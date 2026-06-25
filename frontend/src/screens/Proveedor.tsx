@@ -65,7 +65,7 @@ export default function Proveedor() {
       {error && <p className="error">❌ {error}</p>}
       {estado && (
         <div className="estado">
-          <p className="badge">{ETIQUETAS[estado] ?? estado}</p>
+          <p className={"badge estado-" + estado}>{ETIQUETAS[estado] ?? estado}</p>
           {monto && (
             <p>
               Monto del pedido: <strong>{monto} XLM</strong>

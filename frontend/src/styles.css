@@ -1,15 +1,19 @@
-/* Estilos simples para el prototipo. Limpio y legible, sin frameworks. */
+/* Estilos del prototipo Minga. Tema oscuro, limpio y legible en cámara. */
 
 :root {
-  --fondo: #0f1720;
-  --tarjeta: #16212e;
-  --borde: #243446;
-  --texto: #e6edf3;
-  --suave: #93a4b3;
-  --acento: #2dd4bf;
-  --ok: #22c55e;
-  --warn: #f59e0b;
-  --error: #ef4444;
+  --fondo: #0e1a17;
+  --fondo2: #112420;
+  --tarjeta: #15302e;
+  --tarjeta2: #1c3d39;
+  --borde: #27514b;
+  --texto: #eef5f2;
+  --suave: #9fb6b0;
+  --acento: #c75b39; /* terracota */
+  --acento-claro: #e07a59;
+  --ok: #2e7d5b;
+  --ok-claro: #8fd9b6;
+  --warn: #d9a441;
+  --error: #d9534f;
 }
 
 * {
@@ -19,109 +23,164 @@
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--fondo);
+  background: radial-gradient(1200px 600px at 70% -10%, #163a34 0%, var(--fondo) 55%);
   color: var(--texto);
+  min-height: 100vh;
 }
 
 .app {
-  max-width: 640px;
+  max-width: 680px;
   margin: 0 auto;
-  padding: 24px 16px 48px;
+  padding: 32px 18px 56px;
+}
+
+/* ---- Encabezado ---- */
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 18px;
 }
 
 header h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.4rem;
+  letter-spacing: -0.5px;
 }
 
 .sub {
   color: var(--suave);
-  margin: 4px 0 16px;
+  margin: 2px 0 14px;
+  font-size: 0.95rem;
 }
 
 .aviso {
   background: #3a2d12;
   border: 1px solid var(--warn);
-  color: #fde68a;
-  padding: 10px 12px;
-  border-radius: 8px;
+  color: #fde6b0;
+  padding: 10px 14px;
+  border-radius: 10px;
   margin-bottom: 16px;
   font-size: 0.9rem;
 }
 
 .wallet {
-  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-size: 0.92rem;
+  color: var(--suave);
 }
 
+/* ---- Tabs ---- */
 .tabs {
   display: flex;
   gap: 8px;
-  margin: 16px 0;
+  margin: 16px 0 18px;
+  background: var(--fondo2);
+  padding: 6px;
+  border-radius: 12px;
+  border: 1px solid var(--borde);
 }
 
 .tabs button {
   flex: 1;
-  background: var(--tarjeta);
-  border: 1px solid var(--borde);
+  background: transparent;
+  border: none;
   color: var(--suave);
+  font-weight: 600;
+  padding: 10px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
 }
 
 .tabs button.activo {
-  border-color: var(--acento);
+  background: var(--tarjeta);
   color: var(--texto);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
+/* ---- Tarjetas ---- */
 .card {
   background: var(--tarjeta);
   border: 1px solid var(--borde);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 
 .card h2 {
   margin-top: 0;
+  margin-bottom: 4px;
+  font-size: 1.45rem;
 }
 
+/* ---- Formularios ---- */
 label {
   display: block;
-  margin: 12px 0;
+  margin: 14px 0;
   color: var(--suave);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
 }
 
 input {
   width: 100%;
   margin-top: 6px;
-  padding: 10px 12px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
   border: 1px solid var(--borde);
-  background: #0d1620;
+  background: #0d1a17;
   color: var(--texto);
   font-size: 1rem;
+  font-weight: 400;
+  transition: border-color 0.15s ease;
 }
 
+input::placeholder {
+  color: #5e736d;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--acento);
+}
+
+/* ---- Botones ---- */
 button {
   cursor: pointer;
-  padding: 10px 14px;
-  border-radius: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
   border: 1px solid var(--acento);
   background: var(--acento);
-  color: #06231f;
-  font-weight: 600;
+  color: #fff;
+  font-weight: 700;
   font-size: 0.95rem;
+  transition: transform 0.08s ease, filter 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 button:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 button.link {
   background: none;
   border: none;
-  color: var(--acento);
+  color: var(--acento-claro);
   padding: 0 6px;
-  font-weight: 500;
+  font-weight: 600;
+  font-size: 0.85rem;
   text-decoration: underline;
 }
 
@@ -129,7 +188,7 @@ button.link {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .acciones .ok {
@@ -143,29 +202,39 @@ button.link {
   border-color: var(--warn);
 }
 
+/* ---- N° de pedido ---- */
 .idpedido {
-  margin: 12px 0;
-  padding: 10px 12px;
-  background: #0d1620;
-  border-radius: 8px;
+  margin: 16px 0 4px;
+  padding: 12px 14px;
+  background: #0d1a17;
+  border-radius: 10px;
   border: 1px dashed var(--borde);
+  font-size: 0.95rem;
+}
+
+.idpedido strong {
+  color: var(--acento-claro);
+  font-size: 1.1rem;
 }
 
 .hint {
   color: var(--suave);
   font-size: 0.8rem;
-  margin: 6px 0 0;
+  margin: 8px 0 0;
 }
 
+/* ---- Estados / mensajes ---- */
 .cargando {
-  color: var(--acento);
+  color: var(--acento-claro);
+  font-weight: 600;
 }
 
 .resultado {
-  background: #0d1620;
-  padding: 10px 12px;
-  border-radius: 8px;
-  border-left: 3px solid var(--acento);
+  background: #0d1a17;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--borde);
+  font-size: 0.95rem;
 }
 
 .error {
@@ -173,32 +242,60 @@ button.link {
 }
 
 .estado {
-  margin-top: 16px;
+  margin-top: 18px;
 }
 
 .badge {
   display: inline-block;
-  background: #0d1620;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.98rem;
   border: 1px solid var(--borde);
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-weight: 600;
+  background: #0d1a17;
+}
+
+.badge.estado-pendiente {
+  background: rgba(217, 164, 65, 0.15);
+  border-color: var(--warn);
+  color: #f3cd86;
+}
+
+.badge.estado-liberado {
+  background: rgba(46, 125, 91, 0.18);
+  border-color: var(--ok);
+  color: var(--ok-claro);
+}
+
+.badge.estado-cancelado {
+  background: rgba(159, 182, 176, 0.12);
+  border-color: var(--suave);
+  color: var(--suave);
+}
+
+.badge.estado-noexiste {
+  background: rgba(217, 83, 79, 0.12);
+  border-color: var(--error);
+  color: #f0a8a5;
 }
 
 code {
-  background: #0d1620;
-  padding: 2px 6px;
-  border-radius: 4px;
+  background: #0d1a17;
+  padding: 2px 7px;
+  border-radius: 5px;
   font-size: 0.85em;
+  color: var(--ok-claro);
 }
 
 a {
-  color: var(--acento);
+  color: var(--acento-claro);
+  font-weight: 600;
 }
 
 footer {
-  margin-top: 32px;
+  margin-top: 36px;
   color: var(--suave);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   text-align: center;
+  line-height: 1.5;
 }
