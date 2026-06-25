@@ -1,0 +1,27 @@
+[package]
+name = "minga-escrow"
+version = "0.1.0"
+edition = "2021"
+description = "Contrato de escrow de Minga para pagos a proveedores sobre Stellar/Soroban"
+
+# Soroban compila el contrato como una librería dinámica de C (cdylib) a WASM.
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = "22"
+
+[dev-dependencies]
+# La feature `testutils` habilita utilidades para los tests (mock de auth, etc.)
+soroban-sdk = { version = "22", features = ["testutils"] }
+
+# Perfil de release optimizado para tamaño, recomendado para contratos Soroban.
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true

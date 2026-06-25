@@ -1,0 +1,12 @@
+# Rust / Soroban
+target/
+**/target/
+Cargo.lock
+
+# Node / frontend
+node_modules/
+dist/
+
+# Sistema
+.DS_Store
+*.local
