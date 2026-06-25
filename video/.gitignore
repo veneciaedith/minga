@@ -1,0 +1,4 @@
+# Ignorar los videos (pesados); mantener la carpeta y su README en el repo
+*
+!.gitignore
+!README.md
