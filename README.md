@@ -8,6 +8,10 @@ América Latina (caso de uso: Salta, Argentina). Este repositorio contiene **un 
 end-to-end funcional**: el **pago en escrow a un proveedor**, resuelto con un smart
 contract en **Soroban (Stellar)** y un frontend en **React + TypeScript**.
 
+> ▶️ **Probá la app en vivo:** **https://minga-r5ql.vercel.app**
+> — en la pestaña *Proveedor*, consultá el pedido **42** para ver una operación real
+> on-chain (sin instalar nada).
+>
 > 🛰️ **Deployado y funcionando en Stellar Testnet.** Contract ID
 > [`CCYCSIXO…GSL3MX2W5N`](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N).
 > El flujo completo (crear escrow → confirmar entrega → pago liberado) ya se ejecutó
