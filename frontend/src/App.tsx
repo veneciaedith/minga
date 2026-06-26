@@ -73,8 +73,8 @@ export default function App() {
       </main>
 
       <footer>
-        Prototipo · Stellar Pulso Hackathon · Minga — por Cintia Venecia, Ivon
-        Fernández y Mariela Caminos
+        Prototipo · Stellar Pulso Hackathon · Minga — por Cintia Venecia, Mariela
+        Caminos, Cristina Soto y Lourdes Gimenez Bravo
       </footer>
     </div>
   );

@@ -51,7 +51,7 @@ function header(slide, kicker, title) {
   s.addText("Pagos en escrow para las economías invisibles de América Latina — sobre Stellar.", { x: MX, y: 3.75, w: 9.6, h: 0.7, fontFace: SANS, color: ICE, fontSize: 16, margin: 0 });
 
   s.addText([
-    { text: "Cintia Venecia · Ivon Fernández · Mariela Caminos", options: { breakLine: true, fontSize: 14, color: "FFFFFF", bold: true } },
+    { text: "Cintia Venecia · Mariela Caminos · Cristina Soto · Lourdes Gimenez Bravo", options: { breakLine: true, fontSize: 14, color: "FFFFFF", bold: true } },
     { text: "Salta, Argentina · 2026 · Stellar Pulso Hackathon", options: { fontSize: 12, color: ICE } },
   ], { x: MX, y: 6.2, w: 10, h: 0.9, fontFace: SANS, margin: 0, lineSpacingMultiple: 1.2 });
 
@@ -260,7 +260,7 @@ function header(slide, kicker, title) {
 
   s.addText([
     { text: "Minga", options: { bold: true, color: "FFFFFF", fontSize: 18, breakLine: true } },
-    { text: "Cintia Venecia · Ivon Fernández · Mariela Caminos", options: { color: ICE, fontSize: 13, breakLine: true } },
+    { text: "Cintia Venecia · Mariela Caminos · Cristina Soto · Lourdes Gimenez Bravo", options: { color: ICE, fontSize: 13, breakLine: true } },
     { text: "Salta, Argentina · Stellar Pulso Hackathon 2026", options: { color: MUTED, fontSize: 12 } },
   ], { x: MX, y: 5.5, w: 11, h: 1.2, fontFace: SANS, margin: 0, lineSpacingMultiple: 1.25 });
   s.addNotes("Cerrar con fuerza y con el corazón: esto es por el sustento de muchas familias, incluidas las nuestras. Con buena tecnología podemos desarrollar algo increíble.");

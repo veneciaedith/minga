@@ -1,7 +1,7 @@
 # 🤝 Minga — Pagos en escrow para comerciantes, sobre Stellar
 
 > Prototipo presentado a la **Stellar Pulso Hackathon** (DoraHacks).
-> Creado por **Cintia Venecia**, junto a **Ivon Fernández** y **Mariela Caminos**.
+> Creado por **Cintia Venecia**, **Mariela Caminos**, **Cristina Soto** y **Lourdes Gimenez Bravo**.
 
 Minga es un sistema operativo económico para pequeños comerciantes e informales de
 América Latina (caso de uso: Salta, Argentina). Este repositorio contiene **un flujo
