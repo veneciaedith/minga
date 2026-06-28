@@ -8,8 +8,12 @@ const CLAVE_CREADO = "minga_pedido_creado";
 
 // Pantalla de Rosa (la comerciante): crea el pedido, confirma la entrega
 // o cancela. Cada acción dispara una transacción on-chain firmada con Freighter.
+// Dirección del proveedor de demo, precargada para agilizar la grabación.
+// (En un producto real se elegiría de una agenda de contactos.)
+const PROVEEDOR_DEMO = "GBJJK3S4FU7VCKDTPS4O4RKSFYF5EERKGIUSUY2AVZEF2CU4PMGBOXLD";
+
 export default function Comerciante({ wallet }: { wallet: string | null }) {
-  const [proveedor, setProveedor] = useState("");
+  const [proveedor, setProveedor] = useState(PROVEEDOR_DEMO);
   const [monto, setMonto] = useState("");
   // La descripción es solo para Rosa (no se guarda on-chain en este prototipo).
   const [descripcion, setDescripcion] = useState("");
