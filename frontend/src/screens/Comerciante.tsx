@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { crearEscrow, confirmarEntrega, cancelarEscrow } from "../escrow";
+import { crearEscrow, confirmarEntrega, cancelarEscrow, estadoEscrow } from "../escrow";
 import { EXPLORER_TX } from "../config";
 
 // Claves para recordar el pedido en curso entre recargas de la página.
@@ -76,6 +76,14 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
   const onConfirmar = () =>
     ejecutar(async () => {
       const w = exigirWallet();
+      // Chequeo previo on-chain: evita el error críptico si el pedido no existe.
+      const estado = await estadoEscrow(idPedido);
+      if (estado !== "pendiente") {
+        fijarCreado(false);
+        throw new Error(
+          `El pedido #${idPedido} no está pendiente (estado: ${estado}). Tocá "generar nuevo n°" y creá uno antes de confirmar.`
+        );
+      }
       const h = await confirmarEntrega(w, idPedido);
       fijarCreado(false);
       setMensaje(`✅ Entrega del pedido #${idPedido} confirmada. Pago liberado al proveedor.`);
@@ -85,6 +93,13 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
   const onCancelar = () =>
     ejecutar(async () => {
       const w = exigirWallet();
+      const estado = await estadoEscrow(idPedido);
+      if (estado !== "pendiente") {
+        fijarCreado(false);
+        throw new Error(
+          `El pedido #${idPedido} no está pendiente (estado: ${estado}). No hay nada para cancelar.`
+        );
+      }
       const h = await cancelarEscrow(w, idPedido);
       fijarCreado(false);
       setMensaje(`↩️ Pedido #${idPedido} cancelado. Fondos devueltos a tu wallet.`);
@@ -120,11 +135,9 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
 
       <div className="idpedido">
         N° de pedido: <strong>#{idPedido}</strong>
-        {!creado && (
-          <button className="link" onClick={generarNuevo}>
-            generar nuevo n°
-          </button>
-        )}
+        <button className="link" onClick={generarNuevo}>
+          generar nuevo n°
+        </button>
         <p className="hint">
           {creado
             ? "✅ Pedido creado. Compartí este número con tu proveedor; ya podés confirmar la entrega."
