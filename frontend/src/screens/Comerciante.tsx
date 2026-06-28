@@ -43,12 +43,18 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
     localStorage.setItem(CLAVE_CREADO, String(v));
   }
 
-  // Genera un nuevo N° de pedido y reinicia el estado (para arrancar otro pedido).
-  function generarNuevo() {
+  // Prepara el siguiente pedido (nuevo N°, sin "creado") SIN borrar el mensaje de éxito.
+  // Se llama solo después de confirmar/cancelar, para que el próximo "Crear" use un N° fresco.
+  function prepararSiguiente() {
     const n = nuevoId();
     setIdPedido(n);
     localStorage.setItem(CLAVE_ID, String(n));
     fijarCreado(false);
+  }
+
+  // Botón "generar nuevo n°": como prepararSiguiente pero además limpia los mensajes.
+  function generarNuevo() {
+    prepararSiguiente();
     setMensaje(null);
     setHash(null);
   }
@@ -71,6 +77,13 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
   const onCrear = () =>
     ejecutar(async () => {
       const w = exigirWallet();
+      // Chequeo previo: evita el error "ya existe" si el N° ya fue usado.
+      const estadoPrevio = await estadoEscrow(idPedido);
+      if (estadoPrevio !== "noexiste") {
+        throw new Error(
+          `El pedido #${idPedido} ya existe (estado: ${estadoPrevio}). Tocá "generar nuevo n°" y probá de nuevo.`
+        );
+      }
       const h = await crearEscrow(w, proveedor.trim(), monto, idPedido);
       fijarCreado(true); // ahora sí se puede confirmar/cancelar este pedido
       setMensaje(`✅ Pedido #${idPedido} creado. Pago bloqueado en el contrato.`);
@@ -89,8 +102,8 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
         );
       }
       const h = await confirmarEntrega(w, idPedido);
-      fijarCreado(false);
       setMensaje(`✅ Entrega del pedido #${idPedido} confirmada. Pago liberado al proveedor.`);
+      prepararSiguiente(); // deja listo un N° nuevo para el próximo pedido
       return h;
     });
 
@@ -105,8 +118,8 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
         );
       }
       const h = await cancelarEscrow(w, idPedido);
-      fijarCreado(false);
       setMensaje(`↩️ Pedido #${idPedido} cancelado. Fondos devueltos a tu wallet.`);
+      prepararSiguiente(); // deja listo un N° nuevo para el próximo pedido
       return h;
     });
 
