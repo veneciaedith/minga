@@ -69,7 +69,7 @@ export async function escribirContrato(
     networkPassphrase: NETWORK_PASSPHRASE,
   })
     .addOperation(contrato().call(metodo, ...args))
-    .setTimeout(60)
+    .setTimeout(300) // 5 min para que el usuario tenga tiempo de firmar en Freighter
     .build();
 
   // 3) prepareTransaction simula la operación y agrega los recursos/fees
