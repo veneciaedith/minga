@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "contraste": "node scripts/contraste.mjs",
+    "accesibilidad": "node scripts/revision-accesibilidad.mjs"
   },
   "dependencies": {
     "@creit.tech/stellar-wallets-kit": "^2.4.0",
@@ -19,6 +21,7 @@
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
+    "playwright": "^1.49.0",
     "typescript": "^5.6.3",
     "vite": "^5.4.11"
   }
