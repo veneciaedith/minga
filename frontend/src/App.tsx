@@ -31,44 +31,61 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>🤝 Minga</h1>
+        <h1>
+          <span aria-hidden="true">🤝</span> Minga
+        </h1>
         <p className="sub">Pagos en escrow para comerciantes — sobre Stellar</p>
       </header>
 
       {sinConfig && (
-        <div className="aviso">
-          ⚠️ Falta configurar el <code>CONTRACT_ID</code> en{" "}
-          <code>src/config.ts</code> con el id del contrato deployado.
+        <div className="aviso" role="alert">
+          <span aria-hidden="true">⚠️</span> Falta configurar el{" "}
+          <code>CONTRACT_ID</code> en <code>src/config.ts</code> con el id del
+          contrato deployado.
         </div>
       )}
 
       <div className="wallet">
         {wallet ? (
           <span>
-            Wallet conectada: <code>{wallet.slice(0, 6)}…{wallet.slice(-6)}</code>
+            Wallet conectada:{" "}
+            <code title={wallet}>
+              {wallet.slice(0, 6)}…{wallet.slice(-6)}
+            </code>
           </span>
         ) : (
-          <button onClick={conectar}>Conectar wallet</button>
+          <button type="button" onClick={conectar}>
+            Conectar wallet
+          </button>
         )}
       </div>
-      {error && <div className="error">{error}</div>}
 
-      <nav className="tabs">
+      {/* Región siempre presente en la página: así el lector de pantalla
+          anuncia el error en el momento en que aparece. */}
+      <div className="error" role="alert">
+        {error}
+      </div>
+
+      <nav className="tabs" aria-label="Elegí con qué rol querés usar Minga">
         <button
+          type="button"
           className={pantalla === "comerciante" ? "activo" : ""}
+          aria-current={pantalla === "comerciante" ? "true" : undefined}
           onClick={() => setPantalla("comerciante")}
         >
-          🏪 Comerciante (Rosa)
+          <span aria-hidden="true">🏪</span> Comerciante (Rosa)
         </button>
         <button
+          type="button"
           className={pantalla === "proveedor" ? "activo" : ""}
+          aria-current={pantalla === "proveedor" ? "true" : undefined}
           onClick={() => setPantalla("proveedor")}
         >
-          🚚 Proveedor
+          <span aria-hidden="true">🚚</span> Proveedor
         </button>
       </nav>
 
-      <main>
+      <main id="contenido">
         {pantalla === "comerciante" ? <Comerciante wallet={wallet} /> : <Proveedor />}
       </main>
 

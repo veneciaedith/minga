@@ -13,7 +13,8 @@
   --ok: #2e7d5b;
   --ok-claro: #8fd9b6;
   --warn: #d9a441;
-  --error: #d9534f;
+  --error: #d9534f; /* solo para bordes y fondos, no para texto */
+  --error-texto: #f0a8a5; /* version legible sobre fondo oscuro */
 }
 
 * {
@@ -61,7 +62,7 @@ header h1 {
   padding: 10px 14px;
   border-radius: 10px;
   margin-bottom: 16px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
 
 .wallet {
@@ -99,6 +100,12 @@ header h1 {
   background: var(--tarjeta);
   color: var(--texto);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  /* No alcanza con el color: el subrayado y la negrita marcan la pestana
+     activa tambien para quien no distingue colores. */
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
 }
 
 /* ---- Tarjetas ---- */
@@ -119,16 +126,17 @@ header h1 {
 /* ---- Formularios ---- */
 label {
   display: block;
-  margin: 14px 0;
+  margin: 16px 0 6px;
   color: var(--suave);
-  font-size: 0.85rem;
+  /* Antes 0.85rem: muy chico. Minimo legible para vista cansada. */
+  font-size: 0.95rem;
   font-weight: 600;
   letter-spacing: 0.2px;
 }
 
 input {
   width: 100%;
-  margin-top: 6px;
+  margin-top: 0;
   padding: 12px 14px;
   border-radius: 10px;
   border: 1px solid var(--borde);
@@ -144,8 +152,19 @@ input::placeholder {
 }
 
 input:focus {
-  outline: none;
-  border-color: var(--acento);
+  border-color: var(--acento-claro);
+}
+
+/* Indicador de foco para teclado: obligatorio para poder usar la app sin mouse.
+   Se ve como un recuadro grueso, no depende solo del color. */
+:focus-visible {
+  outline: 3px solid var(--acento-claro);
+  outline-offset: 2px;
+}
+
+input:focus-visible {
+  outline: 3px solid var(--acento-claro);
+  outline-offset: 1px;
 }
 
 /* ---- Botones ---- */
@@ -170,7 +189,8 @@ button:active:not(:disabled) {
 }
 
 button:disabled {
-  opacity: 0.45;
+  /* Antes 0.45: quedaba casi ilegible. Se sigue viendo apagado pero se lee. */
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
@@ -180,7 +200,7 @@ button.link {
   color: var(--acento-claro);
   padding: 0 6px;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-decoration: underline;
 }
 
@@ -219,8 +239,10 @@ button.link {
 
 .hint {
   color: var(--suave);
-  font-size: 0.8rem;
-  margin: 8px 0 0;
+  /* Antes 0.8rem (~13px): demasiado chico para un texto de ayuda. */
+  font-size: 0.9rem;
+  line-height: 1.45;
+  margin: 6px 0 0;
 }
 
 /* ---- Estados / mensajes ---- */
@@ -237,8 +259,15 @@ button.link {
   font-size: 0.95rem;
 }
 
+/* El rojo --error (#d9534f) sobre la tarjeta oscura solo llega a 3.56:1 y no
+   cumple el minimo de 4.5:1 de WCAG AA. --error-texto llega a 7.3:1. */
 .error {
-  color: var(--error);
+  color: var(--error-texto);
+  font-weight: 600;
+}
+
+.error:not(:empty) {
+  margin: 12px 0 0;
 }
 
 .estado {
@@ -295,7 +324,19 @@ a {
 footer {
   margin-top: 36px;
   color: var(--suave);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   text-align: center;
   line-height: 1.5;
+}
+
+/* Quien marco "reducir movimiento" en su sistema (por mareos, migrana o
+   sensibilidad vestibular) no deberia recibir animaciones. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

@@ -31,6 +31,9 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
   );
   const [cargando, setCargando] = useState(false);
   const [mensaje, setMensaje] = useState<string | null>(null);
+  // El error va aparte del mensaje de éxito: se anuncia con más prioridad
+  // al lector de pantalla (role="alert") y se ve con su propio estilo.
+  const [error, setError] = useState<string | null>(null);
   const [hash, setHash] = useState<string | null>(null);
 
   function exigirWallet(): string {
@@ -56,19 +59,21 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
   function generarNuevo() {
     prepararSiguiente();
     setMensaje(null);
+    setError(null);
     setHash(null);
   }
 
   // Envuelve cada acción para manejar el estado de carga / error de forma uniforme.
   async function ejecutar(accion: () => Promise<string>) {
     setMensaje(null);
+    setError(null);
     setHash(null);
     setCargando(true);
     try {
       const h = await accion();
       setHash(h);
     } catch (e: any) {
-      setMensaje("❌ " + e.message);
+      setError(e.message);
     } finally {
       setCargando(false);
     }
@@ -123,36 +128,65 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
       return h;
     });
 
+  // Por qué los pasos 2 y 3 pueden estar bloqueados. Se muestra en pantalla Y se
+  // lee al enfocar el botón (aria-describedby), así nadie queda sin saber por qué
+  // "no pasa nada" al tocarlo.
+  const motivoBloqueo = !wallet
+    ? "Para operar, primero conectá tu wallet arriba."
+    : !creado
+      ? "Para confirmar o cancelar, primero creá el pedido con el paso 1."
+      : cargando
+        ? "Esperá a que termine la operación anterior."
+        : null;
+
   return (
-    <section className="card">
+    <section className="card" aria-busy={cargando}>
       <h2>Crear pedido a proveedor</h2>
 
-      <label>
-        Wallet del proveedor (G...)
-        <input
-          value={proveedor}
-          onChange={(e) => setProveedor(e.target.value)}
-          placeholder="GA..."
-        />
-      </label>
+      <label htmlFor="proveedor">Wallet del proveedor (G...)</label>
+      <input
+        id="proveedor"
+        value={proveedor}
+        onChange={(e) => setProveedor(e.target.value)}
+        placeholder="GA..."
+        aria-describedby="ayuda-proveedor"
+        autoComplete="off"
+        autoCapitalize="none"
+        spellCheck={false}
+      />
+      <p className="hint" id="ayuda-proveedor">
+        Es la dirección de la wallet de tu proveedor. Empieza con la letra G.
+      </p>
 
-      <label>
-        Monto (XLM)
-        <input value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="10" />
-      </label>
+      <label htmlFor="monto">Monto (XLM)</label>
+      <input
+        id="monto"
+        value={monto}
+        onChange={(e) => setMonto(e.target.value)}
+        placeholder="10"
+        inputMode="decimal"
+        aria-describedby="ayuda-monto"
+        autoComplete="off"
+      />
+      <p className="hint" id="ayuda-monto">
+        Cuánto vas a bloquear en garantía, en XLM. Podés usar decimales.
+      </p>
 
-      <label>
-        Descripción del pedido
-        <input
-          value={descripcion}
-          onChange={(e) => setDescripcion(e.target.value)}
-          placeholder="Ej: 2 cajones de gaseosa"
-        />
-      </label>
+      <label htmlFor="descripcion">Descripción del pedido</label>
+      <input
+        id="descripcion"
+        value={descripcion}
+        onChange={(e) => setDescripcion(e.target.value)}
+        placeholder="Ej: 2 cajones de gaseosa"
+        aria-describedby="ayuda-descripcion"
+      />
+      <p className="hint" id="ayuda-descripcion">
+        Es una nota para vos: no se guarda en la blockchain.
+      </p>
 
       <div className="idpedido">
         N° de pedido: <strong>#{idPedido}</strong>
-        <button className="link" onClick={generarNuevo}>
+        <button type="button" className="link" onClick={generarNuevo}>
           generar nuevo n°
         </button>
         <p className="hint">
@@ -163,26 +197,57 @@ export default function Comerciante({ wallet }: { wallet: string | null }) {
       </div>
 
       <div className="acciones">
-        <button onClick={onCrear} disabled={cargando || creado}>
+        <button type="button" onClick={onCrear} disabled={cargando || creado}>
           1 · Crear pedido y bloquear pago
         </button>
-        <button onClick={onConfirmar} disabled={cargando || !creado} className="ok">
+        <button
+          type="button"
+          onClick={onConfirmar}
+          disabled={cargando || !creado}
+          className="ok"
+          aria-describedby={motivoBloqueo ? "motivo-bloqueo" : undefined}
+        >
           2 · Confirmar entrega (liberar pago)
         </button>
-        <button onClick={onCancelar} disabled={cargando || !creado} className="warn">
+        <button
+          type="button"
+          onClick={onCancelar}
+          disabled={cargando || !creado}
+          className="warn"
+          aria-describedby={motivoBloqueo ? "motivo-bloqueo" : undefined}
+        >
           Cancelar pedido (devolver fondos)
         </button>
       </div>
 
-      {cargando && <p className="cargando">⏳ Procesando en la red Stellar…</p>}
-      {mensaje && <p className="resultado">{mensaje}</p>}
-      {hash && (
-        <p>
-          <a href={`${EXPLORER_TX}/${hash}`} target="_blank" rel="noreferrer">
-            Ver transacción en el explorador ↗
-          </a>
+      {motivoBloqueo && (
+        <p className="hint" id="motivo-bloqueo">
+          {motivoBloqueo}
         </p>
       )}
+
+      {/* Regiones siempre presentes: el lector de pantalla avisa en voz alta
+          cuando cambia el estado del pago, que es la información crítica. */}
+      <div aria-live="polite" role="status">
+        {cargando && (
+          <p className="cargando">
+            <span aria-hidden="true">⏳</span> Procesando en la red Stellar…
+          </p>
+        )}
+        {mensaje && <p className="resultado">{mensaje}</p>}
+        {hash && (
+          <p>
+            <a href={`${EXPLORER_TX}/${hash}`} target="_blank" rel="noreferrer">
+              Ver transacción en el explorador (se abre en otra pestaña)
+              <span aria-hidden="true"> ↗</span>
+            </a>
+          </p>
+        )}
+      </div>
+
+      <div className="error" role="alert">
+        {error && <>No se pudo completar la operación: {error}</>}
+      </div>
     </section>
   );
 }
