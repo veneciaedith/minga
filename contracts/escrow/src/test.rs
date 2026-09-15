@@ -44,7 +44,9 @@ fn escenario<'a>() -> Escenario<'a> {
     let (token_addr, token_admin) = crear_token(&env, &admin);
     token_admin.mint(&comprador, &1000);
 
-    let id_contrato = env.register(ContratoEscrow, ());
+    // El token se fija en el DEPLOY, via constructor: por eso va acá y no en
+    // cada llamada a create_escrow.
+    let id_contrato = env.register(ContratoEscrow, (token_addr.clone(),));
     let cliente = ContratoEscrowClient::new(&env, &id_contrato);
 
     Escenario {
@@ -75,7 +77,6 @@ fn flujo_crear_y_confirmar() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -100,7 +101,6 @@ fn flujo_cancelar_devuelve_fondos() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &300,
         &7u64,
         &PLAZO_DIAS,
@@ -130,7 +130,6 @@ fn proveedor_cobra_si_rosa_no_dice_nada_en_el_plazo() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -164,7 +163,6 @@ fn proveedor_no_puede_cobrar_antes_de_que_venza_el_plazo() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -190,7 +188,6 @@ fn proveedor_no_puede_reclamar_sin_declarar_la_entrega() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -215,7 +212,6 @@ fn rosa_objeta_y_el_proveedor_ya_no_puede_cobrar_por_vencimiento() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -246,7 +242,6 @@ fn rosa_no_puede_objetar_despues_del_plazo() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -266,7 +261,6 @@ fn en_disputa_rosa_puede_ceder_y_liberar_el_pago() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -287,7 +281,6 @@ fn en_disputa_el_proveedor_puede_ceder_y_devolver_la_plata() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -313,7 +306,6 @@ fn rosa_no_puede_cancelar_una_entrega_ya_declarada() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -336,7 +328,6 @@ fn no_se_puede_declarar_la_entrega_dos_veces() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -356,7 +347,6 @@ fn un_pedido_cerrado_no_se_puede_volver_a_tocar() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &1u64,
         &PLAZO_DIAS,
@@ -396,7 +386,6 @@ fn el_plazo_tiene_que_ser_razonable() {
         e.cliente.try_create_escrow(
             &e.comprador,
             &e.proveedor,
-            &e.token_addr,
             &500,
             &1u64,
             &0u64
@@ -409,7 +398,6 @@ fn el_plazo_tiene_que_ser_razonable() {
         e.cliente.try_create_escrow(
             &e.comprador,
             &e.proveedor,
-            &e.token_addr,
             &500,
             &2u64,
             &3000u64
@@ -426,7 +414,6 @@ fn el_plazo_tiene_que_ser_razonable() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &500,
         &3u64,
         &PLAZO_MAXIMO_DIAS,
@@ -441,7 +428,6 @@ fn el_monto_tiene_que_ser_mayor_a_cero() {
         e.cliente.try_create_escrow(
             &e.comprador,
             &e.proveedor,
-            &e.token_addr,
             &0,
             &1u64,
             &PLAZO_DIAS
@@ -456,7 +442,6 @@ fn no_se_puede_crear_dos_veces_el_mismo_numero_de_pedido() {
     e.cliente.create_escrow(
         &e.comprador,
         &e.proveedor,
-        &e.token_addr,
         &100,
         &5u64,
         &PLAZO_DIAS,
@@ -465,7 +450,6 @@ fn no_se_puede_crear_dos_veces_el_mismo_numero_de_pedido() {
         e.cliente.try_create_escrow(
             &e.comprador,
             &e.proveedor,
-            &e.token_addr,
             &100,
             &5u64,
             &PLAZO_DIAS
@@ -477,4 +461,69 @@ fn no_se_puede_crear_dos_veces_el_mismo_numero_de_pedido() {
     let token_cliente = token::Client::new(&e.env, &e.token_addr);
     assert_eq!(token_cliente.balance(&e.id_contrato), 100);
     assert_eq!(token_cliente.balance(&e.comprador), 900);
+}
+
+// =====================================================================
+//  El token no se puede falsificar (regresión del agujero que cerramos)
+// =====================================================================
+
+#[test]
+fn el_contrato_solo_mueve_el_token_fijado_en_el_deploy() {
+    let e = escenario();
+
+    // Alguien crea OTRO token —el "falso"— y se mintea saldo de sobra.
+    // Antes, este token podía pasarse a create_escrow y el contrato lo aceptaba:
+    // el proveedor veía "pago bloqueado y garantizado" y cobraba algo sin valor.
+    let admin_falso = Address::generate(&e.env);
+    let (token_falso, minter_falso) = crear_token(&e.env, &admin_falso);
+    minter_falso.mint(&e.comprador, &1_000_000);
+
+    // Hoy no hay dónde meterlo: create_escrow ya no recibe token.
+    e.cliente
+        .create_escrow(&e.comprador, &e.proveedor, &500, &1u64, &PLAZO_DIAS);
+
+    let real = token::Client::new(&e.env, &e.token_addr);
+    let falso = token::Client::new(&e.env, &token_falso);
+
+    // Lo que se bloqueó es el token de verdad.
+    assert_eq!(real.balance(&e.id_contrato), 500);
+    assert_eq!(real.balance(&e.comprador), 500);
+
+    // Y el token falso no se tocó: el contrato no lo conoce.
+    assert_eq!(falso.balance(&e.id_contrato), 0);
+    assert_eq!(falso.balance(&e.comprador), 1_000_000);
+}
+
+#[test]
+fn cualquiera_puede_verificar_que_token_acepta_el_contrato() {
+    let e = escenario();
+
+    // Esta lectura es la que le permite al proveedor confiar: antes de entregar
+    // la mercadería puede comprobar que el contrato paga con el token que espera.
+    assert_eq!(e.cliente.get_token(), e.token_addr);
+
+    // Y el escrow guarda el mismo token, no otro.
+    e.cliente
+        .create_escrow(&e.comprador, &e.proveedor, &500, &1u64, &PLAZO_DIAS);
+    let datos = e.cliente.get_escrow(&1u64).unwrap();
+    assert_eq!(datos.token, e.token_addr);
+}
+
+#[test]
+fn el_pago_se_libera_en_el_token_correcto() {
+    let e = escenario();
+    let admin_falso = Address::generate(&e.env);
+    let (token_falso, _) = crear_token(&e.env, &admin_falso);
+
+    e.cliente
+        .create_escrow(&e.comprador, &e.proveedor, &500, &1u64, &PLAZO_DIAS);
+    e.cliente.marcar_entregado(&1u64);
+    pasar_dias(&e.env, PLAZO_DIAS);
+    e.cliente.reclamar_pago(&1u64);
+
+    // El proveedor cobró en el token de verdad, no en uno inventado.
+    let real = token::Client::new(&e.env, &e.token_addr);
+    let falso = token::Client::new(&e.env, &token_falso);
+    assert_eq!(real.balance(&e.proveedor), 500);
+    assert_eq!(falso.balance(&e.proveedor), 0);
 }

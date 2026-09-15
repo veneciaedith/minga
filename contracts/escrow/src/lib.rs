@@ -24,6 +24,20 @@
 //! proveedor devuelve los fondos). Resolver una disputa en la que ninguno cede
 //! necesita un árbitro, y eso está fuera del alcance de este prototipo.
 //!
+//! ## Por qué el token se fija en el deploy
+//!
+//! Antes, `create_escrow` recibía la dirección del token como argumento. El
+//! contrato es público: cualquiera podía llamarlo sin pasar por la app y crear
+//! un pedido con un token FALSO —uno que dice "transferí" pero no vale nada—.
+//! El proveedor consultaba el pedido, veía "pago bloqueado y garantizado",
+//! entregaba la mercadería y cobraba algo sin valor. Eso rompía la promesa
+//! central de Minga.
+//!
+//! Ahora el token se fija UNA SOLA VEZ, en el momento de deployar el contrato
+//! (`__constructor`), y no se puede cambiar nunca más. No hay ningún lugar
+//! donde meter un token falso. Cualquiera puede verificar con `get_token()`
+//! qué token acepta este contrato antes de confiar en él.
+//!
 //! Todo el dinero se mueve con transferencias REALES de un token de Stellar
 //! (en testnet usamos el XLM nativo). Buscá los comentarios "*** ON-CHAIN ***"
 //! para ver exactamente dónde se toca la red.
@@ -38,6 +52,13 @@ pub const SEGUNDOS_POR_DIA: u64 = 86_400;
 /// Plazo máximo que se puede pedir, en días. Un techo evita que por un error de
 /// tipeo (poner 3000 en lugar de 3) los fondos queden trabados años.
 pub const PLAZO_MAXIMO_DIAS: u64 = 60;
+
+/// Un ledger dura ~5 segundos, así que hay ~17.280 por día.
+const LEDGERS_POR_DIA: u32 = 17_280;
+/// Si al storage de instancia le quedan menos de 120 días de vida, lo renovamos.
+const UMBRAL_TTL: u32 = 120 * LEDGERS_POR_DIA;
+/// Lo renovamos hasta 180 días, que es el máximo que permite la red.
+const EXTENDER_TTL_A: u32 = 180 * LEDGERS_POR_DIA;
 
 /// Estado de cada pedido con pago en escrow.
 #[contracttype]
@@ -67,9 +88,14 @@ pub struct Escrow {
     pub entregado_en: u64,
 }
 
-/// Claves de almacenamiento: a cada `id_pedido` le corresponde un `Escrow`.
+/// Claves de almacenamiento.
 #[contracttype]
 pub enum DataKey {
+    /// El token que este contrato acepta. Se escribe una sola vez, en el deploy,
+    /// y ninguna función lo modifica. Vive en storage de instancia porque es
+    /// configuración global del contrato, no dato de un pedido.
+    Token,
+    /// A cada `id_pedido` le corresponde un `Escrow`.
     Escrow(u64),
 }
 
@@ -86,6 +112,7 @@ pub enum Error {
     EstadoInvalido = 6, // la acción no corresponde al estado actual del pedido
     PlazoNoVencido = 7, // el proveedor todavía no puede reclamar: Rosa tiene tiempo
     PlazoVencido = 8,   // se pasó el plazo para objetar
+    SinToken = 9,       // el contrato se deployó sin token (no debería pasar nunca)
 }
 
 #[contract]
@@ -93,22 +120,37 @@ pub struct ContratoEscrow;
 
 #[contractimpl]
 impl ContratoEscrow {
+    /// Se ejecuta UNA SOLA VEZ, al deployar el contrato, y fija el token con el
+    /// que se van a pagar todos los pedidos.
+    ///
+    /// No existe ninguna función para cambiarlo después: si hiciera falta otro
+    /// token, hay que deployar otro contrato. Eso es a propósito — un token que
+    /// se puede cambiar es un token que se puede falsificar.
+    pub fn __constructor(env: Env, token: Address) {
+        env.storage().instance().set(&DataKey::Token, &token);
+        env.storage().instance().extend_ttl(UMBRAL_TTL, EXTENDER_TTL_A);
+    }
+
     /// El comprador bloquea fondos asociados a un id de pedido.
     /// El dinero sale de la wallet del comprador y queda dentro del contrato.
     ///
     /// `plazo_dias` es el tiempo que Rosa se da a sí misma para revisar el
     /// pedido después de que el proveedor declare la entrega.
+    ///
+    /// Ya NO recibe el token: lo lee del que se fijó en el deploy.
     pub fn create_escrow(
         env: Env,
         comprador: Address,
         proveedor: Address,
-        token: Address,
         monto: i128,
         id_pedido: u64,
         plazo_dias: u64,
     ) -> Result<(), Error> {
         // El comprador debe firmar esta operación con su wallet (Freighter).
         comprador.require_auth();
+
+        // El token NO lo elige quien llama: es el que se fijó al deployar.
+        let token = Self::token_del_contrato(&env)?;
 
         if monto <= 0 {
             return Err(Error::MontoInvalido);
@@ -140,6 +182,11 @@ impl ContratoEscrow {
             entregado_en: 0,
         };
         env.storage().persistent().set(&clave, &escrow);
+
+        // El token vive en storage de instancia, que también tiene vencimiento.
+        // Lo renovamos acá para que la configuración del contrato no se archive
+        // mientras el contrato se sigue usando.
+        env.storage().instance().extend_ttl(UMBRAL_TTL, EXTENDER_TTL_A);
 
         Ok(())
     }
@@ -342,6 +389,15 @@ impl ContratoEscrow {
         env.storage().persistent().get(&DataKey::Escrow(id_pedido))
     }
 
+    /// Lectura: qué token acepta este contrato.
+    ///
+    /// Sirve para que el proveedor (o cualquiera) pueda verificar ANTES de
+    /// confiar en un pedido que este contrato paga con el token que él espera,
+    /// y no con uno inventado.
+    pub fn get_token(env: Env) -> Result<Address, Error> {
+        Self::token_del_contrato(&env)
+    }
+
     /// Lectura: cuántos segundos le quedan a Rosa para confirmar u objetar.
     /// Devuelve 0 si el plazo ya venció o si todavía no empezó a correr.
     /// El frontend lo usa para mostrar la cuenta regresiva.
@@ -381,6 +437,16 @@ impl ContratoEscrow {
     }
 
     // ---- Ayudas internas (no se exponen como funciones del contrato) ----
+
+    /// El token fijado en el deploy. Si no está, el contrato se deployó mal
+    /// (el constructor siempre lo escribe), así que devolvemos un error claro
+    /// en lugar de entrar en pánico.
+    fn token_del_contrato(env: &Env) -> Result<Address, Error> {
+        env.storage()
+            .instance()
+            .get(&DataKey::Token)
+            .ok_or(Error::SinToken)
+    }
 
     fn leer(env: &Env, clave: &DataKey) -> Result<Escrow, Error> {
         env.storage()

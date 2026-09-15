@@ -65,14 +65,31 @@ stellar contract build
 # Si no la viste, encontrá el .wasm con este comando (Windows PowerShell):
 Get-ChildItem -Recurse -Filter minga_escrow.wasm target
 
+# Averiguá el id del token con el que va a pagar el contrato (XLM de testnet).
+# COPIALO: hace falta en el comando de abajo.
+stellar contract id asset --asset native --network testnet
+
 # Deployar a testnet usando ESA ruta. GUARDÁ el CONTRACT_ID que imprime ("C...").
 # Según tu versión del CLI/Rust, la carpeta puede ser
 #   target/wasm32-unknown-unknown/release/   o   target/wasm32v1-none/release/
+#
+# ⚠️ OJO con el `--` suelto y el `--token` del final: el contrato fija el token
+# UNA SOLA VEZ, en el deploy, y no se puede cambiar después. Si te lo olvidás,
+# el deploy falla. Si pegás el token equivocado, hay que volver a deployar.
 stellar contract deploy `
   --wasm target/wasm32-unknown-unknown/release/minga_escrow.wasm `
   --source rosa `
-  --network testnet
+  --network testnet `
+  -- `
+  --token CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC
 ```
+
+> **¿Por qué el token va en el deploy y no en cada pedido?**
+> Porque el contrato es público: cualquiera puede llamarlo sin pasar por la app.
+> Si el token se eligiera en cada pedido, alguien podría crear uno con un token
+> falso —que dice "transferí" pero no vale nada—, y el proveedor entregaría la
+> mercadería creyendo que el pago está garantizado. Fijándolo en el deploy, no
+> hay dónde meter un token falso.
 
 El comando imprime algo como:
 
@@ -81,6 +98,18 @@ CONTRACT_ID: CABC123...XYZ
 ```
 
 > 👉 Copiá ese `CONTRACT_ID`.
+
+Para comprobar que quedó bien, preguntale al contrato qué token acepta:
+
+```powershell
+stellar contract invoke `
+  --id CONTRACT_ID `
+  --source rosa `
+  --network testnet `
+  -- `
+  get_token
+# Tiene que devolver el mismo id del token de arriba.
+```
 
 ---
 
@@ -98,6 +127,11 @@ El `TOKEN_ID` ya viene con el XLM nativo de testnet. Para verificarlo:
 stellar contract id asset --asset native --network testnet
 # Debería coincidir con el TOKEN_ID que ya está en config.ts
 ```
+
+> Desde que el token se fija en el deploy, el frontend **ya no se lo manda** al
+> contrato en cada pedido. El `TOKEN_ID` de `config.ts` queda como referencia
+> (es el mismo valor que le pasaste al `--token` del deploy) y para poder
+> comparar contra lo que devuelve `get_token`.
 
 ---
 
