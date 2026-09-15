@@ -1,7 +1,10 @@
 # Rust / Soroban
 target/
 **/target/
-Cargo.lock
+# Cargo.lock SI se versiona a proposito. Un contrato es un ejecutable, no una
+# libreria: queremos que todas las maquinas compilen exactamente las mismas
+# versiones. Sin el lock, cada maquina resuelve por su cuenta y una version
+# nueva de una dependencia puede romper el build de un dia para el otro.
 
 # Node / frontend
 node_modules/
