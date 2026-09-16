@@ -51,6 +51,37 @@ export function revisarMonto(valor: string): string | null {
   return null;
 }
 
+/**
+ * Revisa el plazo que se da el comercio para revisar la mercadería.
+ * El techo de 60 días lo pone el contrato: evita que un error de tipeo
+ * (poner 300 en lugar de 3) deje la plata trabada casi un año.
+ */
+export function revisarPlazo(valor: string): string | null {
+  const v = valor.trim();
+  if (!v) return "Falta decir cuántos días te vas a tomar para revisar el pedido.";
+  if (!/^\d+$/.test(v)) return "Poné solo números de días. Por ejemplo: 3.";
+  const n = Number(v);
+  if (n < 1) return "Tiene que ser por lo menos 1 día.";
+  if (n > 60) return "Como mucho podés tomarte 60 días.";
+  return null;
+}
+
+/**
+ * Convierte segundos en algo que se lea de un vistazo.
+ * Redondea para arriba: si faltan 3 horas y media, decimos 4 horas, para
+ * que nadie crea que tiene menos tiempo del que tiene.
+ */
+export function tiempoRestante(segundos: number): string {
+  if (segundos <= 0) return "se terminó el tiempo";
+  if (segundos < 60) return "menos de un minuto";
+  const minutos = Math.ceil(segundos / 60);
+  if (minutos < 60) return minutos === 1 ? "1 minuto" : `${minutos} minutos`;
+  const horas = Math.ceil(minutos / 60);
+  if (horas < 24) return horas === 1 ? "1 hora" : `${horas} horas`;
+  const dias = Math.ceil(horas / 24);
+  return dias === 1 ? "1 día" : `${dias} días`;
+}
+
 /** Revisa el número de pedido que tipea el proveedor. */
 export function revisarNumeroPedido(valor: string): string | null {
   const v = valor.trim();
@@ -108,6 +139,12 @@ const TRADUCCIONES: Traduccion[] = [
     dice: "No se pudo hablar con la red. Fijate si tenés internet y volvé a tocar el botón. Tu pedido no se perdió.",
   },
   {
+    // Este caso es distinto de los demás: la firma YA se mandó. Decir
+    // "tu plata no se movió" sería mentirle a la persona.
+    busca: ["tardó demasiado en confirmar"],
+    dice: "Tu firma ya salió, pero la red está tardando más de lo normal en confirmar. No vuelvas a firmar: esperá un minuto y tocá «Actualizar cómo viene» para ver si se completó.",
+  },
+  {
     busca: ["timeout", "timed out", "deadline"],
     dice: "La red tardó demasiado en contestar. Esperá unos segundos y probá otra vez.",
   },
@@ -115,17 +152,52 @@ const TRADUCCIONES: Traduccion[] = [
     busca: ["no wallet", "not connected", "no se encontr", "freighter is not"],
     dice: "No encontramos tu billetera. Tocá «Conectar mi billetera» arriba y elegí la que usás.",
   },
+  // --------------------------------------------------------------
+  //  Los errores que devuelve el contrato, por número.
+  //
+  //  El orden lo fija `Error` en contracts/escrow/src/lib.rs. Si allá
+  //  se agrega o se mueve un error, ACÁ hay que cambiarlo también: un
+  //  número mal traducido le dice a la persona algo que no pasó.
+  // --------------------------------------------------------------
   {
-    busca: ["already exists", "ya existe", "error(contract, #1)"],
+    busca: ["error(contract, #1)", "already exists", "ya existe"],
     dice: "Ese número de pedido ya está usado. Tocá «Usar otro número» y creá el pedido de nuevo.",
   },
   {
-    busca: ["error(contract, #2)", "not pending", "invalid state"],
+    busca: ["error(contract, #2)"],
+    dice: "No encontramos ningún pedido con ese número. Fijate que esté bien copiado y probá de nuevo.",
+  },
+  {
+    busca: ["error(contract, #3)"],
+    dice: "Este pedido ya no está esperando la entrega, así que esto no se puede hacer ahora. Volvé a mirar cómo viene.",
+  },
+  {
+    busca: ["error(contract, #4)"],
+    dice: "El monto tiene que ser mayor que cero.",
+  },
+  {
+    busca: ["error(contract, #5)"],
+    dice: "El plazo para revisar tiene que ser de 1 a 60 días.",
+  },
+  {
+    busca: ["error(contract, #6)"],
     dice: "Este pedido ya se cerró antes: o se pagó o se canceló. Creá uno nuevo para seguir.",
   },
   {
-    busca: ["unauthorized", "not authorized", "error(contract, #3)"],
-    dice: "Esta billetera no es la que hizo el pedido, así que no puede tocarlo. Conectate con la billetera con la que lo creaste.",
+    busca: ["error(contract, #7)"],
+    dice: "Todavía no podés cobrar por vencimiento: al comercio le queda tiempo para revisar el pedido. En pantalla dice cuánto falta.",
+  },
+  {
+    busca: ["error(contract, #8)"],
+    dice: "Se pasó el plazo que te habías dado para objetar esta entrega. Si hay un problema con la mercadería, hablalo con tu proveedor.",
+  },
+  {
+    busca: ["error(contract, #9)"],
+    dice: "Este contrato quedó mal instalado: no sabe con qué moneda pagar. Avisale a quien lo instaló antes de usarlo.",
+  },
+  {
+    busca: ["unauthorized", "not authorized", "invalid auth", "authentication"],
+    dice: "Esta billetera no es la que corresponde para esta acción. Fijate de estar conectada con la billetera correcta: el comercio firma sus pasos y el proveedor los suyos.",
   },
   {
     busca: ["monto inválido", "monto invalido"],

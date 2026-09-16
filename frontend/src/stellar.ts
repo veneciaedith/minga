@@ -87,8 +87,22 @@ export async function escribirContrato(
   }
 
   // 6) Esperamos a que la red confirme (puede tardar unos segundos).
+  //
+  //    Con un límite: antes esta espera no terminaba nunca. Si la red se
+  //    caía justo acá, la pantalla quedaba en "Estamos anotando esto en la
+  //    red" para siempre, y quien está del otro lado no sabe si su plata se
+  //    movió o no. Eso no es un detalle técnico: le pega justo a quien ya
+  //    desconfía. Mejor cortar y decirle qué hacer.
+  const LIMITE_ESPERA_MS = 90_000;
+  const comienzo = Date.now();
+
   let resultado = await servidor.getTransaction(envio.hash);
   while (resultado.status === "NOT_FOUND") {
+    if (Date.now() - comienzo > LIMITE_ESPERA_MS) {
+      throw new Error(
+        `La red tardó demasiado en confirmar (comprobante ${envio.hash}).`
+      );
+    }
     await new Promise((r) => setTimeout(r, 1500));
     resultado = await servidor.getTransaction(envio.hash);
   }

@@ -1,7 +1,24 @@
 import { useRef, useState } from "react";
-import { estadoEscrow, detalleEscrow, stroopsAXlm } from "../escrow";
-import { Aviso, Estado } from "../componentes/Estado";
-import { conMiles, mensajeClaro, revisarNumeroPedido } from "../textos";
+import {
+  DatosEscrow,
+  EstadoPedido,
+  detalleEscrow,
+  devolverFondos,
+  estadoEscrow,
+  marcarEntregado,
+  puedeReclamar,
+  reclamarPago,
+  segundosRestantes,
+  stroopsAXlm,
+} from "../escrow";
+import { Aviso, Estado, EnlaceTransaccion } from "../componentes/Estado";
+import {
+  conMiles,
+  direccionCorta,
+  mensajeClaro,
+  revisarNumeroPedido,
+  tiempoRestante,
+} from "../textos";
 
 /**
  * Qué significa cada estado del contrato, contado como se lo contaría
@@ -16,10 +33,22 @@ const ESTADOS: Record<string, { signo: string; titulo: string; explicacion: stri
     explicacion:
       "El comercio ya apartó la plata y no la puede usar para otra cosa. La vas a cobrar en cuanto confirme que le llegó la mercadería. Podés preparar el envío tranquilo.",
   },
+  entregado: {
+    signo: "◐",
+    titulo: "Avisaste que entregaste",
+    explicacion:
+      "Ahora el comercio tiene un tiempo para revisar la mercadería. Si confirma, cobrás en el momento. Si deja pasar ese tiempo sin decir nada, podés cobrar igual: no quedás esperando para siempre.",
+  },
+  disputa: {
+    signo: "!",
+    titulo: "El comercio frenó el pago",
+    explicacion:
+      "Dice que la mercadería no está como la pidió. Hasta que se arregle, nadie cobra. Hablá con el comercio: si tiene razón, podés devolverle la plata; si la tenés vos, él puede pagarte igual.",
+  },
   liberado: {
     signo: "✓",
     titulo: "Ya cobraste",
-    explicacion: "El comercio confirmó que le llegó el pedido y la plata salió hacia tu billetera.",
+    explicacion: "La plata salió hacia tu billetera. Este pedido terminó.",
   },
   cancelado: {
     signo: "↩",
@@ -38,20 +67,45 @@ const ESTADOS: Record<string, { signo: string; titulo: string; explicacion: stri
 /**
  * Pantalla de quien vende (el proveedor).
  *
- * Es solo de lectura: no pide billetera, no firma nada y no cuesta
- * plata consultar. Sirve para que el proveedor deje de depender de un
- * llamado o un mensaje para saber si le van a pagar.
+ * Mirar cómo viene un pedido no pide billetera ni cuesta nada: eso sigue
+ * igual y es lo primero que ve cualquiera.
+ *
+ * Lo que sí pide billetera es ACTUAR: avisar que entregó, cobrar cuando
+ * se cumplió el plazo, o devolver la plata. Son acciones que mueven
+ * dinero, así que las tiene que firmar él y nadie más.
  */
-export default function Proveedor() {
+export default function Proveedor({ billetera }: { billetera: string | null }) {
   const [numero, setNumero] = useState("");
-  const [estado, setEstado] = useState<string | null>(null);
-  const [monto, setMonto] = useState<string | null>(null);
+  const [idConsultado, setIdConsultado] = useState<number | null>(null);
+  const [estado, setEstado] = useState<EstadoPedido | null>(null);
+  const [datos, setDatos] = useState<DatosEscrow | null>(null);
+  const [restante, setRestante] = useState(0);
+  const [puedeCobrar, setPuedeCobrar] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [aviso, setAviso] = useState<Aviso | null>(null);
   const [errorCampo, setErrorCampo] = useState<string | null>(null);
+  const [hash, setHash] = useState<string | null>(null);
 
   const campo = useRef<HTMLInputElement>(null);
   const resultado = useRef<HTMLHeadingElement>(null);
+
+  /** Trae de la red todo lo que hace falta para mostrar el pedido. */
+  async function traer(id: number) {
+    const st = await estadoEscrow(id);
+    setEstado(st);
+    setIdConsultado(id);
+
+    if (st === "noexiste") {
+      setDatos(null);
+      setRestante(0);
+      setPuedeCobrar(false);
+      return;
+    }
+
+    setDatos(await detalleEscrow(id));
+    setRestante(st === "entregado" ? await segundosRestantes(id) : 0);
+    setPuedeCobrar(st === "entregado" ? await puedeReclamar(id) : false);
+  }
 
   async function consultar() {
     const problema = revisarNumeroPedido(numero);
@@ -62,19 +116,12 @@ export default function Proveedor() {
     }
 
     setEstado(null);
-    setMonto(null);
+    setDatos(null);
     setAviso({ tono: "trabajando", texto: "Buscando el pedido en la red. Tarda unos segundos." });
     setCargando(true);
 
     try {
-      const id = Number(numero.trim());
-      const st = await estadoEscrow(id);
-      setEstado(st);
-
-      if (st !== "noexiste") {
-        const d = await detalleEscrow(id);
-        if (d) setMonto(stroopsAXlm(d.monto));
-      }
+      await traer(Number(numero.trim()));
       setAviso(null);
       // El foco va al resultado: sin esto, quien usa lector de pantalla
       // no se entera de que apareció algo nuevo más abajo.
@@ -86,14 +133,34 @@ export default function Proveedor() {
     }
   }
 
+  /** Envuelve las acciones que mueven plata y piden firma. */
+  async function actuar(accion: () => Promise<string>, exito: string) {
+    setAviso({ tono: "trabajando", texto: "Estamos anotando esto en la red. Tarda unos segundos." });
+    setCargando(true);
+    try {
+      const h = await accion();
+      setHash(h);
+      setAviso({ tono: "bien", texto: exito });
+      if (idConsultado !== null) await traer(idConsultado);
+    } catch (e) {
+      setAviso({ tono: "mal", texto: mensajeClaro(e) });
+    } finally {
+      setCargando(false);
+    }
+  }
+
   const info = estado ? (ESTADOS[estado] ?? null) : null;
+
+  // ¿La billetera conectada es la de este pedido? Si no lo es, no
+  // mostramos botones que van a fallar: es mejor decirlo antes.
+  const esMiPedido = Boolean(billetera && datos && billetera === datos.proveedor);
 
   return (
     <section className="tarjeta" aria-labelledby="titulo-proveedor">
       <h2 id="titulo-proveedor">¿Me van a pagar?</h2>
       <p className="bajada">
-        Poné el número de pedido que te pasó el comercio y fijate cómo viene tu cobro. No hace falta
-        billetera ni contraseña, y consultar no cuesta nada.
+        Poné el número de pedido que te pasó el comercio y fijate cómo viene tu cobro. Para mirar no
+        hace falta billetera ni contraseña, y consultar no cuesta nada.
       </p>
 
       <form
@@ -138,6 +205,7 @@ export default function Proveedor() {
       </form>
 
       <Estado aviso={aviso} cargando={cargando} />
+      <EnlaceTransaccion hash={hash} />
 
       {info && (
         <div className={`resultado-estado ${estado}`} role="region" aria-labelledby="titulo-resultado">
@@ -146,10 +214,104 @@ export default function Proveedor() {
             {info.titulo}
           </h3>
           <p>{info.explicacion}</p>
-          {monto && (
+
+          {datos && (
             <p>
-              Monto del pedido: <span className="monto">{conMiles(monto)} XLM</span>
+              Monto del pedido:{" "}
+              <span className="monto">{conMiles(stroopsAXlm(datos.monto))} XLM</span>
             </p>
+          )}
+
+          {estado === "entregado" && (
+            <p className="plazo-restante">
+              {puedeCobrar ? (
+                <>
+                  <strong>Se cumplió el plazo</strong> y el comercio no dijo nada. Ya podés cobrar.
+                </>
+              ) : (
+                <>
+                  Al comercio le quedan <strong>{tiempoRestante(restante)}</strong> para revisar la
+                  mercadería.
+                </>
+              )}
+            </p>
+          )}
+
+          {/* ---------- lo que puede hacer, si es su pedido ---------- */}
+          {estado !== "liberado" && estado !== "cancelado" && estado !== "noexiste" && (
+            <div className="acciones">
+              {!billetera ? (
+                <p className="nota">
+                  Para avisar que entregaste o para cobrar, primero conectá tu billetera con el botón
+                  de arriba de todo. Para mirar cómo viene el pedido no hace falta.
+                </p>
+              ) : !esMiPedido ? (
+                <p className="nota">
+                  Este pedido es para otra billetera
+                  {datos ? ` (${direccionCorta(datos.proveedor)})` : ""}. Conectate con la billetera
+                  a la que el comercio le hizo el pedido.
+                </p>
+              ) : (
+                <>
+                  {estado === "pendiente" && (
+                    <button
+                      type="button"
+                      className="boton boton-principal"
+                      onClick={() =>
+                        actuar(
+                          () => marcarEntregado(billetera!, idConsultado!),
+                          "Avisaste que entregaste. Ahora el comercio tiene su plazo para revisar, y si no dice nada vas a poder cobrar igual."
+                        )
+                      }
+                      disabled={cargando}
+                    >
+                      Ya entregué la mercadería
+                    </button>
+                  )}
+
+                  {estado === "entregado" && puedeCobrar && (
+                    <button
+                      type="button"
+                      className="boton boton-principal"
+                      onClick={() =>
+                        actuar(
+                          () => reclamarPago(billetera!, idConsultado!),
+                          "Cobraste. La plata salió hacia tu billetera."
+                        )
+                      }
+                      disabled={cargando}
+                    >
+                      Cobrar ahora
+                    </button>
+                  )}
+
+                  {(estado === "entregado" || estado === "disputa") && (
+                    <button
+                      type="button"
+                      className="boton boton-secundario"
+                      onClick={() =>
+                        actuar(
+                          () => devolverFondos(billetera!, idConsultado!),
+                          "Devolviste la plata al comercio. El pedido quedó cerrado."
+                        )
+                      }
+                      disabled={cargando}
+                    >
+                      Devolverle la plata al comercio
+                    </button>
+                  )}
+
+                  <button
+                    type="button"
+                    className="boton boton-secundario"
+                    onClick={() => idConsultado !== null && traer(idConsultado)}
+                    disabled={cargando}
+                  >
+                    Actualizar cómo viene
+                  </button>
+                </>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -166,10 +328,15 @@ export default function Proveedor() {
             plata para otra cosa.
           </li>
           <li>
-            Vos cobrás cuando el comercio confirma que recibió la mercadería. Si el pedido se
-            cancela, la plata vuelve a él y no te queda ninguna deuda.
+            Cuando entregás, avisás acá. Desde ese momento el comercio tiene un plazo para revisar.
+            Si lo deja pasar sin decir nada, <strong>cobrás igual</strong>: su silencio ya no te
+            deja esperando.
           </li>
-          <li>Podés consultar las veces que quieras: es gratis y no necesitás cuenta.</li>
+          <li>
+            Si el comercio dice que algo está mal, la plata queda frenada hasta que se arreglen. Vos
+            también podés devolverla si preferís cortar por lo sano.
+          </li>
+          <li>Mirar cómo viene un pedido es gratis y no necesitás cuenta.</li>
         </ul>
       </details>
     </section>

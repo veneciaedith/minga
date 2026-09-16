@@ -231,7 +231,7 @@ export default function App() {
           aria-labelledby="pestana-proveedor"
           hidden={pantalla !== "proveedor"}
         >
-          {pantalla === "proveedor" && <Proveedor />}
+          {pantalla === "proveedor" && <Proveedor billetera={billetera} />}
         </div>
       </main>
 

@@ -614,9 +614,38 @@ body {
 .resultado-estado .monto { font-variant-numeric: tabular-nums; font-weight: 800; }
 
 .resultado-estado.pendiente { border-color: var(--atencion); background: var(--atencion-fondo); color: var(--atencion); }
+.resultado-estado.entregado { border-color: var(--atencion); background: var(--atencion-fondo); color: var(--atencion); }
+.resultado-estado.disputa   { border-color: var(--mal);      background: var(--mal-fondo);      color: var(--mal); }
 .resultado-estado.liberado  { border-color: var(--bien);     background: var(--bien-fondo);     color: var(--bien); }
 .resultado-estado.cancelado { border-color: var(--borde-fuerte); }
 .resultado-estado.noexiste  { border-color: var(--mal);      background: var(--mal-fondo);      color: var(--mal); }
+
+/* Aclaraciones dentro de un grupo de botones: por qué no se puede hacer
+   algo todavía, o qué billetera hace falta. */
+.acciones .nota {
+  margin: 0;
+  font-size: .92rem;
+  color: var(--tinta-suave);
+}
+
+/* ---------------------------------------------------------------
+   13 bis. El reloj del plazo
+   
+   No va dentro del cartel que se anuncia en voz alta: si el tiempo
+   restante se anunciara cada vez que cambia, quien usa lector de
+   pantalla no podria escuchar otra cosa. Se lee cuando la persona
+   llega hasta ahi.
+   --------------------------------------------------------------- */
+
+.plazo-restante {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: var(--radio);
+  border: 2px dashed var(--borde-fuerte);
+  background: var(--papel2);
+  color: var(--tinta);
+  font-size: .98rem;
+}
 
 /* ---------------------------------------------------------------
    14. Ayuda  (Heurística 10)

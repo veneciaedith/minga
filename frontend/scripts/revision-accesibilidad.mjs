@@ -62,6 +62,19 @@ await p.click('form button[type="submit"]');
 await p.waitForSelector("#error-proveedor");
 ok("detecta la billetera cortada: «" + (await p.textContent("#error-proveedor")).trim() + "»");
 
+// --- el plazo para revisar: ni 0 ni mas de 60 ---
+await p.fill("#campo-proveedor", "GBJJK3S4FU7VCKDTPS4O4RKSFYF5EERKGIUSUY2AVZEF2CU4PMGBOXLD");
+await p.fill("#campo-plazo", "0");
+await p.click('form button[type="submit"]');
+await p.waitForSelector("#error-plazo");
+ok("no acepta un plazo de 0 dias: «" + (await p.textContent("#error-plazo")).trim() + "»");
+
+await p.fill("#campo-plazo", "300");
+await p.click('form button[type="submit"]');
+await p.waitForSelector("#error-plazo");
+ok("no acepta un plazo mas largo que el que permite el contrato: «" + (await p.textContent("#error-plazo")).trim() + "»");
+await p.fill("#campo-plazo", "3");
+
 // --- tamano de texto ---
 const base = await p.evaluate(() => getComputedStyle(document.body).fontSize);
 await p.click('.ajustes .grande');
