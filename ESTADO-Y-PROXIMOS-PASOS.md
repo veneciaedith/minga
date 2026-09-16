@@ -1,6 +1,6 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **15 de septiembre de 2026**
+> Última actualización: **16 de septiembre de 2026**
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
 > Rama de trabajo: **`claude/cool-fermi-6kp11h`**
 
@@ -38,7 +38,7 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 
 1. Abrí Claude Code en la carpeta `minga` y decí: **"leé ESTADO-Y-PROXIMOS-PASOS.md y seguimos"**.
 2. Traé los cambios: `git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h`
-3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 19 tests**.
+3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 25 tests**.
 
 > 📱 **Desde el celular** no se pueden correr comandos ni tests. Para solo leer este
 > archivo formateado:
@@ -74,10 +74,11 @@ de tipos que no se entiende. Frontend y deploy van juntos, en el mismo paso.
 
 ---
 
-## ✅ Lo que se hizo (5 commits, todos pusheados)
+## ✅ Lo que se hizo (6 commits, todos pusheados)
 
 | Commit | Qué |
 |---|---|
+| `7946357` | **Eventos y vencimiento de los datos (16/09).** El contrato ahora avisa cada cambio de estado en la red, y los pedidos se renuevan solos mientras se usen. 6 tests nuevos → **25 en total** |
 | `9e912f4` | **Accesibilidad de la app.** Los avisos de pago se anuncian en voz alta (`aria-live`), foco visible con teclado, contraste del error arreglado, letra más grande, teclado numérico en el celular |
 | `d0e8413` | **Plazo y disputa en el contrato.** El proveedor ya no queda rehén del silencio de Rosa |
 | `4a8e675` | **`Cargo.lock` versionado.** Sin esto, una clonada nueva no compila |
@@ -150,18 +151,27 @@ Va todo junto, en este orden, porque cada paso depende del anterior:
 - [ ] **Grabar un pedido de demo nuevo** on-chain. El pedido 42 no existe en el
       contrato nuevo.
 
-### 2. Pendientes del contrato (conviene cerrarlos ANTES del deploy, para deployar una sola vez)
+### 2. Pendientes del contrato — ✅ CERRADOS el 16/09 (commit `7946357`)
 
-- [ ] **Renovar el TTL de los pedidos.** El contrato escribe 13 veces con
-      `persistent()` y nunca llama a `extend_ttl`. Los datos vencen a los ~120 días
-      y se archivan. **La plata no se pierde** (desde el protocolo 23 se restauran
-      solos pagando el alquiler), pero suma fricción y costo. El patrón oficial es
-      renovar en cada escritura. Ya se hizo para el storage de instancia (el token);
-      falta para los pedidos.
-- [ ] **Emitir eventos.** El contrato no emite ni uno. Sin eventos, ningún explorador
-      ni indexador puede ver el flujo del escrow, y la app **no puede mostrar un
-      historial** leído de la blockchain. Hoy el número de pedido vive en el navegador
-      de Rosa: si cambia de teléfono, lo pierde.
+- [x] **Renovar el TTL de los pedidos.** Hecho. Guardar un pedido y renovarle la
+      fecha de vencimiento ahora son **una sola operación** (`Self::guardar`), para
+      que nadie pueda agregar una función nueva y olvidarse de renovar.
+- [x] **Emitir eventos.** Hecho. Cada cambio de estado publica un aviso en la red:
+      `creado`, `entregado`, `objetado`, `liberado`, `cancelado`. Las direcciones
+      del comprador y del proveedor van entre los **tópicos**, que es por lo que se
+      filtra desde afuera: con eso la app puede pedirle a la red *"todos los pedidos
+      de esta wallet"*. Los avisos de plata que se mueve llevan además un **motivo**
+      (`confirmo` / `vencio` / `cancelo` / `devolvio`), porque no es lo mismo que
+      Rosa confirme a que el proveedor cobre por vencimiento.
+
+> Con esto, **el contrato ya está listo para deployar**. No quedan pendientes suyos.
+> Lo que falta antes del deploy es la Etapa 2 del frontend (punto 1), porque frontend
+> y deploy van juntos en el mismo paso.
+
+> ⚠️ Detalle técnico para la próxima sesión: se usó `env.events().publish(...)`,
+> que es la API del **SDK 22**, el que usa Minga. La skill oficial de Stellar
+> documenta `#[contractevent]`, que existe recién en versiones posteriores del SDK.
+> Si alguien copia el ejemplo de la skill tal cual, no compila.
 
 ### 3. Pendientes del frontend
 
@@ -180,17 +190,44 @@ Va todo junto, en este orden, porque cada paso depende del anterior:
 
 ## ❓ Decisiones que esperan a Cintia
 
-1. **Los créditos del equipo.** El `README.md` (línea 4) y el pie de la app (`frontend/src/App.tsx:93`) dicen
+1. 🚨 **Hay DOS versiones del frontend, en dos ramas distintas, y no se conocen
+   entre sí.** Esto se descubrió el 16/09 y es lo más urgente de esta lista.
+
+   | Rama | Qué tiene | Cuándo |
+   |---|---|---|
+   | `claude/cool-fermi-6kp11h` (esta) | El contrato bueno (plazo, disputa, eventos, TTL) + un retoque de accesibilidad sobre las pantallas viejas | 14 al 16/09 |
+   | `claude/mockup-link-rd56g2` | Un **rediseño completo** de la app real con las 10 heurísticas y diseño universal: `textos.ts` (lenguaje claro y validaciones), `componentes/Estado.tsx`, scripts que revisan contraste y accesibilidad solos, y `docs/diseno-accesible.md` con 206 líneas explicando cada decisión. **2.147 líneas.** | 13/09 |
+
+   **El problema:** las dos ramas tocan los mismos archivos (`App.tsx`,
+   `Comerciante.tsx`, `Proveedor.tsx`, `styles.css`) de maneras distintas. El
+   trabajo de accesibilidad se hizo **dos veces**, sin saberlo. Si se sigue
+   construyendo sobre `cool-fermi` sin resolver esto, el rediseño del 13/09 queda
+   abandonado en una rama que nadie mira.
+
+   **Lo que hay que decidir:** cuál de las dos versiones del frontend es la buena.
+   Lo más probable es que sea la de `mockup-link` (es mucho más completa y es la
+   que sigue el criterio de diseño universal), y que haya que traer el contrato
+   nuevo hacia ahí. Pero es una decisión de producto, no técnica: **la toma Cintia
+   después de mirar las dos.**
+
+   > Para mirarla sin instalar nada:
+   > https://github.com/veneciaedith/minga/blob/claude/mockup-link-rd56g2/docs/diseno-accesible.md
+
+2. **Los créditos del equipo.** El `README.md` (línea 4) y el pie de la app (`frontend/src/App.tsx:93`) dicen
    *"Cintia Venecia, Mariela Caminos, Cristina Soto y Lourdes Gimenez Bravo"*, pero el
    equipo hoy es **Cintia Venecia y Octavio Giménez Bravo**. Son nombres de personas
    reales: **decidí vos qué tiene que decir** y se cambia. No se toca por iniciativa propia.
-2. **WSL, sí o no.** Está la duda desde el 14/9. El entorno de Windows ya funciona
+3. **WSL, sí o no.** Está la duda desde el 14/9. El entorno de Windows ya funciona
    (Node 24, Rust, Stellar CLI 27 — ver `COMANDOS.md`), así que WSL no hace falta
    para avanzar. Sirve si el grupo de la hackathon pasa comandos de Linux.
    ⚠️ Antes de instalarlo: **liberar espacio en C:** o instalarlo en D:.
-3. **¿Cerrar los pendientes del contrato antes de deployar?** Si se deploya ahora y
-   después se agregan eventos o TTL, hay que deployar dos veces y actualizar el
-   `CONTRACT_ID` dos veces.
+4. **¿Cuántas personas reales antes del 27/09?** Cintia puso como objetivo que la
+   app la usen **7 personas reales**. Hoy hay un artefacto compartido con su
+   hermano, que prueba como cliente. Falta decidir cómo se registra lo que cada
+   persona dice y quién las contacta.
+
+> ✅ **Resuelta:** *"¿cerrar los pendientes del contrato antes de deployar?"* — sí,
+> se cerraron el 16/09. Ya se puede deployar una sola vez.
 
 ---
 
@@ -221,7 +258,7 @@ Va todo junto, en este orden, porque cada paso depende del anterior:
 ## 🛠️ Comandos que funcionan (verificados)
 
 ```bash
-# Tests del contrato — tienen que pasar 19
+# Tests del contrato — tienen que pasar 25
 cd contracts/escrow && cargo test
 
 # Compilar a WASM (el formato que se sube a la red)
