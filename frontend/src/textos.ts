@@ -152,6 +152,22 @@ const TRADUCCIONES: Traduccion[] = [
     busca: ["no wallet", "not connected", "no se encontr", "freighter is not"],
     dice: "No encontramos tu billetera. Tocá «Conectar mi billetera» arriba y elegí la que usás.",
   },
+  {
+    // Pasa cuando el contrato instalado en la red NO es el que esta
+    // versión de la app espera: la app le manda cinco datos y el
+    // contrato viejo esperaba otros cinco distintos. El error que
+    // devuelve la red es incomprensible, y la persona que lo ve no
+    // tiene ninguna culpa ni nada que arreglar de su lado.
+    busca: [
+      "unexpectedtype",
+      "unexpected type",
+      "bad union switch",
+      "invalidaction",
+      "wasmvm",
+      "missing function",
+    ],
+    dice: "Esta versión de Minga y el contrato instalado en la red no coinciden, así que no se puede operar. No es nada que hayas hecho mal: hay que instalar el contrato nuevo. Avisale a quien te dio la aplicación.",
+  },
   // --------------------------------------------------------------
   //  Los errores que devuelve el contrato, por número.
   //
