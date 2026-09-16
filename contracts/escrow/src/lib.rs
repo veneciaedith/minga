@@ -38,6 +38,22 @@
 //! donde meter un token falso. Cualquiera puede verificar con `get_token()`
 //! qué token acepta este contrato antes de confiar en él.
 //!
+//! ## Por qué el contrato avisa lo que hace (eventos)
+//!
+//! Hasta ahora el contrato cambiaba de estado en silencio. El número de pedido
+//! vivía únicamente en el navegador de Rosa: si cambiaba de teléfono o borraba
+//! los datos, perdía el rastro de su propio pedido y no había forma de
+//! recuperarlo.
+//!
+//! Ahora cada cambio de estado publica un EVENTO en la red. Un evento es un
+//! aviso que queda registrado junto a la transacción y que cualquiera puede
+//! leer sin permiso ni firma. Con eso, la app puede reconstruir el historial de
+//! pedidos de una wallet leyendo la blockchain, en vez de depender de la memoria
+//! del navegador.
+//!
+//! Los eventos son públicos a propósito: el proveedor puede demostrar que
+//! entregó, y Rosa que pagó, sin que ninguno dependa de la palabra del otro.
+//!
 //! Todo el dinero se mueve con transferencias REALES de un token de Stellar
 //! (en testnet usamos el XLM nativo). Buscá los comentarios "*** ON-CHAIN ***"
 //! para ver exactamente dónde se toca la red.
@@ -55,7 +71,14 @@ pub const PLAZO_MAXIMO_DIAS: u64 = 60;
 
 /// Un ledger dura ~5 segundos, así que hay ~17.280 por día.
 const LEDGERS_POR_DIA: u32 = 17_280;
-/// Si al storage de instancia le quedan menos de 120 días de vida, lo renovamos.
+/// Si a un dato le quedan menos de 120 días de vida, lo renovamos.
+///
+/// Todo lo que se guarda en Stellar tiene fecha de vencimiento y paga alquiler.
+/// Si vence, el dato se archiva y deja de leerse hasta que alguien pague por
+/// restaurarlo. La plata NO se pierde, pero para Rosa la diferencia es entre
+/// "veo mi pedido" y "mi pedido desapareció", que es justo lo que no puede
+/// pasarle a quien desconfía de la tecnología. Por eso renovamos en cada
+/// escritura: mientras el pedido se use, nunca se acerca al vencimiento.
 const UMBRAL_TTL: u32 = 120 * LEDGERS_POR_DIA;
 /// Lo renovamos hasta 180 días, que es el máximo que permite la red.
 const EXTENDER_TTL_A: u32 = 180 * LEDGERS_POR_DIA;
@@ -181,12 +204,24 @@ impl ContratoEscrow {
             plazo_confirmacion: plazo_dias * SEGUNDOS_POR_DIA,
             entregado_en: 0,
         };
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
 
         // El token vive en storage de instancia, que también tiene vencimiento.
         // Lo renovamos acá para que la configuración del contrato no se archive
         // mientras el contrato se sigue usando.
         env.storage().instance().extend_ttl(UMBRAL_TTL, EXTENDER_TTL_A);
+
+        // Aviso público: nació un pedido. Con este evento la app puede listar
+        // los pedidos de una wallet sin guardarlos en el navegador.
+        env.events().publish(
+            (
+                symbol_short!("creado"),
+                id_pedido,
+                escrow.comprador.clone(),
+                escrow.proveedor.clone(),
+            ),
+            (escrow.monto, escrow.plazo_confirmacion),
+        );
 
         Ok(())
     }
@@ -210,7 +245,18 @@ impl ContratoEscrow {
 
         escrow.estado = Estado::Entregado;
         escrow.entregado_en = env.ledger().timestamp();
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+
+        // Avisamos cuándo se declaró la entrega y hasta cuándo puede responder
+        // Rosa: así la app muestra la cuenta regresiva sin tener que calcularla.
+        env.events().publish(
+            (
+                symbol_short!("entregado"),
+                id_pedido,
+                escrow.proveedor.clone(),
+            ),
+            Self::vence_en(&escrow),
+        );
 
         Ok(())
     }
@@ -241,7 +287,8 @@ impl ContratoEscrow {
         );
 
         escrow.estado = Estado::Liberado;
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+        Self::avisar_liberado(&env, id_pedido, &escrow, symbol_short!("confirmo"));
 
         Ok(())
     }
@@ -272,7 +319,8 @@ impl ContratoEscrow {
         );
 
         escrow.estado = Estado::Cancelado;
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+        Self::avisar_cancelado(&env, id_pedido, &escrow, symbol_short!("cancelo"));
 
         Ok(())
     }
@@ -299,7 +347,18 @@ impl ContratoEscrow {
         }
 
         escrow.estado = Estado::EnDisputa;
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+
+        // La objeción queda registrada en la red con la firma de Rosa: es la
+        // prueba de que reclamó a tiempo, y no la palabra de una contra la otra.
+        env.events().publish(
+            (
+                symbol_short!("objetado"),
+                id_pedido,
+                escrow.comprador.clone(),
+            ),
+            escrow.monto,
+        );
 
         Ok(())
     }
@@ -334,7 +393,8 @@ impl ContratoEscrow {
         );
 
         escrow.estado = Estado::Liberado;
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+        Self::avisar_liberado(&env, id_pedido, &escrow, symbol_short!("vencio"));
 
         Ok(())
     }
@@ -363,7 +423,8 @@ impl ContratoEscrow {
         );
 
         escrow.estado = Estado::Cancelado;
-        env.storage().persistent().set(&clave, &escrow);
+        Self::guardar(&env, &clave, &escrow);
+        Self::avisar_cancelado(&env, id_pedido, &escrow, symbol_short!("devolvio"));
 
         Ok(())
     }
@@ -437,6 +498,45 @@ impl ContratoEscrow {
     }
 
     // ---- Ayudas internas (no se exponen como funciones del contrato) ----
+
+    /// Guarda el pedido y le corre la fecha de vencimiento.
+    ///
+    /// Las dos cosas van juntas siempre, a propósito: si alguien agrega mañana
+    /// una función nueva y usa esta ayuda, se lleva la renovación puesta y no
+    /// puede olvidarse de ella.
+    fn guardar(env: &Env, clave: &DataKey, escrow: &Escrow) {
+        env.storage().persistent().set(clave, escrow);
+        env.storage()
+            .persistent()
+            .extend_ttl(clave, UMBRAL_TTL, EXTENDER_TTL_A);
+    }
+
+    /// Aviso de que el proveedor cobró. `motivo` dice por qué: `confirmo` si
+    /// Rosa confirmó la entrega, `vencio` si cobró porque se agotó el plazo.
+    fn avisar_liberado(env: &Env, id_pedido: u64, escrow: &Escrow, motivo: Symbol) {
+        env.events().publish(
+            (
+                symbol_short!("liberado"),
+                id_pedido,
+                escrow.proveedor.clone(),
+            ),
+            (escrow.monto, motivo),
+        );
+    }
+
+    /// Aviso de que el comprador recuperó su plata. `motivo` dice por qué:
+    /// `cancelo` si Rosa canceló antes de la entrega, `devolvio` si el proveedor
+    /// dio marcha atrás o cedió en una disputa.
+    fn avisar_cancelado(env: &Env, id_pedido: u64, escrow: &Escrow, motivo: Symbol) {
+        env.events().publish(
+            (
+                symbol_short!("cancelado"),
+                id_pedido,
+                escrow.comprador.clone(),
+            ),
+            (escrow.monto, motivo),
+        );
+    }
 
     /// El token fijado en el deploy. Si no está, el contrato se deployó mal
     /// (el constructor siempre lo escribe), así que devolvemos un error claro
