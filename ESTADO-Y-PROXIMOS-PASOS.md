@@ -60,17 +60,18 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 **Esto es a propósito.** La demo y el pedido 42 siguen andando para mostrarlos
 cuando haga falta. No está roto.
 
-Lo que sí hay que saber: `frontend/src/escrow.ts` todavía llama al contrato viejo
-y **no se puede mezclar**. Es lo único que falta para poder deployar. Fijate la trampa:
+**Esto ya se resolvió del lado del código (16/09).** El frontend ahora habla el
+idioma del contrato nuevo:
 
 ```
-Hoy el frontend manda:  (comprador, proveedor, TOKEN, monto, id_pedido)
-El contrato nuevo pide: (comprador, proveedor, monto, id_pedido, plazo_dias)
+Antes el frontend mandaba: (comprador, proveedor, TOKEN, monto, id_pedido)
+Ahora manda, como pide el
+contrato nuevo:            (comprador, proveedor, monto, id_pedido, plazo_dias)
 ```
 
-**Son 5 argumentos en los dos casos, pero significan cosas distintas.** Si se
-deploya el contrato nuevo sin tocar el frontend, la app va a fallar con un error
-de tipos que no se entiende. Frontend y deploy van juntos, en el mismo paso.
+Lo que queda es **el deploy**, y eso lo tiene que correr Cintia porque necesita
+su billetera. Mientras tanto la app no puede operar contra la red, y lo dice con
+todas las letras en vez de mostrar un error de tipos.
 
 ---
 
@@ -132,24 +133,44 @@ Rosa crea el pedido (elige plazo: 1 a 60 días)
 
 ## 📋 Pendientes, en orden de prioridad
 
-### 1. Etapa 2: frontend + re-deploy (el paso grande)
+### 1. Etapa 2 — ✅ el código está hecho (16/09). Falta el deploy, que lo corre Cintia
 
-Va todo junto, en este orden, porque cada paso depende del anterior:
+Lo que quedó hecho y verificado:
 
-- [ ] **Wallet en la pantalla del Proveedor.** Hoy `frontend/src/screens/Proveedor.tsx`
-      es solo lectura y no tiene wallet. Pero `marcar_entregado` y `reclamar_pago`
-      necesitan la firma del proveedor. Sin esto, la mitad del arreglo no se puede usar.
-- [ ] **Campo de plazo** en la pantalla de Rosa (`Comerciante.tsx`), en **días**.
-- [ ] **Botón de objetar** + cuenta regresiva, usando `segundos_restantes`.
-- [ ] **Actualizar `frontend/src/escrow.ts`**: sacar el token de `crearEscrow`,
-      agregar `plazo_dias`, y agregar las cuatro funciones nuevas.
-- [ ] **Re-deploy a testnet.** ⚠️ **Esto lo tiene que correr Cintia en su máquina**,
-      porque necesita su wallet. El comando está en `COMANDOS.md` sección 2 —
-      **ojo con el `-- --token` del final**.
-- [ ] **Pegar el `CONTRACT_ID` nuevo** en `frontend/src/config.ts`.
+- [x] **Billetera en la pantalla del Proveedor.** Ya puede avisar «ya entregué»,
+      cobrar cuando se cumplió el plazo, y devolver la plata. Mirar cómo viene un
+      pedido **sigue sin pedir billetera**, como antes.
+- [x] **Campo de plazo** en la pantalla del comercio, en días (1 a 60, por defecto 3),
+      con la explicación de para qué sirve.
+- [x] **Botón de frenar el pago** (objetar) + cuenta regresiva con `segundos_restantes`.
+- [x] **`escrow.ts` actualizado**: sin token, con `plazo_dias` y con las funciones
+      nuevas (`marcar_entregado`, `objetar_entrega`, `reclamar_pago`,
+      `devolver_fondos`, `segundos_restantes`, `puede_reclamar`, `get_token`).
+- [x] **La pantalla del comercio le pregunta a la red** en qué anda el pedido, al
+      entrar y una vez por minuto. Antes dependía de lo que recordaba el navegador,
+      así que no se enteraba de que el proveedor había declarado la entrega.
+- [x] **Los números de los errores del contrato**, que estaban mal traducidos. El
+      error `#2` decía «este pedido ya se cerró» cuando significa «no existe».
+- [x] **La espera de confirmación ya no es infinita** (era el pendiente 3 de esta
+      lista). Corta a los 90 segundos y el mensaje NO dice «tu plata no se movió»,
+      porque la firma ya salió: dice que no vuelva a firmar y que actualice.
+
+**Lo único que falta, y no lo puede hacer una sesión de IA:**
+
+- [ ] 🔑 **Deployar el contrato nuevo a testnet.** Hace falta una billetera con
+      fondos, así que **lo corre Cintia en su máquina**. El comando está en
+      `COMANDOS.md` sección 2 — **ojo con el `-- --token` del final**.
+- [ ] **Pegar el `CONTRACT_ID` nuevo** en `frontend/src/config.ts`. El archivo ya
+      avisa, en el lugar donde se toca, que el id que está ahí es el viejo.
 - [ ] **Actualizar** `README.md` y `DESPLIEGUE-TESTNET.md`, que hoy apuntan al viejo.
 - [ ] **Grabar un pedido de demo nuevo** on-chain. El pedido 42 no existe en el
       contrato nuevo.
+
+> ⚠️ **Hasta que se haga el deploy, la app no puede operar.** Habla el idioma del
+> contrato nuevo y en la red está el viejo. No está rota: si alguien prueba, le va
+> a aparecer *«Esta versión de Minga y el contrato instalado en la red no coinciden…
+> no es nada que hayas hecho mal»*. Eso es a propósito, para que nadie se quede con
+> un error incomprensible.
 
 ### 2. Pendientes del contrato — ✅ CERRADOS el 16/09 (commit `7946357`)
 
@@ -173,12 +194,9 @@ Va todo junto, en este orden, porque cada paso depende del anterior:
 > documenta `#[contractevent]`, que existe recién en versiones posteriores del SDK.
 > Si alguien copia el ejemplo de la skill tal cual, no compila.
 
-### 3. Pendientes del frontend
+### 3. Pendientes del frontend — ✅ CERRADO el 16/09
 
-- [ ] **`frontend/src/stellar.ts:91`** — el `while (resultado.status === "NOT_FOUND")`
-      no tiene límite de intentos ni tiempo máximo. Si la red nunca devuelve la
-      transacción, la app queda en *"⏳ Procesando en la red Stellar…"* para siempre.
-      No es seguridad, es usabilidad: le pega justo a quien no sabe si su plata se movió.
+- [x] **La espera sin límite en `stellar.ts`.** Resuelto junto con la Etapa 2.
 
 ### 4. Opcional, para la hackathon
 
