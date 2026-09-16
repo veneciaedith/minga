@@ -9,11 +9,41 @@ cada jornada.
 
 ---
 
-## ⚡ Para arrancar en 30 segundos
+## 📋 Para pegar en una sesión nueva
+
+Copiá este bloque tal cual y pegalo como primer mensaje:
+
+```
+Proyecto Minga (escrow en Stellar/Soroban). Retomamos trabajo anterior.
+
+1. git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h
+2. Leé ESTADO-Y-PROXIMOS-PASOS.md — tiene todo el estado, los pendientes y las
+   decisiones ya tomadas.
+3. Confirmame que lo leíste y decime cuál es el próximo paso según ese archivo.
+
+Importante: preguntame antes de construir. Lenguaje claro, no tengo formación técnica.
+```
+
+**Por qué así y no pegando todo el contexto:** son unas 80 palabras. La sesión lee
+este archivo de una sola vez y ya sabe todo, en lugar de gastar tokens en que vos
+le expliques de nuevo dónde quedamos.
+
+Si la sesión NO tiene el repo a mano (un chat común, u otra IA), ahí sí hay que
+pegarle el contexto en el mensaje: pedile a Claude Code "armame el bloque largo
+para pegar en una sesión sin repo" y lo genera desde este archivo.
+
+---
+
+## ⚡ Los tres pasos, si preferís a mano
 
 1. Abrí Claude Code en la carpeta `minga` y decí: **"leé ESTADO-Y-PROXIMOS-PASOS.md y seguimos"**.
 2. Traé los cambios: `git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h`
 3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 19 tests**.
+
+> 📱 **Desde el celular** no se pueden correr comandos ni tests. Para solo leer este
+> archivo formateado:
+> https://github.com/veneciaedith/minga/blob/claude/cool-fermi-6kp11h/ESTADO-Y-PROXIMOS-PASOS.md
+> (conviene guardarlo en favoritos)
 
 ---
 
