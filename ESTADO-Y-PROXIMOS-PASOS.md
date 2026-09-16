@@ -61,7 +61,7 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 cuando haga falta. No está roto.
 
 Lo que sí hay que saber: `frontend/src/escrow.ts` todavía llama al contrato viejo
-y **no se puede mezclar**. Fijate la trampa:
+y **no se puede mezclar**. Es lo único que falta para poder deployar. Fijate la trampa:
 
 ```
 Hoy el frontend manda:  (comprador, proveedor, TOKEN, monto, id_pedido)
@@ -190,28 +190,16 @@ Va todo junto, en este orden, porque cada paso depende del anterior:
 
 ## ❓ Decisiones que esperan a Cintia
 
-1. 🚨 **Hay DOS versiones del frontend, en dos ramas distintas, y no se conocen
-   entre sí.** Esto se descubrió el 16/09 y es lo más urgente de esta lista.
+1. ✅ **RESUELTO el 16/09 — las dos ramas ya están unidas.** Esta rama tiene ahora
+   el contrato bueno **y** el rediseño completo de la app. Se tomó la versión del
+   rediseño en los cuatro archivos que chocaban. El contrato no se tocó.
 
-   | Rama | Qué tiene | Cuándo |
-   |---|---|---|
-   | `claude/cool-fermi-6kp11h` (esta) | El contrato bueno (plazo, disputa, eventos, TTL) + un retoque de accesibilidad sobre las pantallas viejas | 14 al 16/09 |
-   | `claude/mockup-link-rd56g2` | Un **rediseño completo** de la app real con las 10 heurísticas y diseño universal: `textos.ts` (lenguaje claro y validaciones), `componentes/Estado.tsx`, scripts que revisan contraste y accesibilidad solos, y `docs/diseno-accesible.md` con 206 líneas explicando cada decisión. **2.147 líneas.** | 13/09 |
+   Verificado sobre el resultado, no sobre las partes: `npm run build` sin errores,
+   42/42 pares de contraste, 17/17 revisiones de accesibilidad en verde contra la
+   app construida en un navegador real, y 25/25 tests del contrato.
 
-   **El problema:** las dos ramas tocan los mismos archivos (`App.tsx`,
-   `Comerciante.tsx`, `Proveedor.tsx`, `styles.css`) de maneras distintas. El
-   trabajo de accesibilidad se hizo **dos veces**, sin saberlo. Si se sigue
-   construyendo sobre `cool-fermi` sin resolver esto, el rediseño del 13/09 queda
-   abandonado en una rama que nadie mira.
-
-   **Lo que hay que decidir:** cuál de las dos versiones del frontend es la buena.
-   Lo más probable es que sea la de `mockup-link` (es mucho más completa y es la
-   que sigue el criterio de diseño universal), y que haya que traer el contrato
-   nuevo hacia ahí. Pero es una decisión de producto, no técnica: **la toma Cintia
-   después de mirar las dos.**
-
-   > Para mirarla sin instalar nada:
-   > https://github.com/veneciaedith/minga/blob/claude/mockup-link-rd56g2/docs/diseno-accesible.md
+   > La rama `claude/mockup-link-rd56g2` queda como registro histórico. **No hay que
+   > seguir trabajando ahí**: todo lo suyo ya está acá.
 
 2. **Los créditos del equipo.** El `README.md` (línea 4) y el pie de la app (`frontend/src/App.tsx:93`) dicen
    *"Cintia Venecia, Mariela Caminos, Cristina Soto y Lourdes Gimenez Bravo"*, pero el
@@ -268,6 +256,11 @@ cargo build --release --target wasm32-unknown-unknown
 # Frontend
 cd frontend && npm install && npm run build   # tsc + vite, sin errores
 npm run dev                                    # para verlo en el navegador
+
+# Las dos revisiones de accesibilidad (quedaron del rediseno)
+npm run contraste       # 42 pares de color contra WCAG 2.1 AA
+npm run build && npm run preview &   # la de abajo necesita la app levantada
+npm run accesibilidad   # 17 revisiones en un navegador real
 ```
 
 El comando de **deploy** (con el `--token`) y el de verificación con `get_token`

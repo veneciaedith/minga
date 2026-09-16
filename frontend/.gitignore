@@ -5,3 +5,7 @@ dist
 .env
 .env.*
 !.env.example
+
+# Capturas que genera "npm run accesibilidad" en cada corrida.
+minga-claro.png
+minga-oscuro.png
