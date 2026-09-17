@@ -357,6 +357,17 @@ Es oficial y muy buena, pero si algo suena raro hay que verificarlo.
 
 ---
 
+## 🧰 Integraciones que recomendaron en el workshop
+
+Anotadas en **[`docs/integraciones-recomendadas.md`](docs/integraciones-recomendadas.md)**
+(Bloque 6, 17/09). Resumen: de la primera categoría **ya cumplimos** (Freighter y
+Stellar Wallets Kit). Las dos que podrían cambiar de verdad quién puede usar Minga
+son **Privy** (entrar con email, sin instalar billetera ni guardar frase de
+recuperación) y **MoneyGram** (entrar y salir en **efectivo**, sin cuenta bancaria).
+Las dos son para después del 27/09.
+
+---
+
 ## 💡 Una mejora barata para evaluar: pasar de XLM a USDC
 
 El XLM sube y baja. Si Rosa aparta plata para un pedido, puede recibir mercadería por
