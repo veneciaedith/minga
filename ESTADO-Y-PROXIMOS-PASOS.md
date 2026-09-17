@@ -386,15 +386,24 @@ Las dos son para después del 27/09.
 
 ---
 
-## 💡 Una mejora barata para evaluar: pasar de XLM a USDC
+## 💡 Decidido el 17/09: el deploy va con USDC, no con XLM
 
-El XLM sube y baja. Si Rosa aparta plata para un pedido, puede recibir mercadería por
-un valor distinto al que apartó. Un dólar digital (USDC) no tiene ese problema y está
-más cerca de cómo piensa ella que el XLM.
+Dos razones, y la segunda es la que pesa:
+
+1. El XLM sube y baja. Si Rosa aparta plata para un pedido, puede recibir mercadería
+   por un valor distinto al que apartó. Un dólar digital no tiene ese problema.
+2. **La salida a efectivo de MoneyGram funciona con USDC.** Si el escrow mueve XLM,
+   hay que cambiar de moneda en el medio. Con USDC la cadena queda derecha:
+   el proveedor cobra USDC → lo tiene en LOBSTR (que Minga ya soporta) → saca
+   efectivo en un mostrador, sin cuenta bancaria. Ver
+   [`docs/integraciones-recomendadas.md`](docs/integraciones-recomendadas.md).
 
 **No hace falta tocar el contrato:** el token se fija al deployar. Es cambiar el
-`--token` del comando de deploy y los textos que dicen «XLM» en pantalla. Conviene
-decidirlo **antes** del deploy, para no deployar dos veces.
+`--token` del comando de deploy y los textos que dicen «XLM» en pantalla.
+
+> ⚠️ **Antes del deploy hay que conseguir el id del USDC de testnet.** El comando del
+> `--token` que está hoy en `COMANDOS.md` es el del XLM nativo. Pedírselo a la sesión
+> de IA antes de correr el deploy, o buscarlo con `stellar contract id asset`.
 
 ---
 

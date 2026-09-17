@@ -49,18 +49,56 @@ en pesos.
 | **Bridge** | El caño por donde una empresa mueve valor entre cuentas, liquidando en Stellar. | Para una empresa que mueve plata, no para Rosa directamente. |
 | **Mercuryo** | Pesos ↔ cripto con el cumplimiento regulatorio ya resuelto. | A mirar junto con los anchors. |
 
-### Por qué MoneyGram importa tanto
+### Por qué MoneyGram importa tanto (ampliado el 17/09)
 
 Todo lo demás en esta categoría termina pidiendo **cuenta bancaria a nombre
 propio**. Eso deja afuera a buena parte de la gente para la que Minga se
 construye, que es justamente la economía informal.
 
-MoneyGram trabaja con **efectivo**, y hay puntos de atención en barrios donde no
-hay sucursal bancaria. Si de verdad opera en Argentina con rieles de Stellar,
-sería el camino más digno para que Rosa entre y salga.
+**El producto se llama MoneyGram Ramps** (antes «MoneyGram Access»). Es un puente
+entre Stellar, **USDC** y la red física de mostradores de MoneyGram: permite sacar
+efectivo **sin cuenta bancaria**, en más de 170 países.
 
-**Hay que verificar:** si opera en Argentina, qué documentación pide en el
-mostrador, y si hay forma de probarlo sin plata real.
+#### Las tres piezas ya encajan, y Minga no tiene que integrar nada
+
+Las billeteras que hoy tienen esa puerta son **Vibrant y LOBSTR**. Y **LOBSTR ya
+está en Minga**: el Stellar Wallets Kit que integramos soporta Freighter, xBull,
+Albedo y LOBSTR (ver `frontend/src/wallet.ts`).
+
+Entonces el camino completo es:
+
+```
+El proveedor cobra USDC en Minga
+        ↓
+Lo tiene en su billetera LOBSTR
+        ↓
+Va a un mostrador de MoneyGram y saca efectivo
+```
+
+**Minga no toca ese último paso, y es mejor así:** no se convierte en intermediaria
+financiera, no maneja la documentación de nadie y no asume esa responsabilidad
+legal. La salida a efectivo ya existe; lo que hacemos es no estorbarla.
+
+#### Esto decide lo del token: USDC
+
+Si la salida a efectivo funciona con USDC, que el escrow mueva XLM obliga a un
+cambio de moneda en el medio, con su pérdida y su complicación. Con USDC la cadena
+queda derecha de punta a punta, y de paso se resuelve que el XLM sube y baja.
+
+#### Lo que falta verificar
+
+- **Que Argentina esté en el corredor con cripto.** Que MoneyGram opere acá para
+  giros comunes no garantiza que el camino de USDC esté habilitado.
+- **Qué piden en el mostrador.** Va a haber documento. Es mucho más liviano que una
+  cuenta bancaria, pero no es cero.
+- **Para la demo del 27/09 esto es una historia, no algo que se muestre**: funciona
+  con USDC real en la red de producción, y la demo es en testnet. Ante un jurado
+  conviene decirlo así: *«la salida a efectivo no la construimos nosotros, ya
+  existe, y nuestra app ya soporta la billetera que la tiene»*.
+
+**Dónde mirar:** la documentación para desarrolladores está en
+`developer.moneygram.com` (sección «integrate MoneyGram Ramps») y la página del
+producto en `stellar.org/products-and-tools/moneygram`.
 
 ---
 
@@ -87,6 +125,9 @@ Esto es la **fase de microcrédito** del roadmap, no ahora.
 - **Ya cumplimos** la primera categoría (Freighter + Stellar Wallets Kit).
 - **Privy** y **MoneyGram** son las dos que podrían cambiar de verdad quién puede
   usar Minga. Las dos son para después de la entrega del 27/09.
+- **MoneyGram ya no necesita trabajo de integración**: alcanza con pagar en USDC,
+  porque la billetera que tiene esa puerta (LOBSTR) ya está soportada. Lo que sí
+  hay que verificar es si el corredor está habilitado en Argentina.
 - La tercera categoría es roadmap, no producto actual.
 - **Nada de esto se toca antes del deploy.** Lo que destraba todo sigue siendo
   instalar el contrato nuevo en la red.
