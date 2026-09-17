@@ -1,0 +1,9 @@
+# Seeds for failure cases proptest has generated in the past. It is
+# automatically read and these particular cases re-run before any
+# novel cases are generated.
+#
+# It is recommended to check this file in to source control so that
+# everyone who runs the test benefits from these saved cases.
+cc a32c1cf89c49a11cc6bf94fb77361c8f947420ee7e9a74b79aee4f2b2e3b6cf9 # shrinks to plazo_dias = 2, espera_dias = 0
+cc 6ea370b7408c509356aded2a50b768e1b1ea3f921df0225d8c53ad78508e9f7f # shrinks to acciones = [Crear { id: 1, monto: 1, plazo_dias: 1 }]
+cc b8198bbff285e092378c314bb35091fc2b957472e3c97a0c5ace8fe4c905dde0 # shrinks to acciones = [Crear { id: 2, monto: 1, plazo_dias: 1 }, Crear { id: 1, monto: 1, plazo_dias: 1 }, Cancelar(2), Confirmar(2)]

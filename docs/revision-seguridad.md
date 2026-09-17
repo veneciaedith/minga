@@ -188,11 +188,7 @@ un error. Cuatro sugerencias de estilo en los tests.
    cargo install cargo-scout-audit
    cd contracts/escrow && cargo scout-audit
    ```
-2. **Tests de propiedades y fuzzing.** En vez de probar los casos que se nos ocurren,
-   tirarle miles de combinaciones al azar y verificar que **nunca** se rompan las
-   reglas: *«la plata que entra es igual a la que sale»*, *«nadie cobra dos veces»*,
-   *«un pedido cerrado no se puede volver a tocar»*. Es lo que encuentra lo que los
-   tests escritos a mano no ven.
+2. ~~Tests de propiedades~~ ✅ **HECHO el 17/09** — ver la sección siguiente.
 3. **Medir la concurrencia de verdad.** Queda una duda abierta: cada creación de
    pedido renueva también el vencimiento de la configuración global, que es **una
    entrada compartida por todos**. No sé con certeza si eso hace que las creaciones
@@ -212,3 +208,54 @@ tranquila.** No hay nada que robar y no se encontró ningún agujero.
 Para **plata real: no salir sin una auditoría externa.** No por desconfianza en este
 código, sino porque es lo que corresponde cuando se custodia plata de otros, y porque
 sin pausa ni actualización un error no se puede arreglar después.
+
+
+---
+
+## Tests de propiedades (hechos el 17/09)
+
+Están en `contracts/escrow/src/propiedades.rs`. Son **cuatro reglas que no se pueden
+romper**, y la computadora arma sola las combinaciones que intentan romperlas.
+
+| Regla | Qué defiende |
+|---|---|
+| La plata ni se crea ni se destruye | Lo que hay al final es lo mismo que había al principio, repartido de otra manera |
+| Lo guardado coincide con lo debido | **El pago de un pedido nunca usa la plata de otro** (es el hallazgo 1) |
+| Nadie cobra dos veces | El proveedor tiene exactamente los pedidos que se le pagaron |
+| Los límites se respetan siempre | Monto no positivo y plazo fuera de rango se rechazan, sea cual sea el número |
+
+La prueba principal arma secuencias al azar de hasta 14 acciones sobre **tres pedidos
+a la vez**, en cualquier orden, con saltos de tiempo en el medio, y revisa las cuatro
+reglas **después de cada acción**.
+
+### Cómo sabemos que estos tests sirven
+
+Un test que nunca falló no prueba nada. Así que se rompió el contrato a propósito, dos
+veces, para ver si las propiedades se daban cuenta:
+
+**Sabotaje 1** — que el contrato reciba un peso menos del que anota (simula justo el
+hallazgo 1: una moneda que cobra comisión al transferir).
+→ **Detectado**: *«lo que el contrato tiene no coincide con lo que dice deber»*.
+
+**Sabotaje 2** — sacarle el control de que el pedido siga abierto antes de pagar, o sea
+permitir cobrar dos veces.
+→ **Detectado**, y además **redujo el problema a la secuencia más corta posible**:
+
+```
+1. Crear el pedido 2
+2. Crear el pedido 1
+3. Cancelar el pedido 2   → la plata vuelve al comprador
+4. Confirmar el pedido 2  → ¡cobra de nuevo!
+                            y esa plata sale del pedido 1
+```
+
+Eso es lo que hace valiosa esta técnica: no solo avisa que algo está mal, sino que
+entrega la receta exacta para reproducirlo. Ningún test escrito a mano habría probado
+«cancelar y después confirmar el mismo pedido, con otro pedido al lado».
+
+Después de los dos sabotajes el contrato se restauró y **las 29 pruebas pasan**.
+
+Las semillas de los dos casos quedaron guardadas en
+`contracts/escrow/proptest-regressions/`, así que **esos dos escenarios se vuelven a
+probar en cada corrida**, para siempre. Si alguien reintroduce cualquiera de los dos
+errores, salta enseguida.

@@ -38,7 +38,7 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 
 1. Abrí Claude Code en la carpeta `minga` y decí: **"leé ESTADO-Y-PROXIMOS-PASOS.md y seguimos"**.
 2. Traé los cambios: `git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h`
-3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 25 tests**.
+3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 29 tests**.
 
 > 📱 **Desde el celular** no se pueden correr comandos ni tests. Para solo leer este
 > archivo formateado:
@@ -286,7 +286,7 @@ Lo que quedó hecho y verificado:
 ## 🛠️ Comandos que funcionan (verificados)
 
 ```bash
-# Tests del contrato — tienen que pasar 25
+# Tests del contrato — tienen que pasar 29
 cd contracts/escrow && cargo test
 
 # Compilar a WASM (el formato que se sube a la red)
@@ -354,6 +354,24 @@ Es oficial y muy buena, pero si algo suena raro hay que verificarlo.
 | **SEP** | Un estándar de Stellar. Por ejemplo, los "anchors" (puente a pesos) usan SEP-6 y SEP-24 |
 | **Anchor** | La empresa que convierte entre pesos y cripto. **Es la pieza que Minga todavía no tiene** |
 | **Skill** | Un paquete de conocimiento que se le da a la IA. No es código de la app |
+
+---
+
+## 🔒 Seguridad: revisión hecha el 17/09
+
+Está en **[`docs/revision-seguridad.md`](docs/revision-seguridad.md)**. Resumen: no se
+encontró ninguna forma de que alguien se lleve plata que no es suya. Seis hallazgos,
+ninguno crítico. Hay una **decisión de producto pendiente** (hallazgo 3): una disputa
+sin acuerdo congela la plata para siempre, y sin pausa ni actualización un error
+posterior al deploy no se puede arreglar.
+
+Se agregaron **tests de propiedades** (`contracts/escrow/src/propiedades.rs`) y se
+comprobó que sirven rompiendo el contrato a propósito dos veces: los detectó las dos.
+
+Falta: correr **Scout** en la máquina de Cintia (acá pide una versión de Rust más
+nueva), medir la concurrencia, y una **auditoría externa antes de cualquier peso
+real** — el [Audit Bank](https://stellar.org/grants-and-funding/soroban-audit-bank) de
+la SDF subsidia auditorías para proyectos financiados por el SCF.
 
 ---
 

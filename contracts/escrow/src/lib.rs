@@ -571,3 +571,10 @@ impl ContratoEscrow {
 }
 
 mod test;
+
+// Los tests de propiedades usan proptest, que necesita la librería estándar.
+// El contrato compilado a WASM sigue siendo `no_std`: esto solo existe al testear.
+#[cfg(test)]
+extern crate std;
+#[cfg(test)]
+mod propiedades;
