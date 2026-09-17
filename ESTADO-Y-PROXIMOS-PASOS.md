@@ -1,6 +1,6 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **16 de septiembre de 2026**
+> Última actualización: **16 de septiembre de 2026** (jornada completa)
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
 > Rama de trabajo: **`claude/cool-fermi-6kp11h`**
 
@@ -239,6 +239,28 @@ Lo que quedó hecho y verificado:
 
 ## 🗂️ Decisiones ya tomadas (no hace falta volver a discutirlas)
 
+- **Trustless Work queda para después de la hackathon (16/09).** Es infraestructura
+  de escrow para Stellar: contratos Soroban ya hechos, con API, hitos, disputas y
+  USDC. Se lo recomendaron a Cintia en una reunión de mentoría. Es un buen consejo
+  *para quien está por empezar*; Minga ya tiene su escrow terminado y probado, y
+  cambiar el motor a 11 días de la entrega significa tirar lo que funciona y rehacer
+  la integración por tercera vez, sin haberlo probado todavía con una sola persona.
+
+  **Antes de adoptarlo alguna vez hay que preguntar:** ¿se puede usar el contrato sin
+  su API (si hace falta una clave, hay una empresa en el medio)? ¿quién resuelve las
+  disputas, hay un árbitro con poder sobre los fondos? ¿hay un administrador que pueda
+  pausar o congelar? ¿cobran comisión? ¿qué licencia tiene el código? ¿está auditado?
+  Las tres primeras tocan decisiones que Minga ya tomó al revés a propósito.
+
+  Lo que juega a favor: toda la conversación con el contrato vive en **un solo
+  archivo** (`frontend/src/escrow.ts`). Cambiar el motor por debajo es tocar ese
+  archivo, no rehacer la app.
+
+- **Para el pitch, nunca decir "somos los únicos".** Decir *"no encontramos un
+  proyecto que combine stock barrial, pagos y reputación para microcrédito en una
+  sola solución"*. Lo primero te lo voltean con un contraejemplo; lo segundo es
+  verificable y es lo que la investigación en Raven realmente muestra.
+
 - **El plazo lo elige Rosa al crear el pedido**, en días (1 a 60). Techo de 60 para
   que un error de tipeo no trabe la plata años.
 - **El proveedor declara la entrega y ahí arranca el reloj.** Se descartaron las dos
@@ -335,6 +357,18 @@ Es oficial y muy buena, pero si algo suena raro hay que verificarlo.
 
 ---
 
+## 💡 Una mejora barata para evaluar: pasar de XLM a USDC
+
+El XLM sube y baja. Si Rosa aparta plata para un pedido, puede recibir mercadería por
+un valor distinto al que apartó. Un dólar digital (USDC) no tiene ese problema y está
+más cerca de cómo piensa ella que el XLM.
+
+**No hace falta tocar el contrato:** el token se fija al deployar. Es cambiar el
+`--token` del comando de deploy y los textos que dicen «XLM» en pantalla. Conviene
+decidirlo **antes** del deploy, para no deployar dos veces.
+
+---
+
 ## 🎯 El hueco grande que sigue abierto
 
 La app mueve **XLM**. Rosa piensa en **pesos**.
@@ -344,5 +378,27 @@ y **Minga todavía no tiene ninguno**. Es la pregunta que quedó dando vueltas e
 llamada del 14/9 y nadie contestó.
 
 No bloquea la hackathon (la demo es en testnet), pero es lo que separa un prototipo
-que funciona de algo que Rosa pueda usar de verdad. Vale la pena seguir preguntando
-en la comunidad de Stellar si hay un anchor que opere en Argentina.
+que funciona de algo que Rosa pueda usar de verdad.
+
+**Dónde buscar:** https://anchors.stellar.org/?s=Argentina (ojo: las sesiones de IA
+tienen ese sitio bloqueado, así que hay que mirarlo a mano y pegar lo que diga).
+
+**Qué anotar de cada anchor que aparezca:**
+
+1. Nombre y dominio.
+2. Qué activos emite: ¿hay pesos argentinos? Hace falta el **código** (ej. `ARS`) y
+   el **emisor** (una dirección que empieza con G).
+3. Red: producción (*pubnet*) o prueba (*testnet*). Sin testnet no se puede ensayar.
+4. Qué SEPs implementa: **6** y **24** son depósito y retiro, **31** pagos entre
+   países, **12** es KYC.
+5. Qué pide para operar: ¿DNI, domicilio, cuenta bancaria a nombre propio?
+6. Si está activo de verdad o solo listado.
+
+> ⚠️ **El punto 5 es el más importante y no es técnico.** Si el anchor exige DNI,
+> domicilio y cuenta bancaria propia, **parte de la gente para la que Minga se
+> construye queda afuera**: es justamente la economía informal. Hay que saberlo antes
+> de prometer nada. No invalida el proyecto —el escrow sigue sirviendo— pero define
+> hasta dónde llega.
+
+> Si en la búsqueda aparece algo sobre **Wyre** y Argentina: es una nota de 2019 y
+> esa empresa cerró en 2023. No usarla.
