@@ -1,0 +1,1146 @@
+<title>Pantallas de Minga</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* ===========================================================
+   Minga — prototipo navegable de tres pantallas
+   Cargar · Reporte · La Feria
+   Diseño universal: objetivos grandes, foco visible, el color
+   nunca informa solo (siempre ícono + palabra + trama).
+   =========================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* --- superficies --- */
+  --papel:        #FBF7F1;
+  --papel2:       #F2EADF;
+  --tarjeta:      #FFFFFF;
+  --borde:        #E2D6C6;
+  --borde-fuerte: #C9B79F;
+
+  /* --- tinta --- */
+  --tinta:        #1A2321;
+  --tinta-suave:  #56635E;
+
+  /* --- marca --- */
+  --teal:         #0E5A51;
+  --terracota:    #C0512F;
+  --ocre:         #D9A227;
+
+  /* --- acción --- */
+  --accion-fondo: #0E5A51;
+  --accion-texto: #FBF7F1;
+  --foco:         #C0512F;
+
+  /* --- estados (independientes del color de marca) --- */
+  --bien:         #1A6B44;
+  --bien-fondo:   #E3F1E8;
+  --atencion:     #8A5A0B;
+  --atencion-fondo:#FAEED3;
+  --perdida:      #9C2A20;
+  --perdida-fondo:#FAE3DF;
+
+  --sombra: 0 1px 2px rgba(26,35,33,.06), 0 8px 24px rgba(26,35,33,.07);
+  --radio: 14px;
+  --escala: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel:        #0F1F1C;
+    --papel2:       #15302B;
+    --tarjeta:      #16302B;
+    --borde:        #27443D;
+    --borde-fuerte: #3B6158;
+    --tinta:        #EEF4F1;
+    --tinta-suave:  #A2B6B0;
+    --teal:         #6FD6C2;
+    --terracota:    #EC8B66;
+    --ocre:         #E8B84C;
+    --accion-fondo: #6FD6C2;
+    --accion-texto: #07231F;
+    --foco:         #F0A882;
+    --bien:         #7BD9A6;
+    --bien-fondo:   #10352A;
+    --atencion:     #F2C667;
+    --atencion-fondo:#382B10;
+    --perdida:      #F5968A;
+    --perdida-fondo:#3D1C18;
+    --sombra: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px rgba(0,0,0,.35);
+  }
+}
+
+:root[data-theme="dark"] {
+  --papel:        #0F1F1C;
+  --papel2:       #15302B;
+  --tarjeta:      #16302B;
+  --borde:        #27443D;
+  --borde-fuerte: #3B6158;
+  --tinta:        #EEF4F1;
+  --tinta-suave:  #A2B6B0;
+  --teal:         #6FD6C2;
+  --terracota:    #EC8B66;
+  --ocre:         #E8B84C;
+  --accion-fondo: #6FD6C2;
+  --accion-texto: #07231F;
+  --foco:         #F0A882;
+  --bien:         #7BD9A6;
+  --bien-fondo:   #10352A;
+  --atencion:     #F2C667;
+  --atencion-fondo:#382B10;
+  --perdida:      #F5968A;
+  --perdida-fondo:#3D1C18;
+  --sombra: 0 1px 2px rgba(0,0,0,.3), 0 10px 26px rgba(0,0,0,.35);
+}
+
+body {
+  background: var(--papel2);
+  color: var(--tinta);
+  font-family: "Alegreya Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: calc(17px * var(--escala));
+  line-height: 1.45;
+  -webkit-text-size-adjust: 100%;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ===== marco del teléfono ===== */
+.escena {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding-block: 28px 40px;
+  padding-inline: 16px;
+}
+
+.telefono {
+  width: 100%;
+  max-width: 430px;
+  background: var(--papel);
+  border-radius: 26px;
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 760px;
+}
+
+@media (max-width: 470px) {
+  .escena { padding: 0; gap: 0; }
+  .telefono { border-radius: 0; border: none; min-height: 100vh; box-shadow: none; max-width: none; }
+}
+
+/* ===== encabezado ===== */
+.barra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  background: var(--papel);
+  border-bottom: 1px solid var(--borde);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.marca { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.marca svg { flex: none; }
+
+.marca b {
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -.01em;
+  line-height: 1;
+}
+
+.marca span {
+  display: block;
+  font-size: .78rem;
+  color: var(--tinta-suave);
+  line-height: 1.2;
+}
+
+.texto-mas {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+.texto-mas button {
+  font: inherit;
+  font-weight: 700;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 11px;
+  border: 1.5px solid var(--borde-fuerte);
+  background: var(--tarjeta);
+  color: var(--tinta);
+  cursor: pointer;
+}
+.texto-mas button:hover { border-color: var(--teal); }
+.texto-mas .chico { font-size: .82rem; }
+.texto-mas .grande { font-size: 1.12rem; }
+
+/* ===== contenido ===== */
+.contenido { flex: 1; padding: 18px 16px 28px; display: block; }
+[hidden] { display: none !important; }
+
+h2 {
+  font-size: 1.42rem;
+  font-weight: 800;
+  letter-spacing: -.015em;
+  margin: 0 0 4px;
+  text-wrap: balance;
+}
+
+.bajada {
+  margin: 0 0 18px;
+  color: var(--tinta-suave);
+  font-size: 1rem;
+  max-width: 34ch;
+}
+
+/* ===== botones grandes de captura ===== */
+.acciones { display: grid; gap: 12px; margin-bottom: 18px; }
+
+.grandote {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 84px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 2px solid transparent;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.grandote:active { transform: scale(.985); }
+.grandote strong { display: block; font-size: 1.22rem; font-weight: 800; line-height: 1.15; }
+.grandote em { display: block; font-style: normal; font-size: .92rem; opacity: .85; margin-top: 2px; }
+.grandote .icono {
+  width: 52px; height: 52px;
+  display: grid; place-items: center;
+  border-radius: 14px;
+}
+
+.grandote.voz { background: var(--accion-fondo); color: var(--accion-texto); box-shadow: var(--sombra); }
+.grandote.voz .icono { background: rgba(255,255,255,.16); }
+.grandote.voz[aria-pressed="true"] { border-color: var(--foco); }
+
+.grandote.foto { background: var(--tarjeta); color: var(--tinta); border-color: var(--terracota); }
+.grandote.foto .icono { background: var(--papel2); color: var(--terracota); }
+
+/* ===== estado del sistema (visible siempre) ===== */
+.estado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--papel2);
+  border: 1px dashed var(--borde-fuerte);
+  color: var(--tinta-suave);
+  font-size: .96rem;
+  margin-bottom: 18px;
+}
+.estado.activo { color: var(--tinta); border-style: solid; border-color: var(--teal); background: var(--tarjeta); }
+
+.ondas { display: flex; align-items: flex-end; gap: 3px; height: 22px; flex: none; }
+.ondas i {
+  width: 4px; height: 6px;
+  background: var(--teal);
+  border-radius: 2px;
+  display: block;
+}
+.estado.activo .ondas i { animation: latir .9s ease-in-out infinite; }
+.ondas i:nth-child(1) { height: 8px; }
+.ondas i:nth-child(2) { height: 14px; animation-delay: .12s; }
+.ondas i:nth-child(3) { height: 20px; animation-delay: .24s; }
+.ondas i:nth-child(4) { height: 12px; animation-delay: .36s; }
+.ondas i:nth-child(5) { height: 7px; animation-delay: .48s; }
+@keyframes latir { 0%,100% { height: 6px; } 50% { height: 22px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ondas i { animation: none !important; height: 14px; }
+  .grandote { transition: none; }
+  .aparece { animation: none !important; }
+}
+
+/* ===== tarjetas ===== */
+.tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.aparece { animation: subir .22s ease-out; }
+@keyframes subir { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.rotulo {
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  margin: 0 0 10px;
+}
+
+.dicho {
+  font-family: "Alegreya Sans", sans-serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: var(--tinta);
+  border-left: 4px solid var(--ocre);
+  padding-left: 12px;
+  margin: 0 0 14px;
+}
+
+/* lista de items entendidos */
+.items { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 10px; }
+.items li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  align-items: baseline;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--borde);
+}
+.items li:last-child { border-bottom: none; padding-bottom: 0; }
+.items .nombre { font-weight: 700; }
+.items .detalle { grid-column: 1 / -1; font-size: .9rem; color: var(--tinta-suave); }
+.items .cant {
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: .95rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.par-botones { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 14px;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.btn-principal { background: var(--accion-fondo); color: var(--accion-texto); }
+.btn-secundario { background: var(--tarjeta); color: var(--tinta); border-color: var(--borde-fuerte); }
+.btn-secundario:hover { border-color: var(--teal); }
+.btn-chico { min-height: 46px; font-size: .95rem; padding: 0 14px; }
+.fila-cuerpo .btn, .protegido .btn { width: 100%; }
+
+/* ===== lo que se cargó hoy ===== */
+.hoy { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.hoy li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 12px;
+  align-items: start;
+  background: var(--papel2);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 12px 14px;
+}
+.hoy-hora {
+  font-family: "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+  font-size: .88rem;
+  color: var(--tinta-suave);
+  padding-top: 2px;
+}
+.hoy-que { font-size: .97rem; }
+.hoy-como { color: var(--tinta-suave); font-size: .88rem; }
+.hoy li .btn { grid-column: 2; justify-self: start; margin-top: 4px; }
+
+/* ===== ayuda ===== */
+details.ayuda { margin-top: 18px; border-top: 1px solid var(--borde); padding-top: 14px; }
+details.ayuda summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--teal);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+details.ayuda summary::after { content: "▼"; font-size: .8rem; }
+details.ayuda[open] summary::after { content: "▲"; }
+details.ayuda ol { margin: 6px 0 0; padding-left: 22px; color: var(--tinta-suave); }
+details.ayuda li { margin-bottom: 6px; }
+
+/* ===== resumen del reporte ===== */
+.resumen { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: var(--radio); padding: 16px; margin-bottom: 18px; }
+.resumen p { margin: 0 0 12px; font-size: 1.05rem; }
+.resumen p b { font-weight: 800; }
+
+.barra-escala { display: flex; height: 26px; border-radius: 8px; overflow: hidden; border: 1px solid var(--borde-fuerte); }
+.barra-escala div { display: grid; place-items: center; font-family: "IBM Plex Mono", monospace; font-size: .8rem; font-weight: 600; }
+.tramo-bien { background: var(--bien-fondo); color: var(--bien); }
+.tramo-atencion {
+  background: var(--atencion-fondo); color: var(--atencion);
+  background-image: repeating-linear-gradient(45deg, transparent 0 5px, color-mix(in srgb, var(--atencion) 22%, transparent) 5px 10px);
+}
+.tramo-perdida {
+  background: var(--perdida-fondo); color: var(--perdida);
+  background-image: radial-gradient(circle at 3px 3px, color-mix(in srgb, var(--perdida) 34%, transparent) 1.6px, transparent 1.7px);
+  background-size: 7px 7px;
+}
+
+.leyenda { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 10px 0 0; padding: 0; font-size: .88rem; color: var(--tinta-suave); }
+.leyenda li { display: flex; align-items: center; gap: 6px; }
+
+/* ===== filas de producto ===== */
+.fila { border: 1px solid var(--borde); border-radius: var(--radio); background: var(--tarjeta); margin-bottom: 12px; overflow: hidden; }
+.fila > summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; gap: 8px; }
+.fila > summary::-webkit-details-marker { display: none; }
+.fila[data-estado="perdida"]  { border-left: 6px solid var(--perdida); }
+.fila[data-estado="atencion"] { border-left: 6px solid var(--atencion); }
+.fila[data-estado="bien"]     { border-left: 6px solid var(--bien); }
+
+.fila-tope { display: flex; align-items: center; gap: 10px; }
+.fila-tope h3 { margin: 0; font-size: 1.1rem; font-weight: 800; flex: 1; }
+.abrir { font-size: .85rem; color: var(--teal); font-weight: 700; white-space: nowrap; }
+.fila[open] .abrir::after { content: " ▲"; }
+.fila:not([open]) .abrir::after { content: " ▼"; }
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px 5px 9px;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 700;
+  border: 1.5px solid;
+  white-space: nowrap;
+}
+.chip.perdida  { color: var(--perdida);  background: var(--perdida-fondo);  border-color: var(--perdida); }
+.chip.atencion { color: var(--atencion); background: var(--atencion-fondo); border-color: var(--atencion); }
+.chip.bien     { color: var(--bien);     background: var(--bien-fondo);     border-color: var(--bien); }
+
+.frase { margin: 0; font-size: 1rem; color: var(--tinta); }
+.frase .plata { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-weight: 600; }
+
+.fila-cuerpo { padding: 0 16px 16px; border-top: 1px solid var(--borde); }
+.fila-cuerpo dl { display: grid; grid-template-columns: 1fr auto; gap: 8px 12px; margin: 14px 0; }
+.fila-cuerpo dt { color: var(--tinta-suave); font-size: .95rem; }
+.fila-cuerpo dd { margin: 0; font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-weight: 600; text-align: right; }
+.fila-cuerpo dd.mal { color: var(--perdida); }
+.fila-cuerpo dd.bien { color: var(--bien); }
+.consejo { background: var(--papel2); border-radius: 10px; padding: 12px 14px; margin: 0 0 14px; font-size: .97rem; }
+
+/* ===== La Feria ===== */
+.aviso-privacidad {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--papel2); border: 1px solid var(--borde);
+  border-radius: var(--radio); padding: 12px 14px; margin-bottom: 16px;
+  font-size: .92rem; color: var(--tinta-suave);
+}
+.aviso-privacidad svg { flex: none; margin-top: 2px; color: var(--teal); }
+
+.termometro { margin: 14px 0 6px; }
+.termo-linea { position: relative; height: 12px; border-radius: 999px; background: linear-gradient(90deg, var(--bien-fondo), var(--atencion-fondo), var(--perdida-fondo)); border: 1px solid var(--borde-fuerte); }
+.termo-marca { position: absolute; top: -5px; left: calc(var(--p) * (100% - 5px)); width: 5px; height: 20px; border-radius: 2px; background: var(--tinta); }
+.termo-marca.zona { background: var(--bien); }
+.termo-pies { display: flex; justify-content: space-between; margin-top: 8px; font-size: .84rem; color: var(--tinta-suave); font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; }
+.termo-nota { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 8px 0 0; padding: 0; list-style: none; font-size: .86rem; }
+.termo-nota li { display: flex; align-items: center; gap: 6px; }
+.punto { width: 10px; height: 10px; border-radius: 3px; background: var(--tinta); flex: none; }
+.punto.zona { background: var(--bien); }
+
+.ahorro { font-weight: 800; color: var(--bien); }
+
+.protegido { border: 2px solid var(--teal); background: var(--tarjeta); border-radius: var(--radio); padding: 16px; }
+.protegido h3 { margin: 0 0 6px; font-size: 1.08rem; display: flex; align-items: center; gap: 8px; }
+.protegido p { margin: 0 0 12px; font-size: .97rem; color: var(--tinta-suave); }
+.pasos { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 10px; }
+.pasos li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: .95rem; }
+.pasos .tilde { color: var(--bien); font-weight: 800; }
+.pasos .espera { color: var(--tinta-suave); font-weight: 800; }
+
+/* ===== navegación inferior ===== */
+.navegacion {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  background: var(--papel);
+  border-top: 1px solid var(--borde);
+  z-index: 6;
+}
+
+.navegacion button {
+  font: inherit;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  min-height: 62px;
+  padding: 8px 4px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: .88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.navegacion button:hover { background: var(--papel2); }
+.navegacion button[aria-selected="true"] {
+  color: var(--teal);
+  background: var(--papel2);
+  border-color: var(--teal);
+}
+
+/* ===== aviso flotante ===== */
+.aviso-guardado {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  max-width: min(400px, calc(100vw - 32px));
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--tinta);
+  color: var(--papel);
+  padding: 12px 14px;
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+  z-index: 20;
+  font-size: .95rem;
+}
+.aviso-guardado button {
+  font: inherit;
+  font-weight: 800;
+  background: transparent;
+  color: var(--papel);
+  border: 2px solid currentColor;
+  border-radius: 10px;
+  min-height: 40px;
+  padding: 0 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* ===== pie fuera del teléfono ===== */
+.pie {
+  max-width: 430px;
+  text-align: center;
+  font-size: .86rem;
+  color: var(--tinta-suave);
+  line-height: 1.5;
+}
+.pie b { color: var(--tinta); }
+@media (max-width: 470px) { .pie { padding: 20px 16px 28px; background: var(--papel); max-width: none; } }
+
+.oculto-visual {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+</style>
+
+<div class="escena">
+  <div class="telefono">
+
+    <!-- ============ ENCABEZADO ============ -->
+    <header class="barra">
+      <div class="marca">
+        <svg width="34" height="34" viewBox="0 0 34 34" role="img" aria-label="Minga">
+          <rect width="34" height="34" rx="9" fill="var(--teal)"></rect>
+          <path d="M13 7h8v3h3v3h3v8h-3v3h-3v3h-8v-3h-3v-3H7v-8h3v-3h3z" fill="var(--ocre)"></path>
+          <rect x="15" y="15" width="4" height="4" rx="1" fill="var(--terracota)"></rect>
+        </svg>
+        <div>
+          <b>Minga</b>
+          <span>Almacén de Rosa · Salta</span>
+        </div>
+      </div>
+      <div class="texto-mas">
+        <span class="oculto-visual" id="rot-texto">Tamaño del texto</span>
+        <button type="button" class="chico" id="texto-menos" aria-describedby="rot-texto">A−<span class="oculto-visual"> achicar el texto</span></button>
+        <button type="button" class="grande" id="texto-mas" aria-describedby="rot-texto">A+<span class="oculto-visual"> agrandar el texto</span></button>
+      </div>
+    </header>
+
+    <main class="contenido">
+
+      <!-- ============ 1. CARGAR ============ -->
+      <section id="panel-cargar" role="tabpanel" aria-labelledby="tab-cargar" tabindex="-1">
+        <h2>Cargá sin escribir</h2>
+        <p class="bajada">Contale a Minga qué entró y qué salió. Con la voz o con una foto: no hace falta el teclado.</p>
+
+        <div class="acciones">
+          <button type="button" class="grandote voz" id="btn-voz" aria-pressed="false">
+            <span class="icono" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+                <path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v4"></path><path d="M8 22h8"></path>
+              </svg>
+            </span>
+            <span>
+              <strong>Hablar</strong>
+              <em>Decí qué vendiste o qué compraste</em>
+            </span>
+          </button>
+
+          <button type="button" class="grandote foto" id="btn-foto">
+            <span class="icono" aria-hidden="true">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 8a2 2 0 0 1 2-2h2l1.5-2h7L17 6h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+              </svg>
+            </span>
+            <span>
+              <strong>Sacar foto a la factura</strong>
+              <em>Minga lee el remito del proveedor</em>
+            </span>
+          </button>
+        </div>
+
+        <p class="estado" id="estado" role="status" aria-live="polite">
+          <span class="ondas" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          <span id="estado-texto">Listo. Tocá un botón para empezar.</span>
+        </p>
+
+        <div class="tarjeta" id="resultado" hidden></div>
+
+        <p class="rotulo">Lo que se cargó hoy</p>
+        <ul class="hoy">
+          <li>
+            <span class="hoy-hora">09:14</span>
+            <span class="hoy-que"><b>Entraron 12 yerbas</b> Rosamonte 1 kg<br><span class="hoy-como">por foto del remito de El Portezuelo</span></span>
+            <button type="button" class="btn btn-secundario btn-chico" id="btn-deshacer-ultimo">Deshacer</button>
+          </li>
+          <li>
+            <span class="hoy-hora">08:40</span>
+            <span class="hoy-que"><b>Salieron 4 panes</b> de 1 kg<br><span class="hoy-como">por voz</span></span>
+          </li>
+          <li>
+            <span class="hoy-hora">08:05</span>
+            <span class="hoy-que"><b>Abriste el almacén.</b> Minga empezó a contar el día<br><span class="hoy-como">van $18.640 vendidos</span></span>
+          </li>
+        </ul>
+
+        <details class="ayuda">
+          <summary>¿Cómo se usa?</summary>
+          <ol>
+            <li>Tocá <b>Hablar</b> y decilo como lo dirías a una persona: «vendí seis kilos de azúcar».</li>
+            <li>Minga te muestra lo que entendió. Vos mirás si está bien.</li>
+            <li>Si está bien, tocás <b>Guardar</b>. Si no, tocás <b>Corregir</b> y lo decís de nuevo.</li>
+            <li>Siempre podés deshacer lo último que guardaste.</li>
+          </ol>
+        </details>
+      </section>
+
+      <!-- ============ 2. REPORTE ============ -->
+      <section id="panel-reporte" role="tabpanel" aria-labelledby="tab-reporte" tabindex="-1" hidden>
+        <h2>Tu reporte de hoy</h2>
+        <p class="bajada">En qué estás ganando y en qué estás perdiendo, producto por producto.</p>
+
+        <div class="resumen">
+          <p>De tus <b>12 productos</b>: 7 van bien, 3 para mirar y <b>2 te dan pérdida</b>.</p>
+          <div class="barra-escala" role="img" aria-label="De 12 productos: 7 van bien, 3 para mirar, 2 con pérdida.">
+            <div class="tramo-bien" style="width:58.33%">7</div>
+            <div class="tramo-atencion" style="width:25%">3</div>
+            <div class="tramo-perdida" style="width:16.67%">2</div>
+          </div>
+          <ul class="leyenda">
+            <li><span class="chip bien">✓ Va bien</span></li>
+            <li><span class="chip atencion">! Para mirar</span></li>
+            <li><span class="chip perdida">▼ Pérdida</span></li>
+          </ul>
+        </div>
+
+        <p class="rotulo">Primero lo urgente</p>
+
+        <details class="fila" data-estado="perdida" open>
+          <summary>
+            <span class="fila-tope">
+              <h3>Aceite Natura 900 ml</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip perdida">▼ Perdés plata</span>
+            <p class="frase">Lo comprás a <span class="plata">$2.850</span> y lo vendés a <span class="plata">$2.700</span>. Perdés <span class="plata">$150</span> en cada botella.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <dl>
+              <dt>Vendiste esta semana</dt><dd>9 botellas</dd>
+              <dt>Lo que perdiste con esas ventas</dt><dd class="mal">−$1.350</dd>
+              <dt>Precio para ganar como en el resto del almacén</dt><dd class="bien">$3.560</dd>
+            </dl>
+            <p class="consejo">El proveedor te subió el aceite el 3 de septiembre y el precio de venta quedó viejo. Subilo a $3.560 y volvés a ganar $710 por botella.</p>
+            <button type="button" class="btn btn-principal" data-guardar="Precio actualizado: aceite Natura a $3.560.">Cambiar el precio a $3.560</button>
+          </div>
+        </details>
+
+        <details class="fila" data-estado="atencion">
+          <summary>
+            <span class="fila-tope">
+              <h3>Azúcar Ledesma 1 kg</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip atencion">! Casi no te queda nada</span>
+            <p class="frase">De cada <span class="plata">$1.590</span> que cobrás te quedan <span class="plata">$90</span>. El flete se come casi toda la ganancia.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <dl>
+              <dt>Te cuesta</dt><dd>$1.500</dd>
+              <dt>Lo vendés a</dt><dd>$1.590</dd>
+              <dt>Te queda</dt><dd>$90 (5,7%)</dd>
+            </dl>
+            <p class="consejo">Si lo comprás por bolsa de 10 kg en vez de suelto, el kilo te baja a $1.340 y te quedarían $250.</p>
+            <button type="button" class="btn btn-secundario" data-ir="feria">Buscar más barato en La Feria</button>
+          </div>
+        </details>
+
+        <p class="rotulo">Lo que está andando</p>
+
+        <details class="fila" data-estado="bien">
+          <summary>
+            <span class="fila-tope">
+              <h3>Yerba Rosamonte 1 kg</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip bien">✓ Conviene pedir más</span>
+            <p class="frase">De cada paquete te quedan <span class="plata">$1.120</span> y se vende rápido: 12 en la semana.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <dl>
+              <dt>Te cuesta</dt><dd>$3.980</dd>
+              <dt>Lo vendés a</dt><dd>$5.100</dd>
+              <dt>Ganaste esta semana</dt><dd class="bien">$13.440</dd>
+              <dt>Te quedan en el estante</dt><dd>3 paquetes</dd>
+            </dl>
+            <p class="consejo">Con lo que vendés, el jueves te quedás sin yerba. Minga te va a avisar por WhatsApp antes de que pase.</p>
+            <button type="button" class="btn btn-principal" data-guardar="Pedido de 12 yerbas anotado para el miércoles.">Anotar pedido de 12</button>
+          </div>
+        </details>
+
+        <details class="fila" data-estado="bien">
+          <summary>
+            <span class="fila-tope">
+              <h3>Pan francés (por kilo)</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip bien">✓ Va bien</span>
+            <p class="frase">Te quedan <span class="plata">$640</span> por kilo y se vende todos los días.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <dl>
+              <dt>Te cuesta</dt><dd>$1.460</dd>
+              <dt>Lo vendés a</dt><dd>$2.100</dd>
+              <dt>Vendiste esta semana</dt><dd>38 kg</dd>
+            </dl>
+            <p class="consejo">Lo que sobra al cierre son 2 kg por día. Bajando el pedido del lunes ganás $1.280 más por semana.</p>
+          </div>
+        </details>
+
+        <details class="fila" data-estado="atencion">
+          <summary>
+            <span class="fila-tope">
+              <h3>Gaseosa 2,25 L</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip atencion">! Para mirar</span>
+            <p class="frase">Te quedan <span class="plata">$310</span> por botella, pero se vende poco: 4 en la semana.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <dl>
+              <dt>Te cuesta</dt><dd>$2.690</dd>
+              <dt>Lo vendés a</dt><dd>$3.000</dd>
+              <dt>Te quedan en el estante</dt><dd>11 botellas</dd>
+            </dl>
+            <p class="consejo">Tenés plata quieta en el estante: $29.590 en botellas que salen de a poco. Conviene pedir menos el mes que viene.</p>
+          </div>
+        </details>
+      </section>
+
+      <!-- ============ 3. LA FERIA ============ -->
+      <section id="panel-feria" role="tabpanel" aria-labelledby="tab-feria" tabindex="-1" hidden>
+        <h2>La Feria</h2>
+        <p class="bajada">Lo que están pagando otros comercios de tu zona por lo mismo que comprás vos.</p>
+
+        <p class="aviso-privacidad">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6z"></path>
+          </svg>
+          <span>Nadie ve tu nombre ni el de tu almacén. Solo se comparten precios. Esta semana aportaron <b>34 comercios</b> de Salta capital, Cerrillos y Vaqueros.</span>
+        </p>
+
+        <details class="fila" data-estado="perdida" open>
+          <summary>
+            <span class="fila-tope">
+              <h3>Yerba Rosamonte 1 kg</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip perdida">▼ Pagás de más</span>
+            <p class="frase">Vos pagás <span class="plata">$3.980</span>. En tu zona se consigue a <span class="plata">$3.540</span>.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <div class="termometro">
+              <div class="termo-linea" role="img" aria-label="Escala de precios de la yerba de 1 kg en la zona: el más barato $3.540, el más caro $4.120. Vos pagás $3.980.">
+                <span class="termo-marca zona" style="--p:0"></span>
+                <span class="termo-marca" style="--p:.758"></span>
+              </div>
+              <div class="termo-pies"><span>$3.540</span><span>$4.120</span></div>
+              <ul class="termo-nota">
+                <li><span class="punto zona" aria-hidden="true"></span> El más barato de la zona</li>
+                <li><span class="punto" aria-hidden="true"></span> Lo que pagás vos</li>
+              </ul>
+            </div>
+            <p class="consejo">Comprando 12 paquetes ahorrás <span class="ahorro">$5.280</span> por mes. Lo tiene el Mayorista Güemes, a 14 cuadras.</p>
+            <button type="button" class="btn btn-principal" data-guardar="Pedido enviado al Mayorista Güemes. El dinero queda protegido hasta que llegue.">Pedir a este precio</button>
+          </div>
+        </details>
+
+        <details class="fila" data-estado="perdida">
+          <summary>
+            <span class="fila-tope">
+              <h3>Aceite Natura 900 ml</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip perdida">▼ Pagás de más</span>
+            <p class="frase">Vos pagás <span class="plata">$2.850</span>. En tu zona se consigue a <span class="plata">$2.610</span>.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <div class="termometro">
+              <div class="termo-linea" role="img" aria-label="Escala de precios del aceite de 900 mililitros en la zona: el más barato $2.610, el más caro $2.980. Vos pagás $2.850.">
+                <span class="termo-marca zona" style="--p:0"></span>
+                <span class="termo-marca" style="--p:.648"></span>
+              </div>
+              <div class="termo-pies"><span>$2.610</span><span>$2.980</span></div>
+              <ul class="termo-nota">
+                <li><span class="punto zona" aria-hidden="true"></span> El más barato de la zona</li>
+                <li><span class="punto" aria-hidden="true"></span> Lo que pagás vos</li>
+              </ul>
+            </div>
+            <p class="consejo">En 6 botellas ahorrás <span class="ahorro">$1.440</span>. Sumado al precio nuevo de venta, el aceite deja de darte pérdida.</p>
+            <button type="button" class="btn btn-principal" data-guardar="Pedido de 6 aceites enviado. El dinero queda protegido hasta que llegue.">Pedir a este precio</button>
+          </div>
+        </details>
+
+        <details class="fila" data-estado="bien">
+          <summary>
+            <span class="fila-tope">
+              <h3>Harina 000 Morixe 1 kg</h3>
+              <span class="abrir">Ver</span>
+            </span>
+            <span class="chip bien">✓ Estás bien</span>
+            <p class="frase">Vos pagás <span class="plata">$1.240</span> y en tu zona pagan <span class="plata">$1.190</span>. Casi lo mismo.</p>
+          </summary>
+          <div class="fila-cuerpo">
+            <div class="termometro">
+              <div class="termo-linea" role="img" aria-label="Escala de precios de la harina de 1 kg en la zona: la más barata $1.190, la más cara $1.480. Vos pagás $1.240.">
+                <span class="termo-marca zona" style="--p:0"></span>
+                <span class="termo-marca" style="--p:.172"></span>
+              </div>
+              <div class="termo-pies"><span>$1.190</span><span>$1.480</span></div>
+              <ul class="termo-nota">
+                <li><span class="punto zona" aria-hidden="true"></span> La más barata de la zona</li>
+                <li><span class="punto" aria-hidden="true"></span> Lo que pagás vos</li>
+              </ul>
+            </div>
+            <p class="consejo">No vale la pena cambiar de proveedor por $50. El Portezuelo te la deja en la puerta.</p>
+          </div>
+        </details>
+
+        <div class="protegido">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" aria-hidden="true">
+              <path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6z"></path><path d="M9 12l2 2 4-4"></path>
+            </svg>
+            Tu pedido está protegido
+          </h3>
+          <p>Pedido a Distribuidora El Portezuelo · 20 harinas · $24.800</p>
+          <ul class="pasos">
+            <li><span class="tilde" aria-hidden="true">✓</span> <span><b>Hiciste el pedido.</b> Martes 10:22</span></li>
+            <li><span class="tilde" aria-hidden="true">✓</span> <span><b>Tu plata quedó guardada.</b> No se la llevó nadie todavía.</span></li>
+            <li><span class="espera" aria-hidden="true">○</span> <span><b>Falta que llegue la mercadería.</b> Cuando confirmás que llegó, el proveedor cobra. Si no llega, la plata vuelve a tu cuenta.</span></li>
+          </ul>
+          <button type="button" class="btn btn-principal" data-guardar="Confirmaste que llegó el pedido. El proveedor ya cobró.">Ya me llegó el pedido</button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============ NAVEGACIÓN ============ -->
+    <nav class="navegacion" role="tablist" aria-label="Secciones de Minga">
+      <button type="button" role="tab" id="tab-cargar" aria-controls="panel-cargar" aria-selected="true" data-panel="cargar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <rect x="9" y="2" width="6" height="12" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v4"></path>
+        </svg>
+        Cargar
+      </button>
+      <button type="button" role="tab" id="tab-reporte" aria-controls="panel-reporte" aria-selected="false" data-panel="reporte">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M5 20V10"></path><path d="M12 20V4"></path><path d="M19 20v-7"></path>
+        </svg>
+        Reporte
+      </button>
+      <button type="button" role="tab" id="tab-feria" aria-controls="panel-feria" aria-selected="false" data-panel="feria">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 9h16l-1 11H5z"></path><path d="M4 9l2-5h12l2 5"></path><path d="M9 13h6"></path>
+        </svg>
+        La Feria
+      </button>
+    </nav>
+  </div>
+
+  <p class="pie">
+    <b>Prototipo de Minga.</b> Los datos son de ejemplo, pensados con comerciantes de Salta.
+    La voz y la foto están simuladas para poder mostrar el flujo completo.
+  </p>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- tamaño del texto (diseño universal) ---------- */
+  var pasos = [0.9, 1, 1.15, 1.3, 1.5];
+  var paso = 1;
+  try {
+    var g = localStorage.getItem("minga-escala");
+    if (g !== null) paso = Math.min(pasos.length - 1, Math.max(0, parseInt(g, 10) || 1));
+  } catch (e) {}
+
+  function aplicarEscala() {
+    document.documentElement.style.setProperty("--escala", pasos[paso]);
+    document.getElementById("texto-menos").disabled = paso === 0;
+    document.getElementById("texto-mas").disabled = paso === pasos.length - 1;
+    try { localStorage.setItem("minga-escala", String(paso)); } catch (e) {}
+  }
+  document.getElementById("texto-menos").addEventListener("click", function () {
+    if (paso > 0) { paso--; aplicarEscala(); avisar("Texto más chico."); }
+  });
+  document.getElementById("texto-mas").addEventListener("click", function () {
+    if (paso < pasos.length - 1) { paso++; aplicarEscala(); avisar("Texto más grande."); }
+  });
+  aplicarEscala();
+
+  /* ---------- navegación entre pantallas ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+
+  function mostrar(nombre, mover) {
+    tabs.forEach(function (t) {
+      var elegido = t.dataset.panel === nombre;
+      t.setAttribute("aria-selected", elegido ? "true" : "false");
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      panel.hidden = !elegido;
+      if (elegido && mover) { panel.focus(); }
+    });
+    document.querySelector(".contenido").scrollTop = 0;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { mostrar(t.dataset.panel, false); });
+    t.addEventListener("keydown", function (ev) {
+      var d = ev.key === "ArrowRight" ? 1 : ev.key === "ArrowLeft" ? -1 : 0;
+      if (!d) return;
+      ev.preventDefault();
+      var s = tabs[(i + d + tabs.length) % tabs.length];
+      s.focus();
+      mostrar(s.dataset.panel, false);
+    });
+  });
+
+  /* ---------- aviso flotante con deshacer ---------- */
+  var avisoActual = null, temporizador = null;
+
+  function avisar(texto, conDeshacer) {
+    if (avisoActual) { avisoActual.remove(); avisoActual = null; }
+    clearTimeout(temporizador);
+
+    var caja = document.createElement("div");
+    caja.className = "aviso-guardado";
+    caja.setAttribute("role", "status");
+    var p = document.createElement("span");
+    p.textContent = texto;
+    caja.appendChild(p);
+
+    if (conDeshacer) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.textContent = "Deshacer";
+      b.addEventListener("click", function () {
+        caja.remove();
+        avisoActual = null;
+        avisar("Listo, lo deshicimos. Nada quedó guardado.");
+      });
+      caja.appendChild(b);
+    }
+
+    document.body.appendChild(caja);
+    avisoActual = caja;
+    temporizador = setTimeout(function () {
+      if (avisoActual === caja) { caja.remove(); avisoActual = null; }
+    }, conDeshacer ? 9000 : 4500);
+  }
+
+  /* ---------- pantalla 1: cargar por voz y por foto ---------- */
+  var estado = document.getElementById("estado");
+  var estadoTexto = document.getElementById("estado-texto");
+  var resultado = document.getElementById("resultado");
+  var btnVoz = document.getElementById("btn-voz");
+  var btnFoto = document.getElementById("btn-foto");
+  var escuchando = false;
+
+  var porVoz = {
+    rotulo: "Esto entendí",
+    dicho: "«Vendí seis kilos de azúcar y dos aceites Natura»",
+    items: [
+      { nombre: "Azúcar Ledesma 1 kg", cant: "salieron 6", detalle: "Quedan 14 kg en el estante" },
+      { nombre: "Aceite Natura 900 ml", cant: "salieron 2", detalle: "Quedan 7 botellas · ojo: este te da pérdida" }
+    ],
+    guardado: "Guardado. Se descontaron 6 azúcares y 2 aceites."
+  };
+
+  var porFoto = {
+    rotulo: "Leí el remito",
+    dicho: "Distribuidora El Portezuelo · Remito 0042-00018734 · 12 de septiembre",
+    items: [
+      { nombre: "Yerba Rosamonte 1 kg", cant: "entraron 12", detalle: "$3.980 cada una · $47.760 en total" },
+      { nombre: "Harina 000 Morixe 1 kg", cant: "entraron 20", detalle: "$1.240 cada una · $24.800 en total" },
+      { nombre: "Aceite Natura 900 ml", cant: "entraron 6", detalle: "$2.850 cada uno · $17.100 en total" }
+    ],
+    guardado: "Guardado. Se cargaron 38 unidades al inventario."
+  };
+
+  function pintarResultado(datos) {
+    resultado.innerHTML = "";
+    resultado.className = "tarjeta aparece";
+
+    var rot = document.createElement("p");
+    rot.className = "rotulo";
+    rot.textContent = datos.rotulo;
+    resultado.appendChild(rot);
+
+    var dicho = document.createElement("p");
+    dicho.className = "dicho";
+    dicho.textContent = datos.dicho;
+    resultado.appendChild(dicho);
+
+    var ul = document.createElement("ul");
+    ul.className = "items";
+    datos.items.forEach(function (it) {
+      var li = document.createElement("li");
+      var n = document.createElement("span");
+      n.className = "nombre";
+      n.textContent = it.nombre;
+      var c = document.createElement("span");
+      c.className = "cant";
+      c.textContent = it.cant;
+      var d = document.createElement("span");
+      d.className = "detalle";
+      d.textContent = it.detalle;
+      li.appendChild(n); li.appendChild(c); li.appendChild(d);
+      ul.appendChild(li);
+    });
+    resultado.appendChild(ul);
+
+    var par = document.createElement("div");
+    par.className = "par-botones";
+
+    var ok = document.createElement("button");
+    ok.type = "button";
+    ok.className = "btn btn-principal";
+    ok.textContent = "Está bien, guardar";
+    ok.addEventListener("click", function () {
+      resultado.hidden = true;
+      estado.classList.remove("activo");
+      estadoTexto.textContent = "Listo. Tocá un botón para empezar.";
+      avisar(datos.guardado, true);
+      btnVoz.focus();
+    });
+
+    var no = document.createElement("button");
+    no.type = "button";
+    no.className = "btn btn-secundario";
+    no.textContent = "Corregir";
+    no.addEventListener("click", function () {
+      resultado.hidden = true;
+      estado.classList.remove("activo");
+      estadoTexto.textContent = "No se guardó nada. Probá de nuevo cuando quieras.";
+      btnVoz.focus();
+    });
+
+    par.appendChild(ok); par.appendChild(no);
+    resultado.appendChild(par);
+    resultado.hidden = false;
+  }
+
+  btnVoz.addEventListener("click", function () {
+    if (escuchando) {
+      escuchando = false;
+      btnVoz.setAttribute("aria-pressed", "false");
+      estado.classList.remove("activo");
+      estadoTexto.textContent = "Listo. Tocá un botón para empezar.";
+      return;
+    }
+    escuchando = true;
+    resultado.hidden = true;
+    btnVoz.setAttribute("aria-pressed", "true");
+    estado.classList.add("activo");
+    estadoTexto.textContent = "Escuchando… hablá tranquila. Tocá de nuevo para parar.";
+    setTimeout(function () {
+      if (!escuchando) return;
+      escuchando = false;
+      btnVoz.setAttribute("aria-pressed", "false");
+      estadoTexto.textContent = "Terminé de escuchar. Mirá si está bien lo que entendí.";
+      pintarResultado(porVoz);
+    }, 2400);
+  });
+
+  btnFoto.addEventListener("click", function () {
+    escuchando = false;
+    btnVoz.setAttribute("aria-pressed", "false");
+    resultado.hidden = true;
+    estado.classList.add("activo");
+    estadoTexto.textContent = "Leyendo la factura…";
+    setTimeout(function () {
+      estadoTexto.textContent = "Leí el remito. Mirá si está bien antes de guardar.";
+      pintarResultado(porFoto);
+    }, 1600);
+  });
+
+  document.getElementById("btn-deshacer-ultimo").addEventListener("click", function () {
+    avisar("Se borraron las 12 yerbas del último registro.", true);
+  });
+
+  /* ---------- botones de las otras pantallas ---------- */
+  document.addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-guardar]");
+    if (b) { avisar(b.dataset.guardar, true); return; }
+    var ir = ev.target.closest("[data-ir]");
+    if (ir) { mostrar(ir.dataset.ir, true); }
+  });
+})();
+</script>
