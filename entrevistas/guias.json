@@ -1,0 +1,90 @@
+{
+  "panaderia": {
+    "archivo": "Guia-Entrevista-Comercio-de-alimentos",
+    "titulo": "Comercio de alimentos",
+    "subtitulo": "Panadería, rotisería, verdulería, dietética",
+    "preguntas": [
+      ["Contame de tu negocio. ¿Hace cuánto lo tenés? ¿Qué vendés?", 2],
+      ["¿Cómo es un día normal? ¿Qué es lo más difícil y lo que más te gusta?", 3],
+      ["¿A quién le comprás los insumos? ¿Tenés proveedores fijos o vas cambiando?", 2],
+      ["Contame la última compra grande. ¿Cómo y cuándo la pagaste: antes, contra entrega o después?", 3],
+      ["¿Alguna vez pagaste por adelantado y el proveedor te falló? ¿Llegó mal, llegó menos, no llegó? ¿Qué hiciste? ¿Cuánto perdiste?", 4],
+      ["¿Hay proveedores que te exigen pagar antes porque todavía no te conocen? ¿Cómo lo resolviste?", 3],
+      ["¿Hubo momentos en que no tenías plata para comprar insumos? ¿Cómo lo manejaste?", 3],
+      ["¿Sabés hoy si el negocio gana o pierde? ¿Cómo lo calculás?", 3],
+      ["La última vez que un proveedor te subió un precio, ¿cómo te enteraste? ¿Llegaste a vender por debajo del costo?", 3],
+      ["¿Fuiste alguna vez a un banco o financiera a pedir un préstamo? ¿Qué pasó?", 3],
+      ["Si hubieras tenido un crédito chico en el momento justo, ¿qué habrías hecho con él?", 3],
+      ["¿Usás el celular para algo del negocio? ¿WhatsApp, alguna app, anotás en papel?", 3],
+      ["¿Qué es lo que más tiempo o bronca te hace perder de la parte administrativa?", 3],
+      ["Si pudieras resolver UNA sola cosa de tu negocio con un botón, ¿cuál sería?", 2],
+      ["¿Conocés a otra persona con un comercio a la que le pueda preguntar lo mismo?", 2]
+    ],
+    "escuchar": [
+      "Una historia concreta de plata perdida con un proveedor.",
+      "\"No sé bien qué me deja ganancia\" o cuentas en cuaderno.",
+      "\"El banco no me dio crédito\" o \"nunca fui porque soy informal\".",
+      "Que ya use WhatsApp para el negocio."
+    ]
+  },
+  "electronica": {
+    "archivo": "Guia-Entrevista-Electronica",
+    "titulo": "Venta de electrónica",
+    "subtitulo": "Auriculares, baterías portátiles, accesorios y tecnología",
+    "preguntas": [
+      ["Contame qué vendés y hace cuánto. ¿Dónde vendés: local, redes, marketplace, a domicilio?", 3],
+      ["¿Cómo es un día normal?", 2],
+      ["¿A quién le comprás? ¿Importador, mayorista, directo del exterior? ¿Cómo hacés el pedido?", 3],
+      ["Contame la última compra grande. ¿Cómo y cuándo la pagaste: antes, contra entrega o después?", 3],
+      ["¿Alguna vez pagaste por adelantado y la mercadería llegó fallada, incompleta o no llegó? ¿Qué hiciste? ¿Cuánto perdiste?", 4],
+      ["En electrónica suele pasar que lo que llega no es lo que se pactó: otra marca, una réplica, una batería que rinde menos de lo que dice. ¿Te pasó? ¿Cómo lo arreglaste con el proveedor?", 4],
+      ["Cuando un producto llega fallado, ¿quién se hace cargo: vos o el proveedor? ¿Y si el cliente te lo devuelve una semana después?", 4],
+      ["¿Le comprás a proveedores nuevos? ¿Qué mirás antes de mandarle plata a alguien que no conocés?", 3],
+      ["¿Cómo te pegan los cambios de precio y el dólar? ¿Llegaste a vender algo por menos de lo que te costó reponerlo?", 3],
+      ["¿Cómo sabés qué producto te deja ganancia y cuál no?", 3],
+      ["¿Te quedaste con stock que no pudiste vender: un modelo viejo, algo que dejó de pedirse? ¿Qué hiciste?", 3],
+      ["¿Alguna vez necesitaste plata para comprar más stock y no la tuviste? ¿De dónde la sacaste?", 3],
+      ["¿Pediste crédito en un banco o financiera? ¿Qué pasó?", 3],
+      ["¿Qué usás del celular para el negocio? ¿Cómo llevás las cuentas?", 3],
+      ["¿Qué es lo que más tiempo o bronca te hace perder de la parte administrativa?", 3],
+      ["Si pudieras resolver UNA sola cosa con un botón, ¿cuál sería?", 2],
+      ["¿Conocés a otro que venda lo mismo y pueda responder esto?", 2]
+    ],
+    "escuchar": [
+      "\"Me llegó una réplica\" o \"no era lo que pedí\": es el riesgo que ataca el escrow.",
+      "Quién come el costo cuando algo llega fallado.",
+      "Qué mira antes de confiarle plata a un proveedor nuevo.",
+      "Stock parado o vendido al costo por el cambio de precios."
+    ]
+  },
+  "almacen": {
+    "archivo": "Guia-Entrevista-Almacen-y-kiosco",
+    "titulo": "Almacén o kiosco",
+    "subtitulo": "Despensa, kiosco, autoservicio de barrio",
+    "preguntas": [
+      ["Contame de tu negocio. ¿Hace cuánto lo tenés? ¿Qué es lo que más vendés?", 2],
+      ["¿Cómo es un día normal?", 2],
+      ["¿Quién te trae la mercadería? ¿Pasa un preventista o repartidor, vas vos al mayorista, o las dos cosas?", 3],
+      ["Contame el último pedido grande. ¿Cómo y cuándo lo pagaste: antes, contra entrega, o a los tantos días?", 3],
+      ["¿Hay proveedores que te dan cuenta corriente y otros que te cobran en el momento? ¿De qué depende?", 3],
+      ["¿Alguna vez pagaste y te llegó menos mercadería, vencida o en mal estado? ¿Qué hiciste? ¿Te lo reconocieron?", 4],
+      ["¿Te pasó de quedarte sin un producto porque no te alcanzaba para pagar el pedido? ¿Cómo lo manejaste?", 3],
+      ["¿Cómo sabés si un producto te deja ganancia? ¿Cómo ponés los precios?", 3],
+      ["La última vez que te subieron un precio, ¿cómo te enteraste? ¿Seguiste vendiendo al precio viejo un tiempo?", 3],
+      ["¿Fiás a tus clientes? ¿Cómo llevás esa cuenta? ¿Te quedaron deudas sin cobrar?", 3],
+      ["¿Cobrás con tarjeta o con QR? ¿Cuánto tardás en tener esa plata disponible?", 3],
+      ["¿Pediste préstamo alguna vez a un banco o financiera? ¿Qué pasó?", 3],
+      ["¿Hablás con otros comerciantes de la zona para comparar precios de proveedores?", 3],
+      ["¿Usás el celular para el negocio? ¿Anotás en un cuaderno?", 3],
+      ["¿Qué es lo que más tiempo o bronca te hace perder de la parte administrativa?", 3],
+      ["Si pudieras resolver UNA sola cosa con un botón, ¿cuál sería?", 2],
+      ["¿Conocés a otro almacenero o kiosquero para preguntarle lo mismo?", 2]
+    ],
+    "escuchar": [
+      "Diferencia entre proveedores que fían y los que no: ahí está el problema de confianza.",
+      "Mercadería que llegó mal o de menos, y si se la reconocieron.",
+      "El fiado a clientes: es el mismo problema de confianza, del otro lado del mostrador.",
+      "Cuánto tarda en cobrar lo que vende con tarjeta o QR."
+    ]
+  }
+}
