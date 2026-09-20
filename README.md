@@ -321,8 +321,7 @@ El estado detallado y los pendientes del día a día están en
 
 ## Quiénes
 
-**Cintia Venecia** · **Mariela Caminos** · **Cristina Soto** · **Lourdes Gimenez Bravo**
-— Salta, Argentina.
+**Cintia Venecia** · **Octavio Giménez Bravo** — Salta, Argentina.
 
 Las entrevistas de descubrimiento se hicieron con emprendedoras y emprendedores reales
 de Salta, de tres rubros distintos, para validar que el problema de la confianza con
