@@ -231,6 +231,7 @@ minga/
 │   ├── src/escrow.ts        #   las funciones del contrato, tipadas
 │   └── src/screens/         #   pantallas Comerciante y Proveedor
 ├── mockups/minga-app.html   # Prototipo navegable, se abre con doble clic
+├── marca/                   # El logo, en varios tamaños y formatos
 ├── docs/                    # Revisión de seguridad, diseño accesible, integraciones
 ├── entrevistas/             # Guías de entrevista por rubro + consentimiento
 └── COMANDOS.md              # Los comandos exactos, para copiar y pegar
