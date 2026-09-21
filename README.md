@@ -1,5 +1,7 @@
 # 🤝 Minga — que el pago no dependa de la confianza
 
+> ### *Muchas manos levantan lo que una sola no puede.*
+
 Minga es una aplicación para que un comercio chico pueda comprarle mercadería a un
 proveedor sin que ninguno de los dos tenga que arriesgar primero.
 
