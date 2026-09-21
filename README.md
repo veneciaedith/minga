@@ -141,8 +141,6 @@ lista oficial de vulnerabilidades que publica Stellar.
 
 ## En qué estado está hoy
 
-Esto es lo más importante si venís a revisar el proyecto. Lo contamos derecho:
-
 | | Qué hay |
 |---|---|
 | **El código del contrato** | La versión nueva: plazo, disputa, moneda fija, avisos en la red. **Todavía no instalada en la red.** |
