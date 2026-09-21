@@ -304,7 +304,8 @@ Todo corre en **Stellar Testnet**, la red de prueba: **no se usa plata real.**
 ## Qué sigue
 
 1. **Instalar el contrato nuevo en la red** y grabar un pedido de demostración.
-   (Lo corro yo, necesita billetera con fondos.)
+   (Lo corro yo, necesita billetera con fondos. Los pasos, en
+   [`DEPLOY-AHORA.md`](DEPLOY-AHORA.md).)
 2. **Pasar a USDC**, por lo de MoneyGram Ramps.
 3. **El historial de pedidos** leído desde la red, usando los avisos que el contrato
    ya publica.
