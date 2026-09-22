@@ -407,8 +407,25 @@ esto.
 - **Pasar a USDC.** Por **MoneyGram Ramps**: permite retirar efectivo en mostrador
   **sin cuenta bancaria**, en más de 170 países. Para alguien excluido del sistema
   financiero, eso es la diferencia entre que la plata le sirva o no.
-- **Un árbitro para las disputas trabadas.** Hoy, si ninguna de las dos partes cede,
-  el contrato no tiene salida.
+- **Mediadores para las disputas trabadas.** Hoy, si ninguna de las dos partes cede,
+  la plata queda frenada y el contrato no tiene salida. La idea es que un tercero
+  pueda destrabarla. Falta definir quién: personas designadas, o un grupo que vote.
+  Sea cual sea, la regla de fondo no cambia: **el mediador decide hacia quién va la
+  plata, pero nunca puede quedársela.**
+- **Piezas auditadas de [OpenZeppelin](https://github.com/OpenZeppelin/stellar-contracts).**
+  Dos cosas concretas:
+  - **Contratos actualizables** (SEP-0049). Hoy el contrato no se puede corregir: si
+    aparece un error hay que instalar uno nuevo, y los pedidos viejos quedan en el
+    anterior.
+  - **Los detectores de seguridad**, que revisan el contrato buscando fallas típicas.
+    No lo modifican, solo lo analizan.
+
+  > **Lo que no vamos a usar, y es a propósito:** el control de permisos y las listas
+  > de autorizados. El contrato de Minga **no tiene dueño ni administrador**: nadie,
+  > ni quien lo escribió, puede tocar la plata de un pedido. Agregar un rol
+  > privilegiado sería crear exactamente lo que el producto promete que no existe. Y
+  > una lista de autorizados reproduciría el sistema que deja a esta gente afuera:
+  > acá cualquiera puede ser proveedor sin pedirle permiso a nadie.
 - **Auditoría de seguridad externa**, por el camino del Stellar Community Fund y el
   Audit Bank. La revisión interna que ya está hecha
   ([`docs/revision-seguridad.md`](docs/revision-seguridad.md)) es preparación para
@@ -416,6 +433,35 @@ esto.
 - **Evaluar [Trustless Work](https://www.trustlesswork.com/)**, que ofrece escrow
   como servicio sobre Stellar. Podría ahorrar mantener contrato propio. Es una
   decisión para más adelante, con el producto en la calle.
+
+### Cómo se sostiene Minga
+
+Una pregunta abierta, con una idea que **solo vale con condiciones estrictas**.
+
+La plata que espera dentro del contrato podría generar un rendimiento, y ese
+rendimiento financiar la plataforma **en vez de cobrarle comisión al comerciante**.
+
+Pero acá hay una línea que no se cruza: **la plata de un pedido en curso no se toca
+nunca.** Rosa tiene que poder recuperarla en el momento en que cancela, sin depender
+de nada ni de nadie. Esa es la promesa central de Minga y no se negocia por un
+rendimiento.
+
+Lo único que se podría poner a rendir es **la plata que quedó varada**: pedidos
+olvidados, disputas que nadie destrabó hace meses. Y con tres condiciones:
+
+1. **Retiro inmediato garantizado.** Si el dueño aparece, cobra al instante. Si no se
+   puede asegurar eso, no se hace.
+2. **Un plazo largo y explícito** antes de considerar que algo está varado, avisado
+   de antemano.
+3. **El rendimiento es de quien puso la plata**, no de Minga, salvo que se acuerde
+   otra cosa a la vista.
+
+Si alguna de las tres no se cumple, la idea se cae. Y mientras tanto hay caminos más
+sanos y más fáciles de explicar: una comisión chica sobre lo que el comerciante
+**ahorra** gracias a La Feria, o cobrarle al proveedor que quiere aparecer.
+
+**Nada de esto está construido ni decidido.** Está escrito acá para que la discusión
+sea pública y no una sorpresa.
 
 ### Por qué el escrow fue lo primero
 
