@@ -372,11 +372,22 @@ Lo mismo con el orden administrativo: no hace falta llevar un Excel ni aprender 
 sistema de gestión. Se saca la foto, y de ahí sale lo que compró, cuánto gastó y qué
 le está faltando. **El orden es efecto secundario de algo que tarda tres segundos.**
 
-**4. No la guarda Minga.**
+**4. Dónde se guarda cada cosa.**
 
-El contrato publica un aviso en la red por cada operación, así que el registro se
-reconstruye leyendo la red. Ningún comerciante depende de que Minga siga existiendo
-para conservar su información.
+| Qué | Dónde | Por qué |
+|---|---|---|
+| **La biblioteca de precios** | En Minga, compartida entre todos los comercios | Tiene que ser rápida y barata de consultar. Guardar miles de precios en la blockchain costaría carísimo y sería lento. |
+| **El historial de pagos** | En la red Stellar | Es lo que después se convierte en reputación y en crédito. Eso sí tiene que ser imborrable y no depender de que Minga siga existiendo. |
+
+Es una decisión a propósito, no una comodidad: cada dato va donde corresponde según
+para qué sirve.
+
+> **Nota sobre cómo se cuenta esto.** Este archivo lo leen jurados, mentores y
+> programadores, así que acá se explica dónde vive cada cosa. **En la aplicación no
+> aparece nada de esto.** La comerciante no lee la palabra "blockchain" ni le
+> prometemos que se puede "llevar sus datos": a alguien que cierra su negocio eso no
+> le sirve de nada. El historial le importa en un solo momento —cuando quiere pedir
+> crédito— y para entonces la app se lo muestra, sin explicarle dónde está guardado.
 
 ### Etapa 3 — Reputación
 
