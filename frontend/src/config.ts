@@ -4,21 +4,16 @@ import { Networks } from "@stellar/stellar-sdk";
 //  ⚙️  CONFIGURACIÓN — completá estos valores DESPUÉS de deployar
 // =====================================================================
 
-// 1) CONTRACT_ID: lo obtenés al correr `stellar contract deploy ...`
-//    (ver COMANDOS.md). Pegá acá el id que empieza con "C...".
+// 1) CONTRACT_ID: el contrato instalado en testnet.
 //
-//    ⚠️  ESTE ID ES EL DEL CONTRATO VIEJO Y HAY QUE CAMBIARLO.
+//    Este es el contrato NUEVO, con plazo, entrega declarada por el
+//    proveedor, disputa, avisos en la red y el token fijado en el
+//    deploy. Deployado el 22 de septiembre de 2026.
 //
-//    La app ya habla el idioma del contrato NUEVO (con plazo, entrega
-//    declarada por el proveedor y disputa). El contrato que está en
-//    testnet todavía es el viejo, así que mientras este id no se
-//    cambie, cualquier operación va a fallar.
-//
-//    Qué hacer: deployar el contrato nuevo (COMANDOS.md, sección 2 —
-//    ojo con el `-- --token` del final) y pegar acá el id que imprime.
-//    Hace falta una billetera con fondos de testnet, por eso no se
-//    puede hacer desde una sesión de IA: lo corre una persona.
-export const CONTRACT_ID = "CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N";
+//    Si alguna vez hay que deployar de nuevo, los pasos están en
+//    DEPLOY-AHORA.md — ojo con el `-- --token` del final, que es
+//    donde se fija la moneda y no se puede cambiar después.
+export const CONTRACT_ID = "CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G";
 
 // 2) TOKEN_ID: el token con el que se paga.
 //    Ya NO lo usa la app: desde el contrato nuevo, el token se fija al
