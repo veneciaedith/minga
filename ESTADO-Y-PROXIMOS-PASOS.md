@@ -1,6 +1,6 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **16 de septiembre de 2026** (jornada completa)
+> Última actualización: **22 de septiembre de 2026** (día del deploy)
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
 > Rama de trabajo: **`claude/cool-fermi-6kp11h`**
 
@@ -47,18 +47,34 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 
 ---
 
-## 🚨 Lo más importante antes de tocar nada
+## ✅ El deploy ya está hecho (22/09/2026)
 
-**El código del contrato y el contrato que está en la red YA NO SON EL MISMO.**
+**El código del contrato y el contrato que está en la red son el mismo.**
 
 | | Qué hay |
 |---|---|
-| **En la red (testnet)** | El contrato **viejo**: `CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N` |
-| **En el código** | El contrato **nuevo**, con plazo, disputa y token fijo. **Sin deployar.** |
-| **La app en vivo** | https://minga-r5ql.vercel.app apunta al **viejo** y funciona bien |
+| **En la red (testnet)** | El contrato **nuevo**: `CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G` |
+| **En el código** | El mismo, con plazo, disputa, avisos y moneda fija |
+| **La app en vivo** | https://minga-r5ql.vercel.app apunta al **nuevo** y carga sin el aviso de versiones |
+| **Cuenta que lo instaló** | `GD5TCMAA3PHUFOCRVVJLSXVGW5QY3SZJ4UVXC6VNL6A3KXEVKB36Q7KI` (alias `rosa` en el CLI) |
 
-**Esto es a propósito.** La demo y el pedido 42 siguen andando para mostrarlos
-cuando haga falta. No está roto.
+Se verificó con `get_token`: devuelve el XLM nativo de testnet, así que la moneda quedó
+bien fijada. Las transacciones están en `DESPLIEGUE-TESTNET.md`.
+
+**Cómo se hizo, por si hay que repetirlo:** el contrato se compiló en la sesión de IA y
+el `.wasm` se le pasó a Cintia, así que en su notebook **solo hizo falta instalar el
+CLI de Stellar** (`winget install --id Stellar.StellarCLI`). No hizo falta Rust ni
+clonar el repo. Los pasos completos están en `DEPLOY-AHORA.md`.
+
+### Lo que sigue, en orden
+
+1. **Pedidos de demostración.** El pedido 42 es del contrato viejo y no existe en el
+   nuevo. Hay que crear al menos dos desde la app con Freighter: uno en *Pendiente* y
+   otro en *Pago liberado*. Requiere Freighter instalada, en red **Testnet** y con
+   fondos de prueba.
+2. **Las tres pruebas con usuarios** (hermano, prima, Bernardo) — para el checkpoint
+   del sábado 26. Ellos manejan la computadora, no Cintia.
+3. **Video demo y deck**, para la entrega del domingo 27 a las 23:59.
 
 **Esto ya se resolvió del lado del código (16/09).** El frontend ahora habla el
 idioma del contrato nuevo:
