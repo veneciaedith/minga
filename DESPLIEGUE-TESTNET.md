@@ -4,6 +4,48 @@
 > red de prueba de Stellar**, con el flujo completo ejecutado on-chain (no simulado).
 > Todos los links abren en el explorador público stellar.expert.
 
+---
+
+# 🆕 Contrato actual — 22 de septiembre de 2026
+
+Este es el contrato **que usa la app hoy**: el que tiene plazo, entrega declarada por
+el proveedor, disputa, avisos en la red y la moneda fijada en el deploy.
+
+| Qué | Valor |
+|---|---|
+| **Contract ID** | [`CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G`](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) |
+| Cuenta que lo instaló | `GD5TCMAA3PHUFOCRVVJLSXVGW5QY3SZJ4UVXC6VNL6A3KXEVKB36Q7KI` |
+| Moneda (XLM nativo, SAC) | `CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC` |
+| Red | Stellar Testnet |
+
+| Acción | Transacción |
+|---|---|
+| **Subida del contrato** (WASM) | [`d2294121…`](https://stellar.expert/explorer/testnet/tx/d2294121de8b27be191062f56a3e8b27962c0b2b618c30dbe1a734e8995f9f68) |
+| **Instalación** (con la moneda fijada) | [`8749ed98…`](https://stellar.expert/explorer/testnet/tx/8749ed988654769bbe44f4ff6f03825555c5ffcbfefacf249dba81785bb02352) |
+
+### Comprobación de que la moneda quedó bien fijada
+
+Cualquiera puede verificar, sin permiso ni firma, qué moneda acepta este contrato:
+
+```bash
+stellar contract invoke \
+  --id CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G \
+  --source <tu-identidad> --network testnet \
+  -- get_token
+# => "CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC"
+```
+
+Ya se corrió y devuelve el XLM nativo de testnet, como corresponde. Esa es la garantía
+de que nadie puede crear un pedido con una moneda falsa: la moneda se fijó en el deploy
+y ninguna función la puede cambiar.
+
+---
+
+# 📜 Contrato anterior — julio de 2026
+
+Se deja como evidencia del **flujo completo ejecutado on-chain**, con plata moviéndose
+de verdad entre billeteras. Era la versión sin plazo ni disputa.
+
 ## Contrato y cuentas
 
 | Qué | Valor |

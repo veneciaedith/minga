@@ -143,23 +143,17 @@ lista oficial de vulnerabilidades que publica Stellar.
 
 | | Qué hay |
 |---|---|
-| **El código del contrato** | La versión nueva: plazo, disputa, moneda fija, avisos en la red. **Todavía no instalada en la red.** |
-| **En la red (testnet)** | La versión vieja, de julio: [`CCYCSIXO…GSL3MX2W5N`](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N) |
-| **La app en vivo** | [minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) — apunta a la versión vieja y funciona |
+| **El contrato en la red (testnet)** | La versión nueva, instalada el **22/09/2026**: [`CDUJYPSQ…WLMAZ73G`](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) |
+| **La app en vivo** | [minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) |
 | **Los tests** | **29 pruebas automáticas, todas en verde** |
 
-**Es a propósito, no es un descuido.** El flujo completo ya se ejecutó de verdad en la
-red en julio, con plata moviéndose entre billeteras: la evidencia, con el enlace a cada
-transacción, está en [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md). Esa demo sigue
-en pie.
+El contrato que está en la red es el mismo que está en el código: plazo, entrega
+declarada por el proveedor, disputa, avisos en la red y la moneda fijada en el deploy.
 
-Instalar la versión nueva necesita una billetera con fondos, así que lo tengo que
-correr yo a mano. Lo dejo para después de esta ronda de devoluciones, para no tener que
-hacerlo dos veces si de la revisión sale algo para cambiar.
-
-Mientras tanto la app no puede operar contra la red, y **lo dice con todas las letras**
-en vez de tirar un error incomprensible: *"Esta versión de Minga y el contrato instalado
-en la red no coinciden… no es nada que hayas hecho mal"*.
+La evidencia, con el enlace a cada transacción y la comprobación de que la moneda quedó
+bien fijada, está en [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md). También queda ahí
+el despliegue de julio, que muestra el flujo completo ejecutado on-chain con plata
+moviéndose de verdad entre billeteras.
 
 ---
 
@@ -313,7 +307,8 @@ El orden no es un capricho. Cada etapa necesita que la anterior exista.
 
 | | Qué |
 |---|---|
-| 🔜 | **Instalar el contrato nuevo en la red** y dejar un pedido de demostración. Los pasos están en [`DEPLOY-AHORA.md`](DEPLOY-AHORA.md). |
+| ✅ | ~~Instalar el contrato nuevo en la red.~~ Hecho el 22/09/2026. |
+| 🔜 | **Dejar pedidos de demostración** en el contrato nuevo, para que cualquiera pueda consultarlos sin instalar nada. |
 | 🔜 | **El historial de pedidos leído desde la red**, usando los avisos que el contrato ya publica. |
 
 ### Etapa 1 — Que cargar no cueste nada
