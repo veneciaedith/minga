@@ -335,19 +335,48 @@ Minga, ni que sepa que existe.
 
 ### Etapa 2 — La Feria: la biblioteca de precios
 
-Cada boleta cargada deja registrado **qué producto, a qué precio, de qué proveedor**.
-Con eso se arma un catálogo de precios de la zona, anónimo, que todos los comercios
-pueden consultar: *"el azúcar lo estás pagando más caro que el de la otra cuadra"*.
+Cada boleta cargada deja registrado **qué producto, a qué precio, de qué proveedor y
+en qué fecha**. Con eso se arma un registro de precios en común, anónimo, que todos
+los comercios pueden consultar.
 
-Dos decisiones de fondo:
+Rosa tiene su almacén. Marianita tiene una despensa a cinco cuadras. Bernardo vende
+maderas. Los tres alimentan el mismo registro y los tres lo usan.
 
-- **No depende de que los proveedores adopten nada.** Un proveedor informal no se va
-  a bajar una aplicación. Pero el comerciante ya recibe su papel, y lo carga porque
-  le sirve a él: para saber cuánto paga y para que no se le termine la mercadería.
-  **La biblioteca se arma de rebote**, como efecto de algo que ya le conviene hacer.
-- **No la guarda Minga.** El contrato publica un aviso en la red por cada operación,
-  así que el catálogo se reconstruye leyendo la red. Ningún comerciante depende de
-  que Minga siga existiendo para conservar su información.
+Cuatro decisiones de fondo:
+
+**1. El cruce es por producto, no por rubro.**
+
+A Bernardo no le sirve saber cuánto sale el azúcar. Pero la **cinta de embalaje**,
+las **bolsas** y el **papel** los compran él y Rosa por igual. Los insumos genéricos
+cruzan rubros que no tienen nada que ver entre sí.
+
+Si el registro fuera por rubro, cada almacenera necesitaría otras almaceneras cerca
+para que le sirviera de algo. Cruzando por producto, **un maderero y una almacenera
+ya se ayudan entre ellos** sin vender nada parecido. Algunos productos coinciden,
+otros no — y eso está bien: cada comercio ve lo que le toca.
+
+**2. El precio siempre va con su fecha.**
+
+En Argentina los precios se mueven todas las semanas. Un precio de referencia de hace
+seis meses no sirve para nada. Saber qué está pagando Marianita **esta semana** es la
+diferencia entre remarcar a tiempo o vender por debajo del costo sin darse cuenta.
+
+**3. No depende de que los proveedores adopten nada.**
+
+Un proveedor informal no se va a bajar una aplicación. Pero el comerciante ya recibe
+su papel, y lo carga porque le sirve a él: para saber cuánto paga y para que no se le
+termine la mercadería. **La biblioteca se arma de rebote**, como efecto de algo que ya
+le conviene hacer.
+
+Lo mismo con el orden administrativo: no hace falta llevar un Excel ni aprender un
+sistema de gestión. Se saca la foto, y de ahí sale lo que compró, cuánto gastó y qué
+le está faltando. **El orden es efecto secundario de algo que tarda tres segundos.**
+
+**4. No la guarda Minga.**
+
+El contrato publica un aviso en la red por cada operación, así que el registro se
+reconstruye leyendo la red. Ningún comerciante depende de que Minga siga existiendo
+para conservar su información.
 
 ### Etapa 3 — Reputación
 
