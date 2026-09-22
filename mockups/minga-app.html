@@ -481,6 +481,28 @@ details.ayuda li { margin-bottom: 6px; }
 .pasos li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: start; font-size: .95rem; }
 .pasos .tilde { color: var(--bien); font-weight: 800; }
 .pasos .espera { color: var(--tinta-suave); font-weight: 800; }
+.pasos .frenado { color: var(--perdida); font-weight: 800; }
+
+/* ===== recorrido del pedido protegido ===== */
+#pedido-chip-caja { margin: 0 0 12px; }
+.reloj {
+  display: flex; align-items: center; gap: 8px;
+  margin: 0 0 12px; padding: 10px 12px;
+  border: 1px solid var(--atencion); border-radius: 10px;
+  background: var(--atencion-fondo); color: var(--atencion);
+  font-size: .95rem; font-weight: 600;
+}
+.pedido-nota { margin: 0 0 14px; font-size: .95rem; }
+.pedido-acciones { display: grid; gap: 8px; }
+.pedido-acciones .btn { width: 100%; }
+.simulacion {
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px dashed var(--borde-fuerte);
+}
+.simulacion > p {
+  margin: 0 0 10px; font-size: .88rem;
+  color: var(--tinta-suave); font-style: italic;
+}
 
 /* ===== navegación inferior ===== */
 .navegacion {
@@ -871,20 +893,28 @@ details.ayuda li { margin-bottom: 6px; }
           </div>
         </details>
 
-        <div class="protegido">
+        <div class="protegido" id="protegido">
           <h3>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" aria-hidden="true">
               <path d="M12 3l7 3v6c0 4.4-3 8.2-7 9-4-.8-7-4.6-7-9V6z"></path><path d="M9 12l2 2 4-4"></path>
             </svg>
-            Tu pedido está protegido
+            <span id="pedido-titulo">Tu pedido está protegido</span>
           </h3>
-          <p>Pedido a Distribuidora El Portezuelo · 20 harinas · $24.800</p>
-          <ul class="pasos">
-            <li><span class="tilde" aria-hidden="true">✓</span> <span><b>Hiciste el pedido.</b> Martes 10:22</span></li>
-            <li><span class="tilde" aria-hidden="true">✓</span> <span><b>Tu plata quedó guardada.</b> No se la llevó nadie todavía.</span></li>
-            <li><span class="espera" aria-hidden="true">○</span> <span><b>Falta que llegue la mercadería.</b> Cuando confirmás que llegó, el proveedor cobra. Si no llega, la plata vuelve a tu cuenta.</span></li>
-          </ul>
-          <button type="button" class="btn btn-principal" data-guardar="Confirmaste que llegó el pedido. El proveedor ya cobró.">Ya me llegó el pedido</button>
+          <p>Pedido a Distribuidora El Portezuelo · 20 harinas · <b>$24.800</b></p>
+
+          <div id="pedido-vivo" aria-live="polite">
+            <p id="pedido-chip-caja"><span class="chip" id="pedido-chip"></span></p>
+            <p class="reloj" id="pedido-reloj" hidden></p>
+            <ul class="pasos" id="pedido-pasos"></ul>
+            <p class="pedido-nota" id="pedido-nota"></p>
+          </div>
+
+          <div class="pedido-acciones" id="pedido-acciones"></div>
+
+          <div class="simulacion" id="pedido-simulacion" hidden>
+            <p>Para probar el recorrido: esto lo hace el proveedor, no vos.</p>
+            <div class="pedido-acciones" id="pedido-acciones-otro"></div>
+          </div>
         </div>
       </section>
 
@@ -1134,6 +1164,184 @@ details.ayuda li { margin-bottom: 6px; }
   document.getElementById("btn-deshacer-ultimo").addEventListener("click", function () {
     avisar("Se borraron las 12 yerbas del último registro.", true);
   });
+
+  /* ---------- recorrido del pedido protegido ----------
+     Los estados son los mismos del contrato: pendiente, entregado,
+     en disputa, liberado y cancelado. Acá se cuentan con las palabras
+     que ve el comerciante, sin nombrar nada de la blockchain. */
+
+  var pasoOk      = { icono: "✓", clase: "tilde" };
+  var pasoEspera  = { icono: "○", clase: "espera" };
+  var pasoFrenado = { icono: "!", clase: "frenado" };
+
+  var hechos = {
+    pedido:   [pasoOk, "Hiciste el pedido.", "Martes 10:22"],
+    guardada: [pasoOk, "Tu plata quedó guardada.", "No la tiene el proveedor ni la tiene Minga."],
+    aviso:    [pasoOk, "El proveedor avisó que entregó.", "Miércoles 08:40"]
+  };
+
+  var recorrido = {
+    guardada: {
+      titulo: "Tu pedido está protegido",
+      chip: ["atencion", "⏳ Esperando la mercadería"],
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        [pasoEspera, "Falta que llegue la mercadería.", "Cuando confirmás que llegó, el proveedor cobra."]
+      ],
+      nota: "Mientras no llegue, podés cancelar cuando quieras y la plata vuelve entera a tu cuenta.",
+      acciones: [
+        ["Ya me llegó el pedido", "btn-principal", "liberado"],
+        ["Cancelar el pedido", "btn-secundario", "cancelado"]
+      ],
+      otro: [["El proveedor avisa que entregó", "entregada"]]
+    },
+
+    entregada: {
+      titulo: "El proveedor dice que ya entregó",
+      chip: ["atencion", "⏳ Te toca revisar"],
+      reloj: "Te quedan 3 días para revisar. Si no decís nada, el proveedor cobra.",
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        hechos.aviso,
+        [pasoEspera, "Falta que digas si llegó bien.", "Revisá la mercadería con tranquilidad."]
+      ],
+      nota: "Desde que el proveedor avisa que entregó ya no se puede cancelar: si algo está mal, lo que corresponde es frenar el pago.",
+      acciones: [
+        ["Sí, llegó bien", "btn-principal", "liberado"],
+        ["No me llegó, o llegó mal", "btn-secundario", "frenada"]
+      ],
+      otro: [["Pasan los 3 días y no dijiste nada", "vencido"]]
+    },
+
+    frenada: {
+      titulo: "Frenaste el pago",
+      chip: ["perdida", "■ Plata frenada"],
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        hechos.aviso,
+        [pasoFrenado, "Dijiste que algo estaba mal.", "La plata está frenada: no cobra nadie."]
+      ],
+      nota: "Se destraba cuando una de las dos partes cede: o vos aceptás y el proveedor cobra, o el proveedor devuelve la plata. Más adelante va a haber mediadores para cuando ninguno ceda.",
+      acciones: [
+        ["Al final estaba bien: que cobre", "btn-principal", "liberado"]
+      ],
+      otro: [["El proveedor devuelve la plata", "cancelado"]]
+    },
+
+    liberado: {
+      titulo: "Listo: el proveedor cobró",
+      chip: ["bien", "✓ Pago liberado"],
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        [pasoOk, "Confirmaste que llegó.", "La plata salió hacia el proveedor."],
+        [pasoOk, "El proveedor cobró sus $24.800.", "El pedido se cerró."]
+      ],
+      nota: "Nadie tocó la plata hasta que vos dijiste que la mercadería había llegado."
+    },
+
+    vencido: {
+      titulo: "El proveedor cobró por el plazo",
+      chip: ["bien", "✓ Pago liberado"],
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        hechos.aviso,
+        [pasoOk, "Pasaron los 3 días y no dijiste nada.", "El proveedor cobró sus $24.800."]
+      ],
+      nota: "El plazo lo elegiste vos al hacer el pedido. Existe para que el proveedor no quede esperando para siempre si te olvidás de confirmar."
+    },
+
+    cancelado: {
+      titulo: "Recuperaste tu plata",
+      chip: ["bien", "✓ Plata devuelta"],
+      pasos: [
+        hechos.pedido,
+        hechos.guardada,
+        [pasoOk, "El pedido no se concretó.", "Tus $24.800 volvieron a tu cuenta, enteros."]
+      ],
+      nota: "No hubo que reclamarle a nadie ni esperar que alguien tuviera ganas de devolverla."
+    }
+  };
+
+  var avisos = {
+    entregada: "El proveedor avisó que entregó. Tenés 3 días para revisar.",
+    frenada:   "Frenaste el pago. No cobra nadie hasta que se resuelva.",
+    liberado:  "Confirmaste que llegó el pedido. El proveedor ya cobró.",
+    vencido:   "Se cumplió el plazo y el proveedor cobró.",
+    cancelado: "Tu plata volvió a tu cuenta."
+  };
+
+  var elTitulo  = document.getElementById("pedido-titulo");
+  var elChip    = document.getElementById("pedido-chip");
+  var elReloj   = document.getElementById("pedido-reloj");
+  var elPasos   = document.getElementById("pedido-pasos");
+  var elNota    = document.getElementById("pedido-nota");
+  var elAcc     = document.getElementById("pedido-acciones");
+  var elSim     = document.getElementById("pedido-simulacion");
+  var elAccOtro = document.getElementById("pedido-acciones-otro");
+
+  function botonPedido(texto, clase, destino) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn " + clase;
+    b.textContent = texto;
+    b.addEventListener("click", function () { irA(destino); });
+    return b;
+  }
+
+  function irA(nombre, silencioso) {
+    var e = recorrido[nombre];
+
+    elTitulo.textContent = e.titulo;
+    elChip.className = "chip " + e.chip[0];
+    elChip.textContent = e.chip[1];
+
+    elReloj.hidden = !e.reloj;
+    if (e.reloj) elReloj.textContent = "⏱ " + e.reloj;
+
+    elPasos.textContent = "";
+    e.pasos.forEach(function (p) {
+      var li = document.createElement("li");
+      var ic = document.createElement("span");
+      ic.className = p[0].clase;
+      ic.setAttribute("aria-hidden", "true");
+      ic.textContent = p[0].icono;
+      var tx = document.createElement("span");
+      var b = document.createElement("b");
+      b.textContent = p[1];
+      tx.appendChild(b);
+      tx.appendChild(document.createTextNode(" " + p[2]));
+      li.appendChild(ic);
+      li.appendChild(tx);
+      elPasos.appendChild(li);
+    });
+
+    elNota.textContent = e.nota;
+
+    elAcc.textContent = "";
+    (e.acciones || []).forEach(function (a) {
+      elAcc.appendChild(botonPedido(a[0], a[1], a[2]));
+    });
+    if (!e.acciones) {
+      elAcc.appendChild(botonPedido("Hacer otro pedido", "btn-secundario", "guardada"));
+    }
+
+    elAccOtro.textContent = "";
+    if (e.otro) {
+      e.otro.forEach(function (a) {
+        elAccOtro.appendChild(botonPedido(a[0], "btn-secundario btn-chico", a[1]));
+      });
+    }
+    elSim.hidden = !e.otro;
+
+    if (!silencioso && avisos[nombre]) avisar(avisos[nombre], true);
+  }
+
+  irA("guardada", true);
 
   /* ---------- botones de las otras pantallas ---------- */
   document.addEventListener("click", function (ev) {

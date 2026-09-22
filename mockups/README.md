@@ -10,7 +10,30 @@ Es un solo archivo HTML: se abre con doble clic, sin instalar nada y sin interne
 |---|---|
 | **Cargar** | Botón grande de voz y botón de foto de factura. Minga muestra lo que entendió y la persona confirma o corrige. Debajo, lo que se cargó hoy. |
 | **Reporte** | En qué se gana y en qué se pierde, producto por producto, con el precio sugerido y el motivo en lenguaje claro. |
-| **La Feria** | Precios anónimos de otros comercios de la zona, cuánto se puede ahorrar, y el estado del pedido protegido (escrow). |
+| **La Feria** | Precios anónimos de otros comercios de la zona, cuánto se puede ahorrar, y el pedido protegido (escrow). |
+
+## El recorrido del pedido protegido
+
+Al final de La Feria se puede recorrer **el pedido entero**, con los mismos estados
+que tiene el contrato de verdad, pero contados como los ve el comerciante:
+
+```
+Tu plata está guardada
+   ├── "Ya me llegó"            → el proveedor cobró
+   ├── "Cancelar"               → la plata vuelve
+   └── el proveedor avisa que entregó
+          ├── "Sí, llegó bien"        → el proveedor cobró
+          ├── "No me llegó / llegó mal" → plata frenada
+          │        ├── "Al final estaba bien" → el proveedor cobró
+          │        └── el proveedor devuelve   → la plata vuelve
+          └── pasan los 3 días sin que digas nada → el proveedor cobra
+```
+
+Los botones que dicen **"esto lo hace el proveedor, no vos"** están separados abajo,
+con una línea de puntos. Son para poder recorrer todos los caminos en una demo: en la
+app real esas acciones las hace el proveedor desde su propia pantalla.
+
+En ninguna pantalla aparece la palabra blockchain, ni escrow, ni billetera.
 
 > La palabra "semáforo" no se usa en la interfaz. La pantalla se llama **Reporte**.
 
