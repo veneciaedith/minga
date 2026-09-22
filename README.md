@@ -301,20 +301,98 @@ Todo corre en **Stellar Testnet**, la red de prueba: **no se usa plata real.**
 
 ---
 
-## Qué sigue
+## Hoja de ruta
 
-1. **Instalar el contrato nuevo en la red** y grabar un pedido de demostración.
-   (Lo corro yo, necesita billetera con fondos. Los pasos, en
-   [`DEPLOY-AHORA.md`](DEPLOY-AHORA.md).)
-2. **Pasar a USDC**, por lo de MoneyGram Ramps.
-3. **El historial de pedidos** leído desde la red, usando los avisos que el contrato
-   ya publica.
-4. **Resolver disputas trabadas**, que hoy necesitan que alguien ceda.
+Acá está **todo lo que Minga promete y todavía no hace**. Está separado de lo que ya
+funciona a propósito: nada de esto está construido, y no queremos que se lea como si
+lo estuviera.
 
-Más adelante, el escrow es la puerta de entrada a lo que Minga quiere ser: cada pago
-deja un registro verificable, y ese registro se convierte en **reputación, y la
-reputación en crédito sin banco**. Un comercio que hoy es invisible para el sistema
-financiero pasa a tener historia propia.
+El orden no es un capricho. Cada etapa necesita que la anterior exista.
+
+### Ahora mismo
+
+| | Qué |
+|---|---|
+| 🔜 | **Instalar el contrato nuevo en la red** y dejar un pedido de demostración. Los pasos están en [`DEPLOY-AHORA.md`](DEPLOY-AHORA.md). |
+| 🔜 | **El historial de pedidos leído desde la red**, usando los avisos que el contrato ya publica. |
+
+### Etapa 1 — Que cargar no cueste nada
+
+**Cargá sin escribir.** El comerciante le saca una foto a la boleta del proveedor, o
+lo dice en voz alta. La app muestra lo que entendió y **la persona confirma o
+corrige** — nunca decide sola.
+
+Funciona con boletas informales: un papel escrito a mano que dice *"azúcar 10 kg"*,
+sin dirección ni teléfono, sirve igual. Es lo que la mayoría de los proveedores
+chicos entrega de verdad.
+
+**Control de stock y avisos.** Con lo que se carga, la app sabe qué se está
+terminando y avisa antes de que falte.
+
+**Pedir por WhatsApp.** Un enlace que abre el WhatsApp del proveedor con el pedido ya
+escrito. El comerciante solo toca "enviar". No hace falta que el proveedor tenga
+Minga, ni que sepa que existe.
+
+### Etapa 2 — La Feria: la biblioteca de precios
+
+Cada boleta cargada deja registrado **qué producto, a qué precio, de qué proveedor**.
+Con eso se arma un catálogo de precios de la zona, anónimo, que todos los comercios
+pueden consultar: *"el azúcar lo estás pagando más caro que el de la otra cuadra"*.
+
+Dos decisiones de fondo:
+
+- **No depende de que los proveedores adopten nada.** Un proveedor informal no se va
+  a bajar una aplicación. Pero el comerciante ya recibe su papel, y lo carga porque
+  le sirve a él: para saber cuánto paga y para que no se le termine la mercadería.
+  **La biblioteca se arma de rebote**, como efecto de algo que ya le conviene hacer.
+- **No la guarda Minga.** El contrato publica un aviso en la red por cada operación,
+  así que el catálogo se reconstruye leyendo la red. Ningún comerciante depende de
+  que Minga siga existiendo para conservar su información.
+
+### Etapa 3 — Reputación
+
+Cada pago cumplido deja una constancia pública en la red. Muchos pagos cumplidos son
+**un historial verificable** que el comerciante se lleva con él, y que ningún
+intermediario le puede quitar ni negar.
+
+Es lo que hoy no tiene: un comercio informal es invisible para el sistema financiero
+porque no puede demostrar nada de lo que hizo.
+
+### Etapa 4 — Crédito sin banco
+
+Con historial de pagos y registro de inventario, un comerciante puede pedir crédito
+mostrando lo que hizo, no papeles que no tiene. El inventario mismo puede funcionar
+como garantía.
+
+Esta es la razón por la que Minga existe. Todo lo anterior construye la base para
+esto.
+
+### Decisiones tomadas, pendientes de hacer
+
+- **Pasar a USDC.** Por **MoneyGram Ramps**: permite retirar efectivo en mostrador
+  **sin cuenta bancaria**, en más de 170 países. Para alguien excluido del sistema
+  financiero, eso es la diferencia entre que la plata le sirva o no.
+- **Un árbitro para las disputas trabadas.** Hoy, si ninguna de las dos partes cede,
+  el contrato no tiene salida.
+- **Auditoría de seguridad externa**, por el camino del Stellar Community Fund y el
+  Audit Bank. La revisión interna que ya está hecha
+  ([`docs/revision-seguridad.md`](docs/revision-seguridad.md)) es preparación para
+  eso, no un reemplazo.
+- **Evaluar [Trustless Work](https://www.trustlesswork.com/)**, que ofrece escrow
+  como servicio sobre Stellar. Podría ahorrar mantener contrato propio. Es una
+  decisión para más adelante, con el producto en la calle.
+
+### Por qué el escrow fue lo primero
+
+De todas estas etapas, **el escrow es la única que no puede existir sin blockchain**.
+Cargar boletas, controlar stock o avisar por WhatsApp se pueden hacer con tecnología
+común. Garantizar un pago entre dos personas que no se conocen, sin una empresa en el
+medio que se quede con la plata, no.
+
+Por eso se construyó primero: es la pieza donde la red hace falta de verdad, y la que
+sostiene a todas las demás.
+
+---
 
 El estado detallado y los pendientes del día a día están en
 [`ESTADO-Y-PROXIMOS-PASOS.md`](ESTADO-Y-PROXIMOS-PASOS.md).
