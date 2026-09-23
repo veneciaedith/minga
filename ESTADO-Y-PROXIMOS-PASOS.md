@@ -1,6 +1,6 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **22 de septiembre de 2026** (día del deploy)
+> Última actualización: **23 de septiembre de 2026** (primer pedido real, desde el celular)
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
 > Rama de trabajo: **`claude/cool-fermi-6kp11h`**
 
@@ -66,12 +66,45 @@ el `.wasm` se le pasó a Cintia, así que en su notebook **solo hizo falta insta
 CLI de Stellar** (`winget install --id Stellar.StellarCLI`). No hizo falta Rust ni
 clonar el repo. Los pasos completos están en `DEPLOY-AHORA.md`.
 
+### ✅ Primer pedido real en el contrato nuevo (23/09/2026)
+
+**Pedido 129183 — 10 XLM guardados, estado Pendiente.** Hecho desde el celular de
+Cintia, con xBull. Queda así a propósito: es la demo de «la plata está guardada,
+esperando la mercadería». **No confirmarlo ni cancelarlo.**
+
+Cómo quedó armado el celular, por si hay que repetirlo:
+
+- Billetera **xBull** (web, `wallet.xbull.app`), con la cuenta `rosa` importada por
+  **clave secreta** (no por frase de palabras). Red: **Red de prueba**, se cambia en
+  ☰ → Ajustes → *Cuenta y Horizonte* → *Nodo de red*.
+- Abrir Minga en **Chrome**, no desde el link de WhatsApp: el navegador interno rompe
+  las ventanas de las billeteras.
+
+Lo que se encontró probando, y hay que contar en el pitch:
+
+- **Albedo no funciona en el celular** (queda en blanco). xBull sí.
+- **Crear una billetera es una pared**: frase de 24 palabras en inglés, un campo que
+  pide una palabra por vez sin decirlo. Tres intentos fallidos.
+- **La pantalla de firma es ilegible** para alguien sin formación técnica.
+- xBull arranca en la **red real**; hay que cambiarla a mano.
+- → Por eso la hoja de ruta propone **cuentas con huella (passkeys)**.
+
+Tres errores de la app que aparecieron y quedaron arreglados:
+
+- Los errores de la billetera se mostraban como `[object Object]`.
+- Al recargar, la app volvía a elegir Freighter por su cuenta y no se podía firmar.
+- Con la billetera «conectada» no había cómo volver a elegirla: ahora hay un botón
+  **«Cambiar de billetera»**.
+
 ### Lo que sigue, en orden
 
-1. **Pedidos de demostración.** El pedido 42 es del contrato viejo y no existe en el
-   nuevo. Hay que crear al menos dos desde la app con Freighter: uno en *Pendiente* y
-   otro en *Pago liberado*. Requiere Freighter instalada, en red **Testnet** y con
-   fondos de prueba.
+1. **Un segundo pedido que llegue a «Pago liberado»**: crearlo igual y tocar «Ya me
+   llegó el pedido». Con eso queda probado el recorrido de punta a punta (checkpoint
+   del jueves 24). Anotar el número y pasarle a la IA el link del comprobante para
+   sumarlo a `DESPLIEGUE-TESTNET.md`.
+2. **Link del comprobante del pedido 129183**, para la evidencia.
+3. **Pie de la app**: todavía nombra al equipo de julio. Cambiarlo a Cintia y Octavio,
+   si ella lo confirma.
 2. **Las tres pruebas con usuarios** (hermano, prima, Bernardo) — para el checkpoint
    del sábado 26. Ellos manejan la computadora, no Cintia.
 3. **Video demo y deck**, para la entrega del domingo 27 a las 23:59.
