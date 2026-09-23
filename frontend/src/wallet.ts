@@ -9,15 +9,20 @@
 // después se llaman sus métodos estáticos (authModal, getAddress, signTransaction).
 
 import { StellarWalletsKit, Networks } from "@creit.tech/stellar-wallets-kit";
-import { FreighterModule, FREIGHTER_ID } from "@creit.tech/stellar-wallets-kit/modules/freighter";
+import { FreighterModule } from "@creit.tech/stellar-wallets-kit/modules/freighter";
 import { xBullModule } from "@creit.tech/stellar-wallets-kit/modules/xbull";
 import { AlbedoModule } from "@creit.tech/stellar-wallets-kit/modules/albedo";
 import { LobstrModule } from "@creit.tech/stellar-wallets-kit/modules/lobstr";
 
 // Configuramos el Kit una sola vez, para TESTNET y con las wallets soportadas.
+//
+// No le pasamos `selectedWalletId` a propósito. El Kit ya recuerda solo, entre
+// recargas, qué billetera eligió la persona. Si acá le forzábamos Freighter, al
+// recargar la página pisaba esa elección: Minga seguía mostrando «conectada»
+// (la dirección sí quedaba guardada) pero al firmar buscaba Freighter, que en
+// el celular no existe, y el pedido fallaba con «No encontramos tu billetera».
 StellarWalletsKit.init({
   network: Networks.TESTNET,
-  selectedWalletId: FREIGHTER_ID,
   modules: [
     new FreighterModule(),
     new xBullModule(),

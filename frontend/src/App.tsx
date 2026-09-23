@@ -157,12 +157,24 @@ export default function App() {
         </p>
 
         {billetera ? (
-          <p className="detalle">
-            Es la que termina en{" "}
-            <code>{direccionCorta(billetera)}</code>
-            <span className="solo-lectores">, termina en {finalDeletreado(billetera)}</span>. Desde
-            ahí sale la plata de los pedidos.
-          </p>
+          <>
+            <p className="detalle">
+              Es la que termina en{" "}
+              <code>{direccionCorta(billetera)}</code>
+              <span className="solo-lectores">, termina en {finalDeletreado(billetera)}</span>. Desde
+              ahí sale la plata de los pedidos.
+            </p>
+            {/* Sin este botón, si la billetera dejaba de responder no había cómo
+                volver a elegirla: la app decía «conectada» y no ofrecía salida. */}
+            <button
+              type="button"
+              className="boton boton-secundario boton-chico"
+              onClick={conectar}
+              disabled={conectando}
+            >
+              {conectando ? "Abriendo tu billetera…" : "Cambiar de billetera"}
+            </button>
+          </>
         ) : (
           <>
             <button

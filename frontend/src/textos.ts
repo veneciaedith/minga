@@ -149,8 +149,8 @@ const TRADUCCIONES: Traduccion[] = [
     dice: "La red tardó demasiado en contestar. Esperá unos segundos y probá otra vez.",
   },
   {
-    busca: ["no wallet", "not connected", "no se encontr", "freighter is not"],
-    dice: "No encontramos tu billetera. Tocá «Conectar mi billetera» arriba y elegí la que usás.",
+    busca: ["no wallet", "not connected", "no se encontr", "freighter is not", "set the wallet", "not installed", "not available"],
+    dice: "No encontramos tu billetera. Tocá «Conectar mi billetera» o «Cambiar de billetera», arriba, y elegí la que usás.",
   },
   {
     // Pasa cuando el contrato instalado en la red NO es el que esta
