@@ -253,7 +253,7 @@ export default function App() {
           práctica.
         </p>
         <p>
-          Hecho por Cintia Venecia, Mariela Caminos, Cristina Soto y Lourdes Gimenez Bravo.
+          Hecho por Cintia Venecia y Octavio Giménez Bravo.
         </p>
       </footer>
     </div>
