@@ -222,13 +222,38 @@ const TRADUCCIONES: Traduccion[] = [
 ];
 
 /**
+ * Saca el texto de un error, venga como venga.
+ *
+ * Los errores de la red llegan como `Error`, pero las billeteras (vía
+ * Stellar Wallets Kit) mandan objetos sueltos del tipo `{ code, message }`.
+ * Si a esos se les aplica `String()`, lo único que queda es
+ * «[object Object]»: la persona no entiende nada y nosotros perdemos el
+ * motivo real del problema.
+ */
+function textoDelError(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  if (error && typeof error === "object") {
+    const e = error as { message?: unknown; code?: unknown };
+    if (typeof e.message === "string" && e.message) {
+      return e.code !== undefined ? `${e.message} (código ${String(e.code)})` : e.message;
+    }
+    try {
+      return JSON.stringify(error);
+    } catch {
+      // un objeto que no se puede pasar a texto: seguimos con String()
+    }
+  }
+  return String(error);
+}
+
+/**
  * Convierte cualquier error en una frase que se pueda leer y resolver.
  * Si no reconocemos el error, damos un mensaje honesto y dejamos el
  * texto original a mano para quien nos acompañe a resolverlo.
  */
 export function mensajeClaro(error: unknown): string {
-  const crudo =
-    error instanceof Error ? error.message : typeof error === "string" ? error : String(error);
+  const crudo = textoDelError(error);
   const busqueda = crudo.toLowerCase();
 
   for (const t of TRADUCCIONES) {
