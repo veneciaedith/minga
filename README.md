@@ -473,6 +473,22 @@ Si alguna de las tres no se cumple, la idea se cae.
 **Esto último no está construido ni decidido.** Está escrito acá para que la
 discusión sea pública y no una sorpresa.
 
+**Pendiente de medir: el costo de los anchors y las trustlines.** Dos cosas técnicas
+que hoy no están presupuestadas:
+
+- **Trustlines.** Cada cuenta que quiera tener una moneda que no sea el XLM nativo
+  (como USDC) necesita abrir una, y eso bloquea **0,5 XLM de reserva** por cuenta
+  mientras esté abierta. Es un costo de la red, chico pero real, y crece con cada
+  comerciante nuevo.
+- **Anchors** (como MoneyGram Ramps, ya mencionado arriba). Convierten entre pesos y
+  la moneda de Stellar, y cada uno tiene su propia tabla de comisiones. Normalmente lo
+  paga quien retira o deposita, no Minga — pero hay que revisar esa tabla antes de
+  elegir uno, y no está hecho todavía.
+
+Entra en la misma idea de fondo: usar las piezas que ya existen en el ecosistema de
+Stellar en vez de reinventarlas, y medir bien lo que cuestan antes de depender de
+ellas.
+
 ### Por qué el escrow fue lo primero
 
 De todas estas etapas, **el escrow es la única que no puede existir sin blockchain**.
