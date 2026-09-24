@@ -436,15 +436,27 @@ esto.
 
 ### Cómo se sostiene Minga
 
-Una pregunta abierta, con una idea que **solo vale con condiciones estrictas**.
+**Decidido, para empezar: 1% de comisión por venta cerrada, cobrada al proveedor.**
+No a Rosa. Ella es la persona que hoy el sistema excluye — cobrarle a ella repetiría
+el mismo problema que Minga resuelve. El que paga es el proveedor, porque es quien
+gana algo nuevo: vender con el pago asegurado a comerciantes que antes no le
+compraban por no conocerlo.
 
-La plata que espera dentro del contrato podría generar un rendimiento, y ese
-rendimiento financiar la plataforma **en vez de cobrarle comisión al comerciante**.
+**Planeado, con la Etapa 4: microcréditos.** Cuando el historial de pagos cumplidos
+alcance para ofrecer crédito (ver "Etapa 4 — Crédito sin banco" arriba), esa misma
+pieza también financia la plataforma: un margen sobre el crédito otorgado, o una
+comisión de originación si el crédito lo da un socio financiero y Minga solo aporta
+el historial que lo hace posible. Todavía no está construido — depende de que la
+Etapa 3 (reputación) esté funcionando primero.
 
-Pero acá hay una línea que no se cruza: **la plata de un pedido en curso no se toca
-nunca.** Rosa tiene que poder recuperarla en el momento en que cancela, sin depender
-de nada ni de nadie. Esa es la promesa central de Minga y no se negocia por un
-rendimiento.
+**En evaluación, no decidido: hacer rendir la plata varada.** Una idea que **solo
+vale con condiciones estrictas**, y que sigue siendo secundaria frente a la comisión
+y los microcréditos.
+
+La plata que espera dentro del contrato podría generar un rendimiento. Pero acá hay
+una línea que no se cruza: **la plata de un pedido en curso no se toca nunca.** Rosa
+tiene que poder recuperarla en el momento en que cancela, sin depender de nada ni de
+nadie. Esa es la promesa central de Minga y no se negocia por un rendimiento.
 
 Lo único que se podría poner a rendir es **la plata que quedó varada**: pedidos
 olvidados, disputas que nadie destrabó hace meses. Y con tres condiciones:
@@ -456,12 +468,10 @@ olvidados, disputas que nadie destrabó hace meses. Y con tres condiciones:
 3. **El rendimiento es de quien puso la plata**, no de Minga, salvo que se acuerde
    otra cosa a la vista.
 
-Si alguna de las tres no se cumple, la idea se cae. Y mientras tanto hay caminos más
-sanos y más fáciles de explicar: una comisión chica sobre lo que el comerciante
-**ahorra** gracias a La Feria, o cobrarle al proveedor que quiere aparecer.
+Si alguna de las tres no se cumple, la idea se cae.
 
-**Nada de esto está construido ni decidido.** Está escrito acá para que la discusión
-sea pública y no una sorpresa.
+**Esto último no está construido ni decidido.** Está escrito acá para que la
+discusión sea pública y no una sorpresa.
 
 ### Por qué el escrow fue lo primero
 
