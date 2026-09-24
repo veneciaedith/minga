@@ -1,0 +1,453 @@
+<title>Pequeños comercios en Argentina</title>
+<meta name="description" content="Estudio de Minga sobre informalidad y supervivencia de los pequeños comercios en Argentina, con datos a septiembre de 2026.">
+<style>
+/* Colores tomados de la app de Minga (frontend/src/styles.css).
+   Ya cumplen contraste AA en los dos temas. */
+:root {
+  color-scheme: light;
+  --escala: 1;
+  --papel:        #FBF7F1;
+  --tarjeta:      #FFFFFF;
+  --borde:        #D9CBB8;
+  --tinta:        #14211E;
+  --tinta-suave:  #46534F;
+  --teal:         #0B4E46;
+  --terracota:    #97381B;
+  --ocre:         #7A5206;
+  --pista:        #EFE6D9;
+  --foco:         #97381B;
+  --bien:         #13593A;
+  --bien-fondo:   #E4F2EA;
+  --atencion:     #6F4805;
+  --atencion-fondo: #FAEED3;
+  --mal:          #8C2318;
+  --mal-fondo:    #FBE4E0;
+  --radio: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-tema="claro"]) {
+    color-scheme: dark;
+    --papel:        #0E1F1C;
+    --tarjeta:      #16312C;
+    --borde:        #2B4A43;
+    --tinta:        #EFF5F2;
+    --tinta-suave:  #A9BDB7;
+    --teal:         #7BDCC7;
+    --terracota:    #F0977A;
+    --ocre:         #E8B84C;
+    --pista:        #21403A;
+    --foco:         #F5B08D;
+    --bien:         #85DFAE;
+    --bien-fondo:   #103528;
+    --atencion:     #F3CB74;
+    --atencion-fondo: #382B10;
+    --mal:          #F8A296;
+    --mal-fondo:    #3E1C18;
+  }
+}
+:root[data-theme="dark"], :root[data-tema="oscuro"] {
+  color-scheme: dark;
+  --papel:        #0E1F1C;
+  --tarjeta:      #16312C;
+  --borde:        #2B4A43;
+  --tinta:        #EFF5F2;
+  --tinta-suave:  #A9BDB7;
+  --teal:         #7BDCC7;
+  --terracota:    #F0977A;
+  --ocre:         #E8B84C;
+  --pista:        #21403A;
+  --foco:         #F5B08D;
+  --bien:         #85DFAE;
+  --bien-fondo:   #103528;
+  --atencion:     #F3CB74;
+  --atencion-fondo: #382B10;
+  --mal:          #F8A296;
+  --mal-fondo:    #3E1C18;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: calc(17px * var(--escala));
+  line-height: 1.6;
+}
+.pagina {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-inline: 16px;
+  padding-block: 1.5rem 3rem;
+  display: grid;
+  gap: 2.5rem;
+}
+a { color: var(--teal); text-underline-offset: .2em; }
+a:focus-visible, button:focus-visible {
+  outline: 3px solid var(--foco);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+h1, h2 { text-wrap: balance; line-height: 1.25; margin: 0; }
+h1 { font-size: 1.9rem; }
+h2 { font-size: 1.35rem; }
+p { margin: 0; }
+.suave { color: var(--tinta-suave); }
+.num { font-variant-numeric: tabular-nums; }
+
+/* Encabezado */
+.cabecera { display: grid; gap: 1rem; }
+.marca-fila {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+}
+.marca { display: flex; align-items: center; gap: .6rem; font-weight: 700; color: var(--teal); }
+.marca svg { width: 34px; height: 34px; flex: none; }
+.ajustes { display: flex; gap: .4rem; align-items: center; font-size: .9rem; }
+.ajustes button {
+  font: inherit; font-weight: 700;
+  min-width: 44px; min-height: 44px;
+  border: 1px solid var(--borde); border-radius: 10px;
+  background: var(--tarjeta); color: var(--tinta); cursor: pointer;
+}
+.fecha { font-size: .92rem; }
+
+/* Resumen */
+.ideas { margin: 0; padding-left: 1.4rem; display: grid; gap: .6rem; }
+
+/* Secciones */
+section { display: grid; gap: 1rem; }
+
+/* Gráficos: cada fila es nombre / barra / valor.
+   El valor tiene su propia columna, así nunca se pisa con la barra. */
+.grafico {
+  margin: 0;
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 1.1rem 1.1rem 1rem;
+  display: grid;
+  gap: .9rem;
+}
+.grafico figcaption { display: grid; gap: .2rem; }
+.grafico .titulo { font-weight: 700; }
+.grafico .nota { font-size: .88rem; color: var(--tinta-suave); }
+.filas { list-style: none; margin: 0; padding: 0; display: grid; gap: .85rem; }
+.fila {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 6.5ch;
+  grid-template-areas: "nombre nombre" "barra valor";
+  column-gap: .75rem;
+  row-gap: .25rem;
+  align-items: center;
+}
+.fila .nombre { grid-area: nombre; font-size: .95rem; }
+.fila .pista {
+  grid-area: barra;
+  height: 1.4rem;
+  background: var(--pista);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.fila .barra {
+  display: block;
+  height: 100%;
+  width: var(--v);
+  background: var(--color, var(--teal));
+  border-radius: 6px;
+}
+.fila .valor {
+  grid-area: valor;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.fila.ancha { grid-template-columns: minmax(0, 1fr) 7.5ch; }
+.escala {
+  display: flex; justify-content: space-between;
+  font-size: .8rem; color: var(--tinta-suave);
+  margin-right: calc(6.5ch + .75rem);
+  font-variant-numeric: tabular-nums;
+}
+.grafico .fuente { font-size: .85rem; color: var(--tinta-suave); }
+
+/* Tablas */
+.tabla-caja { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .95rem; }
+th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--borde); vertical-align: top; }
+th { font-size: .85rem; color: var(--tinta-suave); font-weight: 600; }
+td.cifra { font-weight: 700; font-variant-numeric: tabular-nums; }
+@media (max-width: 480px) {
+  td.cifra { min-width: 6.5em; }
+}
+
+.confianza {
+  display: inline-block;
+  font-size: .82rem; font-weight: 700;
+  padding: .1rem .55rem; border-radius: 999px;
+  white-space: nowrap;
+}
+.confianza.alta { background: var(--bien-fondo); color: var(--bien); }
+.confianza.baja { background: var(--atencion-fondo); color: var(--atencion); }
+
+.destacado {
+  border-left: 4px solid var(--ocre);
+  background: var(--tarjeta);
+  padding: .9rem 1rem;
+  border-radius: 0 var(--radio) var(--radio) 0;
+}
+
+ul.lista { margin: 0; padding-left: 1.3rem; display: grid; gap: .5rem; }
+ul.lista ul { margin-top: .4rem; display: grid; gap: .3rem; }
+
+.fuentes { font-size: .92rem; }
+.fuentes ol { margin: 0; padding-left: 1.3rem; display: grid; gap: .35rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fila .barra { transition: width .6s ease-out; }
+}
+</style>
+
+<main class="pagina">
+
+  <header class="cabecera">
+    <div class="marca-fila">
+      <div class="marca">
+        <svg viewBox="0 0 34 34" aria-hidden="true" focusable="false">
+          <rect width="34" height="34" rx="9" fill="#0B4E46"/>
+          <path d="M13 7h8v3h3v3h3v8h-3v3h-3v3h-8v-3h-3v-3H7v-8h3v-3h3z" fill="#D9A227"/>
+          <rect x="15" y="15" width="4" height="4" rx="1" fill="#C0512F"/>
+        </svg>
+        <span>Minga</span>
+      </div>
+      <div class="ajustes" role="group" aria-label="Tamaño del texto">
+        <button type="button" id="achicar" aria-label="Achicar el texto">A−</button>
+        <button type="button" id="agrandar" aria-label="Agrandar el texto">A+</button>
+      </div>
+    </div>
+    <h1>Pequeños comercios en Argentina: informalidad y supervivencia</h1>
+    <p class="fecha suave">Datos públicos reunidos a septiembre de 2026.</p>
+  </header>
+
+  <section aria-labelledby="t-resumen">
+    <h2 id="t-resumen">Resumen</h2>
+    <ol class="ideas">
+      <li><strong>Cuanto más chico es el negocio, más informal es.</strong> Entre quienes trabajan por su cuenta, casi <strong>2 de cada 3 no están registrados</strong>.</li>
+      <li><strong>La vida de un comercio nuevo es corta.</strong> Muchos cierran en los <strong>primeros 2 o 3 años</strong>, y solo una minoría llega a los 5 años.</li>
+      <li><strong>Hoy cierran más empresas de las que abren.</strong> Desde fines de 2023 se perdieron más de <strong>28.000 empresas con empleados</strong>.</li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="t-cuantos">
+    <h2 id="t-cuantos">¿Cuántos pequeños comercios hay?</h2>
+    <div class="tabla-caja">
+      <table>
+        <thead><tr><th scope="col">Qué se mide</th><th scope="col">Cantidad</th></tr></thead>
+        <tbody>
+          <tr><td>Pymes registradas (abril 2025)</td><td class="cifra">515.599</td></tr>
+          <tr><td>Parte de las empresas con empleados que son pymes</td><td class="cifra">98 %</td></tr>
+          <tr><td>Parte del comercio del país que son pymes</td><td class="cifra">99 %</td></tr>
+          <tr><td>Personas que trabajan por su cuenta en el comercio</td><td class="cifra">1.869.000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La mayoría de los comercios <strong>no tiene empleados</strong>: los atiende su dueña o dueño, como un kiosco, una verdulería o una venta por redes. Por eso las estadísticas de empresas registradas muestran solo una parte del sector.</p>
+  </section>
+
+  <section aria-labelledby="t-informalidad">
+    <h2 id="t-informalidad">Informalidad</h2>
+    <p>Un trabajo es <strong>informal</strong> cuando no está registrado: no tiene aportes jubilatorios, obra social ni seguro por accidentes.</p>
+
+    <figure class="grafico">
+      <figcaption>
+        <span class="titulo">¿Qué parte de la gente trabaja en la informalidad?</span>
+        <span class="nota">Porcentaje de personas sin registrar en cada grupo.</span>
+      </figcaption>
+      <ul class="filas">
+        <li class="fila">
+          <span class="nombre">Todas las personas que trabajan (2026)</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:43%"></span></span>
+          <span class="valor">43 %</span>
+        </li>
+        <li class="fila">
+          <span class="nombre">Personas que trabajan por su cuenta (2025)</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:62.4%; --color: var(--ocre)"></span></span>
+          <span class="valor">62,4 %</span>
+        </li>
+        <li class="fila">
+          <span class="nombre">Personas que trabajan por su cuenta (2026)</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:65.8%; --color: var(--ocre)"></span></span>
+          <span class="valor">65,8 %</span>
+        </li>
+      </ul>
+      <div class="escala" aria-hidden="true"><span>0 %</span><span>50 %</span><span>100 %</span></div>
+      <p class="fuente">Fuentes: estudio de la UBA (Infobae, marzo 2026) y datos del INDEC (El Destape).</p>
+    </figure>
+
+    <figure class="grafico">
+      <figcaption>
+        <span class="titulo">¿En qué empresas están los empleos sin registrar?</span>
+        <span class="nota">De cada 100 empleos privados sin registrar, cuántos hay en cada tamaño de empresa. 3.er trimestre de 2025.</span>
+      </figcaption>
+      <ul class="filas">
+        <li class="fila">
+          <span class="nombre">Menos de 10 personas</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:76%; --color: var(--terracota)"></span></span>
+          <span class="valor">76 %</span>
+        </li>
+        <li class="fila">
+          <span class="nombre">De 10 a 40 personas</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:14%; --color: var(--terracota)"></span></span>
+          <span class="valor">14 %</span>
+        </li>
+        <li class="fila">
+          <span class="nombre">Más de 40 personas</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:10%; --color: var(--terracota)"></span></span>
+          <span class="valor">10 %</span>
+        </li>
+      </ul>
+      <div class="escala" aria-hidden="true"><span>0 %</span><span>50 %</span><span>100 %</span></div>
+      <p class="fuente">Fuente: INDEC, citado por Forbes Argentina.</p>
+    </figure>
+
+    <ul class="lista">
+      <li>En el comercio mayorista y minorista hay <strong>más de 1 millón de empleados sin registrar</strong>.</li>
+      <li>El trabajo informal fue el que <strong>más creció</strong> en el último año, y paga menos de la mitad que un empleo registrado.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-supervivencia">
+    <h2 id="t-supervivencia">¿Cuánto tiempo sobreviven?</h2>
+    <p class="destacado"><strong>Estimación razonable:</strong> un comercio nuevo suele durar <strong>entre 2 y 3 años</strong>, y solo una minoría llega a los 5 años.</p>
+    <p>No hay un estudio oficial y actualizado sobre la supervivencia de los pequeños comercios. Por eso cada dato indica qué tan confiable es.</p>
+    <div class="tabla-caja">
+      <table>
+        <thead><tr><th scope="col">Dato</th><th scope="col">Cifra</th><th scope="col">Confianza</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Cierres que fueron de empresas con menos de 3 años de vida (mediados de 2024 a mediados de 2025)</td>
+            <td class="cifra">34 % de los cierres</td>
+            <td><span class="confianza alta">Alta</span><br><span class="suave">Dato oficial</span></td>
+          </tr>
+          <tr>
+            <td>Empresas nuevas que no llegan a los 2 años</td>
+            <td class="cifra">8 de cada 10</td>
+            <td><span class="confianza baja">Baja</span><br><span class="suave">No queda claro de qué estudio sale</span></td>
+          </tr>
+          <tr>
+            <td>Empresas que llegan a los 8 años</td>
+            <td class="cifra">3 de cada 10</td>
+            <td><span class="confianza baja">Baja</span><br><span class="suave">Misma fuente</span></td>
+          </tr>
+          <tr>
+            <td>Empresas que llegan a los 5 años</td>
+            <td class="cifra">1 de cada 10</td>
+            <td><span class="confianza baja">Baja</span><br><span class="suave">La cifra más pesimista</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Estos números cuentan sobre todo a <strong>empresas registradas con empleados</strong>. Los comercios informales no aparecen en las estadísticas, y probablemente duran todavía menos.</p>
+  </section>
+
+  <section aria-labelledby="t-contexto">
+    <h2 id="t-contexto">Contexto 2024–2026: cierran más empresas de las que abren</h2>
+
+    <figure class="grafico">
+      <figcaption>
+        <span class="titulo">Empresas que abrieron y que cerraron</span>
+        <span class="nota">Todo 2024 y el primer trimestre de 2025.</span>
+      </figcaption>
+      <ul class="filas">
+        <li class="fila ancha">
+          <span class="nombre">Abrieron</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:79.787%"></span></span>
+          <span class="valor">79.787</span>
+        </li>
+        <li class="fila ancha">
+          <span class="nombre">Cerraron</span>
+          <span class="pista" aria-hidden="true"><span class="barra" style="--v:97.11%; --color: var(--terracota)"></span></span>
+          <span class="valor">97.110</span>
+        </li>
+      </ul>
+      <p>Resultado: <strong class="num">17.323 empresas menos</strong>.</p>
+      <p class="fuente">Fuente: Secretaría de Trabajo, citado por El Economista.</p>
+    </figure>
+
+    <div class="tabla-caja">
+      <table>
+        <thead><tr><th scope="col">Período</th><th scope="col">Qué pasó</th></tr></thead>
+        <tbody>
+          <tr><td>1.er semestre 2026</td><td>Cerraron <strong class="num">8.734</strong> empresas, unas 30 por día.</td></tr>
+          <tr><td>Diciembre 2023 a mediados de 2026</td><td>Se perdieron <strong class="num">28.262</strong> empresas con empleados y <strong class="num">341.396</strong> empleos registrados.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>La CAME, la cámara que representa a las pymes, dice que los embargos de ARCA (el organismo que cobra los impuestos, ex AFIP) son hoy el «problema número uno de las pymes». Algunas proyecciones privadas hablan de hasta 40.000 empresas cerradas en 2026. Son estimaciones y no datos confirmados.</p>
+  </section>
+
+  <section aria-labelledby="t-oportunidades">
+    <h2 id="t-oportunidades">Oportunidades para soluciones tecnológicas inclusivas</h2>
+    <ul class="lista">
+      <li><strong>Es mucha gente y pocos la atienden.</strong> Casi 2 millones de personas trabajan por su cuenta en el comercio, y la mayoría está en la informalidad.</li>
+      <li><strong>Lo que más necesitan es durar</strong>, sobre todo en los primeros 2 o 3 años. Por ejemplo: llevar las cuentas de forma simple, ordenar el stock y los precios, entender el monotributo y conseguir financiamiento.</li>
+      <li><strong>La herramienta tiene que servir aunque el negocio todavía sea informal.</strong> Puede ser un camino de a poco hacia la formalidad, sin que la persona se sienta amenazada ni juzgada.</li>
+      <li><strong>Tiene que ser accesible desde el inicio</strong>, siguiendo el diseño universal y la Convención sobre los Derechos de las Personas con Discapacidad:
+        <ul>
+          <li>que funcione en celulares simples y con poca conexión;</li>
+          <li>que use lenguaje claro, con opción de audio o voz;</li>
+          <li>que se pueda usar con lectores de pantalla y con letra grande;</li>
+          <li>que avise de los errores en palabras simples y deje deshacer, como piden las heurísticas de usabilidad de Nielsen.</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-limites">
+    <h2 id="t-limites">Límites de este estudio</h2>
+    <ul class="lista">
+      <li>Los datos de <strong>informalidad</strong> son sólidos porque salen del INDEC.</li>
+      <li>Los datos de <strong>supervivencia</strong> son aproximados: no hay un estudio oficial reciente centrado en pequeños comercios.</li>
+      <li>Muchas cifras llegan a través de notas de prensa que citan a organismos oficiales. Antes de usar un número en una presentación, conviene revisar la fuente original.</li>
+      <li>No hay datos separados por provincia ni por rubro.</li>
+    </ul>
+  </section>
+
+  <section class="fuentes" aria-labelledby="t-fuentes">
+    <h2 id="t-fuentes">Fuentes</h2>
+    <ol>
+      <li><a href="https://ucema.edu.ar/sites/default/files/2025-09/IndicadoresUCEMA_PyMEs092025.pdf">UCEMA: Evolución de las pymes en Argentina (septiembre 2025)</a></li>
+      <li><a href="https://www.infobae.com/economia/2026/03/20/el-empleo-informal-alcanza-a-4-de-cada-10-trabajadores-segun-un-estudio-de-la-uba/">Infobae: el empleo informal alcanza a 4 de cada 10 trabajadores (estudio UBA, marzo 2026)</a></li>
+      <li><a href="https://www.eldestapeweb.com/economia/mapa-oculto-informalidad-donde-esconde-empleo-registrar-202661111573">El Destape: el mapa oculto de la informalidad (datos del INDEC)</a></li>
+      <li><a href="https://www.forbesargentina.com/columnistas/la-informalidad-empieza-microempresas-n87453">Forbes Argentina: la informalidad empieza en las microempresas</a></li>
+      <li><a href="https://www.lanacion.com.ar/economia/informalidad-record-el-tipo-de-empleo-que-mas-crecio-durante-la-gestion-milei-paga-menos-de-la-mitad-nid20092026/">La Nación: informalidad récord</a></li>
+      <li><a href="https://www.argentina.gob.ar/sites/default/files/flujos_de_empleo_y_demografia_de_empresas_-_segundo_trimestre_de_2025_0.pdf">Ministerio de Capital Humano: flujos de empleo y demografía de empresas</a></li>
+      <li><a href="https://www.somospymes.com.ar/item/17331-el-80-de-las-pymes-no-sobreviven-mas-de-dos-anos-en-argentina.html">SomosPymes: el 80 % de las pymes no sobrevive más de dos años</a></li>
+      <li><a href="https://www.ambito.com/opiniones/pymes/la-realidad-las-argentina-analisis-la-razon-su-baja-supervivencia-n5623107">Ámbito: la realidad de las pymes y su baja supervivencia</a></li>
+      <li><a href="https://eleconomista.com.ar/economia/cierre-masivo-empresas-argentina-mas-17000-15-meses-n90808">El Economista: más de 17.000 empresas cerradas en 15 meses</a></li>
+      <li><a href="https://www.ambito.com/economia/crisis-empresas-se-perdieron-mas-5600-2026-y-ya-son-28262-las-bajas-la-era-javier-milei-n6299443">Ámbito: 28.262 empresas menos (datos de la SRT)</a></li>
+      <li><a href="https://www.datadiario.com/economia/en-el-primer-semestre-de-2026-cerraron-8-734-empresas-en-argentina-la-crisis-que-el-gobierno-no-puede-ocultar-202691216180">DataDiario: 8.734 empresas cerradas en el primer semestre de 2026</a></li>
+      <li><a href="https://www.perfil.com/noticias/economia/la-industria-puede-dejar-medio-millon-de-trabajadores-sin-empleo-y-cerrar-hasta-40000-empresas-en-2026-a40.phtml">Perfil: proyección de hasta 40.000 empresas cerradas en 2026</a></li>
+    </ol>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  var raiz = document.documentElement;
+  var escala = 1;
+  try { escala = parseFloat(localStorage.getItem('minga-escala')) || 1; } catch (e) {}
+  function aplicar() {
+    raiz.style.setProperty('--escala', escala);
+    try { localStorage.setItem('minga-escala', String(escala)); } catch (e) {}
+  }
+  aplicar();
+  document.getElementById('achicar').addEventListener('click', function () {
+    escala = Math.max(0.85, Math.round((escala - 0.1) * 100) / 100); aplicar();
+  });
+  document.getElementById('agrandar').addEventListener('click', function () {
+    escala = Math.min(1.6, Math.round((escala + 0.1) * 100) / 100); aplicar();
+  });
+})();
+</script>
