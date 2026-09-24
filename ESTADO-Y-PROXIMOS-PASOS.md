@@ -1,6 +1,6 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **23 de septiembre de 2026** (primer pedido real, desde el celular)
+> Última actualización: **24 de septiembre de 2026** (checkpoint del jueves cumplido)
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
 > Rama de trabajo: **`claude/cool-fermi-6kp11h`**
 
@@ -96,18 +96,25 @@ Tres errores de la app que aparecieron y quedaron arreglados:
 - Con la billetera «conectada» no había cómo volver a elegirla: ahora hay un botón
   **«Cambiar de billetera»**.
 
+### ✅ Checkpoint del jueves 24/09 — cumplido
+
+Recorrido de punta a punta probado dos veces más, desde el celular:
+
+- **287573** y **125388**, los dos llegaron hasta «Pago liberado» (crear pedido →
+  el proveedor avisa que entregó → confirmar → el proveedor cobra).
+- **129183** queda en Pendiente, a propósito, como demo de «la plata está guardada».
+- Comprobante público del pedido 125388 sumado a `DESPLIEGUE-TESTNET.md`.
+- Pie de la app actualizado con el equipo actual (Cintia y Octavio).
+- Primer borrador del guion de pitch, en PDF, listo para la llamada de las 11.
+
 ### Lo que sigue, en orden
 
-1. **Un segundo pedido que llegue a «Pago liberado»**: crearlo igual y tocar «Ya me
-   llegó el pedido». Con eso queda probado el recorrido de punta a punta (checkpoint
-   del jueves 24). Anotar el número y pasarle a la IA el link del comprobante para
-   sumarlo a `DESPLIEGUE-TESTNET.md`.
-2. **Link del comprobante del pedido 129183**, para la evidencia.
-3. **Pie de la app**: todavía nombra al equipo de julio. Cambiarlo a Cintia y Octavio,
-   si ella lo confirma.
-2. **Las tres pruebas con usuarios** (hermano, prima, Bernardo) — para el checkpoint
+1. **Las tres pruebas con usuarios** (hermano, prima, Bernardo) — para el checkpoint
    del sábado 26. Ellos manejan la computadora, no Cintia.
-3. **Video demo y deck**, para la entrega del domingo 27 a las 23:59.
+2. **Video demo y deck**, para la entrega del domingo 27 a las 23:59.
+3. **Pulir el tamaño de pantalla en el celular**: algunas pantallas quedan más largas
+   de lo que entra de una vista, hay que desplazarse para verlas enteras. Es ajuste
+   de estilos, no funcionalidad nueva — entra dentro del feature freeze.
 
 **Esto ya se resolvió del lado del código (16/09).** El frontend ahora habla el
 idioma del contrato nuevo:

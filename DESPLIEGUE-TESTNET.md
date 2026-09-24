@@ -41,6 +41,25 @@ y ninguna función la puede cambiar.
 
 ---
 
+# 📱 Primeros pedidos reales, hechos desde el celular — 23 y 24 de septiembre de 2026
+
+Contra el contrato nuevo. No son una demo grabada de antemano: son operaciones que
+Cintia hizo en vivo, desde su celular, con la billetera **xBull** (web) y la cuenta
+`GD5TCMAA3PHUFOCRVVJLSXVGW5QY3SZJ4UVXC6VNL6A3KXEVKB36Q7KI`. Sirven de referencia para
+el checkpoint del Argentina Builder Challenge y quedan visibles en la app.
+
+| Pedido | Qué muestra | Estado |
+|---|---|---|
+| **129183** | La plata recién guardada, esperando la mercadería. No se toca a propósito. | Pendiente |
+| **287573** | El recorrido completo: guardada → el proveedor avisa que entregó → confirmada → pagada. | Pago liberado |
+| **125388** | El mismo recorrido completo, repetido para confirmar que no fue casualidad. | Pago liberado |
+
+Comprobante público de la confirmación del pedido 125388 (el pago liberándose al
+proveedor):
+[`9abaf38e…`](https://stellar.expert/explorer/testnet/tx/9abaf38e233dfe5e2f4e974a8a0fde444f7cb610a01c6b36b194845b1658be18)
+
+---
+
 # 📜 Contrato anterior — julio de 2026
 
 Se deja como evidencia del **flujo completo ejecutado on-chain**, con plata moviéndose
