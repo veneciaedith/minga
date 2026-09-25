@@ -66,6 +66,26 @@ garantía: la plata está, pero nadie la puede tocar todavía.
 3. **Rosa confirma que recibió** y el contrato le manda la plata al proveedor.
 4. **Si el pedido no se concreta**, Rosa cancela y recupera todo.
 
+El recorrido de cuando todo sale bien, paso a paso:
+
+```mermaid
+sequenceDiagram
+    accTitle: El recorrido de un pedido cuando todo sale bien
+    accDescr: Rosa guarda la plata en el contrato y le pasa el número de pedido al proveedor. El proveedor consulta el contrato, ve que el pago está firme y entrega la mercadería. Rosa confirma que le llegó y el contrato le manda la plata al proveedor.
+    actor R as Rosa (comercio)
+    participant C as Contrato en Stellar
+    actor P as Proveedor
+    R->>C: Arma el pedido y guarda la plata
+    Note over C: La plata queda guardada.<br/>Nadie la puede tocar.
+    R-->>P: Le pasa el número de pedido
+    P->>C: Consulta el pedido
+    C-->>P: El pago está firme
+    P-->>R: Entrega la mercadería
+    R->>C: «Ya me llegó el pedido»
+    C->>P: Le manda la plata
+    Note over P: Cobró
+```
+
 ### Y si algo sale mal
 
 Esta parte es la que más trabajo costó, porque es donde se juega si el proveedor
@@ -87,25 +107,28 @@ reloj del plazo que Rosa eligió:
 
 Los caminos posibles, completos:
 
-```
-Rosa crea el pedido y elige el plazo
-        │  plata bloqueada en el contrato
-        ▼
-   PENDIENTE ──── Rosa confirma ─────────────────────► LIBERADO (cobra el proveedor)
-        │    └─── Rosa cancela ──────────────────────► CANCELADO (recupera Rosa)
-        │
-        │  el proveedor firma "ya entregué"
-        ▼
-   ENTREGADO  ← acá arranca el reloj de Rosa
-        │
-        ├── Rosa confirma ──────────────────────────► LIBERADO
-        ├── se vence el plazo → el proveedor reclama ► LIBERADO
-        ├── el proveedor se echa atrás ─────────────► CANCELADO
-        └── Rosa objeta (dentro del plazo)
-                 ▼
-            EN DISPUTA  ← plata frenada, no cobra nadie
-                 ├── Rosa cede y libera ────────────► LIBERADO
-                 └── el proveedor cede y devuelve ──► CANCELADO
+```mermaid
+stateDiagram-v2
+    accTitle: Los caminos posibles de un pedido
+    accDescr: Un pedido empieza pendiente. Desde ahí Rosa puede confirmar y el proveedor cobra, o cancelar y recupera la plata. Si el proveedor avisa que entregó, el pedido pasa a entregado y arranca el plazo de Rosa. Desde entregado, el proveedor cobra si Rosa confirma o si se vence el plazo; se cancela si el proveedor se echa atrás; y queda en disputa si Rosa objeta dentro del plazo. En disputa la plata está frenada hasta que Rosa libera el pago o el proveedor devuelve la plata.
+    state "Pendiente<br/>plata guardada en el contrato" as Pendiente
+    state "Entregado<br/>arranca el plazo de Rosa" as Entregado
+    state "En disputa<br/>plata frenada, no cobra nadie" as Disputa
+    state "Liberado<br/>cobra el proveedor" as Liberado
+    state "Cancelado<br/>la plata vuelve a Rosa" as Cancelado
+
+    [*] --> Pendiente: Rosa crea el pedido y elige el plazo
+    Pendiente --> Liberado: Rosa confirma
+    Pendiente --> Cancelado: Rosa cancela
+    Pendiente --> Entregado: el proveedor firma «ya entregué»
+    Entregado --> Liberado: Rosa confirma
+    Entregado --> Liberado: se vence el plazo y el proveedor reclama
+    Entregado --> Cancelado: el proveedor se echa atrás
+    Entregado --> Disputa: Rosa objeta dentro del plazo
+    Disputa --> Liberado: Rosa cede y libera
+    Disputa --> Cancelado: el proveedor cede y devuelve
+    Liberado --> [*]
+    Cancelado --> [*]
 ```
 
 **Lo que este prototipo todavía no resuelve:** una disputa en la que ninguna de las
