@@ -295,8 +295,13 @@ nadie a una billetera sola.
 
 **Lo más rápido, sin instalar nada:** abrí
 [`mockups/minga-app.html`](mockups/minga-app.html) con doble clic, o entrá a
-[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) y consultá el pedido **42** en
-la pestaña *Proveedor* (esa es la versión de julio, la que está en la red).
+[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app), abrí la pestaña *Soy proveedor*
+y consultá uno de estos pedidos de demostración del contrato nuevo:
+
+| Pedido | Qué muestra | Estado |
+|---|---|---|
+| **129183** | La plata recién guardada, esperando la mercadería. No se toca a propósito. | Pendiente |
+| **125388** | El recorrido completo: pedido creado, entregado, confirmado y cobrado. | Pago liberado |
 
 **Correr las pruebas** (lo que verifica que el contrato hace lo que dice):
 
@@ -333,7 +338,7 @@ El orden no es un capricho. Cada etapa necesita que la anterior exista.
 | | Qué |
 |---|---|
 | ✅ | ~~Instalar el contrato nuevo en la red.~~ Hecho el 22/09/2026. |
-| 🔜 | **Dejar pedidos de demostración** en el contrato nuevo, para que cualquiera pueda consultarlos sin instalar nada. |
+| ✅ | ~~Dejar pedidos de demostración en el contrato nuevo.~~ Hecho: pedidos 129183 y 125388 (ver "Probarlo"). |
 | 🔜 | **El historial de pedidos leído desde la red**, usando los avisos que el contrato ya publica. |
 
 ### Etapa 1 — Que cargar no cueste nada
@@ -546,6 +551,6 @@ el **Argentina Builder Challenge** (septiembre 2026).
 ## Enlaces
 
 - Repositorio: https://github.com/veneciaedith/minga
-- App en vivo (versión de julio): https://minga-r5ql.vercel.app
+- App en vivo: https://minga-r5ql.vercel.app
 - Video demo: https://youtu.be/6X-0l_hIbqs
-- El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N)
+- El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)

@@ -304,8 +304,13 @@ is tied to a single wallet.
 
 **The fastest way, nothing to install:** open
 [`mockups/minga-app.html`](mockups/minga-app.html) with a double click, or go to
-[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) and look up order **42** on the
-*Supplier* tab (that's the July version, the one on the network).
+[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app), open the *Supplier* tab
+(«Soy proveedor») and look up one of these demo orders on the new contract:
+
+| Order | What it shows | Status |
+|---|---|---|
+| **129183** | The money just locked, waiting for the goods. Left untouched on purpose. | Pending |
+| **125388** | The full journey: order created, delivered, confirmed and paid. | Payment released |
 
 **Run the tests** (they check that the contract does what it says):
 
@@ -342,7 +347,7 @@ The order isn't arbitrary. Each stage needs the previous one to exist.
 | | What |
 |---|---|
 | ✅ | ~~Install the new contract on the network.~~ Done on 09/22/2026. |
-| 🔜 | **Leave demo orders** on the new contract, so anyone can look them up without installing anything. |
+| ✅ | ~~Leave demo orders on the new contract.~~ Done: orders 129183 and 125388 (see "Try it"). |
 | 🔜 | **Order history read from the network**, using the events the contract already publishes. |
 
 ### Stage 1 — Recording things should cost nothing
@@ -552,6 +557,6 @@ in the **Argentina Builder Challenge** (September 2026).
 ## Links
 
 - Repository: https://github.com/veneciaedith/minga
-- Live app (July version): https://minga-r5ql.vercel.app
+- Live app: https://minga-r5ql.vercel.app
 - Demo video: https://youtu.be/6X-0l_hIbqs
-- The contract on the explorer: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N)
+- The contract on the explorer: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)
