@@ -1,549 +1,557 @@
-# 🤝 Minga — que el pago no dependa de la confianza
+# 🤝 Minga — payments that don't depend on trust
 
-> ### *Muchas manos levantan lo que una sola no puede.*
+🌐 **English** · [Español](README.es.md)
 
-Minga es una aplicación para que un comercio chico pueda comprarle mercadería a un
-proveedor sin que ninguno de los dos tenga que arriesgar primero.
+> ### *Many hands lift what one alone cannot.*
 
-La plata queda **guardada y bloqueada** hasta que la mercadería llega. Ahí se libera
-sola. Si el pedido no llega, vuelve a quien la puso.
+Minga is an app that lets a small shop buy goods from a supplier without either of
+them having to take the risk first.
 
-Por debajo funciona con un contrato en la red **Stellar**, pero la persona que usa la
-app nunca toca eso. Solo lee *"Pedido creado"* y *"Pago liberado"*.
+The money is **held and locked** until the goods arrive. Then it is released
+automatically. If the order never arrives, the money goes back to whoever put it in.
 
----
-
-## Por qué existe
-
-Yo tenía una panadería y la terminé cerrando.
-
-No escribo código. Construyo Minga con herramientas de inteligencia artificial,
-preguntando y probando, porque no quiero esperar a que alguien con más estudios
-decida que este problema vale la pena.
-
-Lo que me mueve no es una idea de negocio. Es que conozco de primera mano lo que es
-poner toda tu plata en un comercio chico. Cada decisión de este proyecto está tomada
-pensando en esa persona: la que no tiene un banco atrás, la que no tiene un abogado,
-la que si pierde un pedido pierde la semana.
-
-Por eso el proyecto tiene dos reglas que no se negocian:
-
-1. **Que se entienda.** Todo, desde la app hasta este archivo, escrito en lenguaje
-   claro. Si hace falta saber qué es una blockchain para usarlo, está mal hecho.
-2. **Que entre cualquiera.** Diseño universal: la aplicación tiene que servir sin
-   importar cómo ve, oye, se mueve o lee cada persona.
+Under the hood it runs on a contract on the **Stellar** network, but the person using
+the app never deals with that. They only read *"Order created"* and *"Payment released"*.
 
 ---
 
-## El problema, con nombre y apellido
+## Why it exists
 
-Rosa tiene un almacén de barrio. Cuando necesita mercadería choca siempre con lo mismo:
+I used to run a bakery, and I ended up closing it.
 
-- Si **paga por adelantado**, se arriesga a que el pedido no llegue o llegue mal.
-- Si **paga después**, muchos proveedores no le creen y no le venden.
+I don't write code. I build Minga with artificial intelligence tools, by asking and
+testing, because I don't want to wait for someone with more degrees to decide this
+problem is worth solving.
 
-Alguno de los dos tiene que arriesgar primero. Y como ninguno quiere, la compra
-muchas veces no se hace.
+What drives me isn't a business idea. It's that I know first-hand what it means to put
+all your money into a small shop. Every decision in this project is made with that
+person in mind: the one with no bank behind them, no lawyer, the one who loses a
+week's income when an order goes missing.
 
-Las empresas grandes resuelven esto hace años: tienen bancos, contratos y abogados
-que garantizan el pago entre dos que no se conocen. Un almacén de barrio no tiene
-nada de eso.
+That's why the project has two non-negotiable rules:
 
-**Minga le da esa misma herramienta a Rosa.**
+1. **It has to be understood.** Everything, from the app to this file, is written in
+   plain language. If you need to know what a blockchain is to use it, it's badly made.
+2. **Anyone can use it.** Universal design: the app has to work no matter how each
+   person sees, hears, moves or reads.
 
 ---
 
-## Cómo funciona
+## The problem, with a name and a face
 
-A lo que queda guardado en el medio se le dice **escrow**, que es un depósito en
-garantía: la plata está, pero nadie la puede tocar todavía.
+Rosa runs a neighborhood grocery store. Whenever she needs stock, she runs into the
+same problem:
 
-1. **Rosa arma el pedido** y elige cuántos días se da para revisar la mercadería
-   cuando llegue (de 1 a 60; normalmente 3). Firma, y la plata sale de su billetera
-   y queda bloqueada en el contrato. **Ni Rosa ni el proveedor la tienen.**
-2. **El proveedor consulta el número de pedido** y ve que el pago está garantizado.
-   Entrega tranquilo.
-3. **Rosa confirma que recibió** y el contrato le manda la plata al proveedor.
-4. **Si el pedido no se concreta**, Rosa cancela y recupera todo.
+- If she **pays upfront**, she risks the order never arriving, or arriving damaged.
+- If she **pays later**, many suppliers don't trust her and won't sell to her.
 
-El recorrido de cuando todo sale bien, paso a paso:
+One of them has to take the risk first. Since neither wants to, the purchase often
+doesn't happen at all.
+
+Big companies solved this years ago: they have banks, contracts and lawyers that
+guarantee payment between two parties who don't know each other. A neighborhood
+grocery store has none of that.
+
+**Minga gives Rosa that same tool.**
+
+---
+
+## How it works
+
+What sits in the middle is called **escrow**: a deposit held as a guarantee. The money
+is there, but nobody can touch it yet.
+
+1. **Rosa places the order** and chooses how many days she'll take to check the goods
+   when they arrive (from 1 to 60; usually 3). She signs, and the money leaves her
+   wallet and is locked in the contract. **Neither Rosa nor the supplier has it.**
+2. **The supplier looks up the order number** and sees that the payment is guaranteed.
+   They deliver with confidence.
+3. **Rosa confirms she received it** and the contract sends the money to the supplier.
+4. **If the order doesn't go through**, Rosa cancels and gets everything back.
+
+The journey when everything goes well, step by step:
 
 ```mermaid
 sequenceDiagram
-    accTitle: El recorrido de un pedido cuando todo sale bien
-    accDescr: Rosa guarda la plata en el contrato y le pasa el número de pedido al proveedor. El proveedor consulta el contrato, ve que el pago está firme y entrega la mercadería. Rosa confirma que le llegó y el contrato le manda la plata al proveedor.
-    actor R as Rosa (comercio)
-    participant C as Contrato en Stellar
-    actor P as Proveedor
-    R->>C: Arma el pedido y guarda la plata
-    Note over C: La plata queda guardada.<br/>Nadie la puede tocar.
-    R-->>P: Le pasa el número de pedido
-    P->>C: Consulta el pedido
-    C-->>P: El pago está firme
-    P-->>R: Entrega la mercadería
-    R->>C: «Ya me llegó el pedido»
-    C->>P: Le manda la plata
-    Note over P: Cobró
+    accTitle: The journey of an order when everything goes well
+    accDescr: Rosa locks the money in the contract and sends the order number to the supplier. The supplier checks the contract, sees the payment is secured and delivers the goods. Rosa confirms they arrived and the contract sends the money to the supplier.
+    actor R as Rosa (shop)
+    participant C as Contract on Stellar
+    actor P as Supplier
+    R->>C: Places the order and locks the money
+    Note over C: The money is held.<br/>Nobody can touch it.
+    R-->>P: Sends the order number
+    P->>C: Looks up the order
+    C-->>P: The payment is secured
+    P-->>R: Delivers the goods
+    R->>C: "My order arrived"
+    C->>P: Sends the money
+    Note over P: Paid
 ```
 
-### Y si algo sale mal
+### And if something goes wrong
 
-Esta parte es la que más trabajo costó, porque es donde se juega si el proveedor
-también puede confiar.
+This part took the most work, because it's where we find out whether the supplier can
+trust the system too.
 
-La primera versión tenía un agujero: confirmar dependía solo de Rosa. Si el proveedor
-entregaba y Rosa no confirmaba nunca —por olvido, porque perdió el teléfono, o de
-mala fe— la plata quedaba trabada para siempre y el proveedor no tenía salida.
+The first version had a hole: confirming depended only on Rosa. If the supplier
+delivered and Rosa never confirmed —because she forgot, lost her phone, or acted in
+bad faith— the money stayed stuck forever and the supplier had no way out.
 
-Ahora **el proveedor puede avisar "ya entregué"** con su propia firma. Eso arranca el
-reloj del plazo que Rosa eligió:
+Now **the supplier can declare "I delivered"** with their own signature. That starts
+the clock on the time limit Rosa chose:
 
-- Si Rosa **confirma**, cobra el proveedor.
-- Si Rosa **no dice nada** y el plazo se vence, el proveedor cobra igual. El silencio
-  ya no lo perjudica.
-- Si Rosa **objeta** dentro del plazo ("esto no me llegó, o me llegó mal"), la plata
-  se **frena**. No cobra nadie hasta que una de las dos partes ceda: o Rosa libera el
-  pago, o el proveedor devuelve la plata.
+- If Rosa **confirms**, the supplier gets paid.
+- If Rosa **says nothing** and the time runs out, the supplier gets paid anyway.
+  Silence no longer hurts them.
+- If Rosa **objects** within the time limit ("this never arrived, or it arrived
+  damaged"), the money is **frozen**. Nobody gets paid until one of the two sides gives
+  in: either Rosa releases the payment, or the supplier returns the money.
 
-Los caminos posibles, completos:
+All the possible paths:
 
 ```mermaid
 stateDiagram-v2
-    accTitle: Los caminos posibles de un pedido
-    accDescr: Un pedido empieza pendiente. Desde ahí Rosa puede confirmar y el proveedor cobra, o cancelar y recupera la plata. Si el proveedor avisa que entregó, el pedido pasa a entregado y arranca el plazo de Rosa. Desde entregado, el proveedor cobra si Rosa confirma o si se vence el plazo; se cancela si el proveedor se echa atrás; y queda en disputa si Rosa objeta dentro del plazo. En disputa la plata está frenada hasta que Rosa libera el pago o el proveedor devuelve la plata.
-    state "Pendiente<br/>plata guardada en el contrato" as Pendiente
-    state "Entregado<br/>arranca el plazo de Rosa" as Entregado
-    state "En disputa<br/>plata frenada, no cobra nadie" as Disputa
-    state "Liberado<br/>cobra el proveedor" as Liberado
-    state "Cancelado<br/>la plata vuelve a Rosa" as Cancelado
+    accTitle: All the possible paths of an order
+    accDescr: An order starts as pending. From there, Rosa can confirm and the supplier gets paid, or cancel and get her money back. If the supplier declares they delivered, the order becomes delivered and Rosa's time limit starts. From delivered, the supplier gets paid if Rosa confirms or if the time runs out; the order is cancelled if the supplier backs out; and it goes into dispute if Rosa objects within the time limit. In dispute, the money is frozen until Rosa releases the payment or the supplier returns the money.
+    state "Pending<br/>money held in the contract" as Pendiente
+    state "Delivered<br/>Rosa's time limit starts" as Entregado
+    state "In dispute<br/>money frozen, nobody gets paid" as Disputa
+    state "Released<br/>the supplier gets paid" as Liberado
+    state "Cancelled<br/>the money goes back to Rosa" as Cancelado
 
-    [*] --> Pendiente: Rosa crea el pedido y elige el plazo
-    Pendiente --> Liberado: Rosa confirma
-    Pendiente --> Cancelado: Rosa cancela
-    Pendiente --> Entregado: el proveedor firma «ya entregué»
-    Entregado --> Liberado: Rosa confirma
-    Entregado --> Liberado: se vence el plazo y el proveedor reclama
-    Entregado --> Cancelado: el proveedor se echa atrás
-    Entregado --> Disputa: Rosa objeta dentro del plazo
-    Disputa --> Liberado: Rosa cede y libera
-    Disputa --> Cancelado: el proveedor cede y devuelve
+    [*] --> Pendiente: Rosa creates the order and picks the time limit
+    Pendiente --> Liberado: Rosa confirms
+    Pendiente --> Cancelado: Rosa cancels
+    Pendiente --> Entregado: the supplier signs "I delivered"
+    Entregado --> Liberado: Rosa confirms
+    Entregado --> Liberado: the time runs out and the supplier claims
+    Entregado --> Cancelado: the supplier backs out
+    Entregado --> Disputa: Rosa objects within the time limit
+    Disputa --> Liberado: Rosa gives in and releases
+    Disputa --> Cancelado: the supplier gives in and returns the money
     Liberado --> [*]
     Cancelado --> [*]
 ```
 
-**Lo que este prototipo todavía no resuelve:** una disputa en la que ninguna de las
-dos partes cede. Eso necesita un árbitro, y está fuera de alcance por ahora. Lo
-decimos acá y no en una nota al pie, porque esconderlo sería vender algo que no es.
+**What this prototype doesn't solve yet:** a dispute where neither side gives in. That
+needs an arbitrator, and it's out of scope for now. We say it here and not in a
+footnote, because hiding it would be selling something it isn't.
 
 ---
 
-## Una falla que encontramos y cerramos
+## A flaw we found and fixed
 
-Vale la pena contarla, porque es el tipo de cosa que decide si este producto sirve o
-es peligroso.
+It's worth telling, because it's the kind of thing that decides whether this product is
+useful or dangerous.
 
-**El problema.** El contrato es público: cualquiera puede llamarlo sin pasar por la
-app. Antes, al crear un pedido se le indicaba con qué moneda se iba a pagar. Alguien
-podía crear un pedido con una **moneda falsa** —una que dice "transferí" pero no vale
-nada—. El proveedor consultaba, veía "pago bloqueado y garantizado", entregaba la
-mercadería de verdad y cobraba algo que no valía nada.
+**The problem.** The contract is public: anyone can call it without going through the
+app. Before, when creating an order, you told it which currency the payment would be
+in. Someone could create an order with a **fake currency** —one that says "transferred"
+but is worth nothing. The supplier would look it up, see "payment locked and
+guaranteed", deliver real goods, and get paid in something worthless.
 
-Eso rompía exactamente la promesa de Minga.
+That broke Minga's promise exactly.
 
-**El arreglo.** Ahora la moneda se fija **una sola vez**, en el momento de instalar el
-contrato en la red, y no hay ninguna función que la cambie. No queda ningún lugar
-donde meter una moneda falsa. Cualquiera puede preguntarle al contrato qué moneda
-acepta (`get_token`) antes de confiar en él.
+**The fix.** Now the currency is set **only once**, when the contract is installed on
+the network, and there is no function that changes it. There's nowhere left to slip in
+a fake currency. Anyone can ask the contract which currency it accepts (`get_token`)
+before trusting it.
 
-La revisión completa está en [`docs/revision-seguridad.md`](docs/revision-seguridad.md).
-**No es una auditoría** y no la presentamos como tal: una auditoría la hace gente de
-afuera que cobra por romperte el código. Esto es una revisión interna, hecha contra la
-lista oficial de vulnerabilidades que publica Stellar.
+The full review is in [`docs/revision-seguridad.md`](docs/revision-seguridad.md) (in
+Spanish). **It is not an audit** and we don't present it as one: an audit is done by
+outside people who get paid to break your code. This is an internal review, done
+against the official vulnerability checklist that Stellar publishes.
 
 ---
 
-## En qué estado está hoy
+## Where it stands today
 
-| | Qué hay |
+| | What's there |
 |---|---|
-| **El contrato en la red (testnet)** | La versión nueva, instalada el **22/09/2026**: [`CDUJYPSQ…WLMAZ73G`](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) |
-| **La app en vivo** | [minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) |
-| **Los tests** | **29 pruebas automáticas, todas en verde** |
+| **The contract on the network (testnet)** | The new version, installed on **09/22/2026**: [`CDUJYPSQ…WLMAZ73G`](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) |
+| **The live app** | [minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) |
+| **The tests** | **29 automated tests, all passing** |
 
-El contrato que está en la red es el mismo que está en el código: plazo, entrega
-declarada por el proveedor, disputa, avisos en la red y la moneda fijada en el deploy.
+The contract on the network is the same one in the code: time limit, delivery declared
+by the supplier, dispute, on-chain events, and the currency fixed at deploy time.
 
-La evidencia, con el enlace a cada transacción y la comprobación de que la moneda quedó
-bien fijada, está en [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md). También queda ahí
-el despliegue de julio, que muestra el flujo completo ejecutado on-chain con plata
-moviéndose de verdad entre billeteras.
-
----
-
-## Qué se construyó esta semana
-
-Septiembre 2026, durante el **Argentina Builder Challenge**:
-
-- **Se cerró la falla de la moneda falsa** (la que está contada más arriba).
-- **Plazo y disputa**, para que el proveedor no quede rehén del silencio de Rosa.
-- **Avisos públicos en la red.** Cada cambio de estado deja un aviso que cualquiera
-  puede leer. Sirve para dos cosas: que la app pueda mostrar el historial de pedidos
-  leyendo la red en vez de depender de la memoria del celular, y que tanto Rosa como
-  el proveedor puedan demostrar lo que hicieron sin depender de la palabra del otro.
-- **Que los pedidos no se archiven.** En Stellar los datos guardados vencen. Ahora cada
-  pedido renueva su fecha mientras se use, para que a nadie le "desaparezca" un pedido.
-- **La app al día con el contrato nuevo**: billetera en la pantalla del proveedor,
-  campo de plazo, botón para frenar el pago, cuenta regresiva, y consulta a la red cada
-  minuto.
-- **Accesibilidad**: los avisos de pago se anuncian en voz alta para lectores de
-  pantalla, foco visible al navegar con teclado, contraste corregido, letra más grande
-  y teclado numérico en el celular.
-- **Revisión de seguridad** completa del contrato, escrita.
-- **Pruebas de propiedades**: además de probar casos uno por uno, la computadora inventa
-  miles de combinaciones al azar y verifica que las cuentas siempre cierren. Las
-  comprobamos rompiendo el contrato a propósito, para asegurarnos de que avisan.
-- **Prototipo navegable** de las tres pantallas del comerciante, en
-  [`mockups/minga-app.html`](mockups/minga-app.html): se abre con doble clic, sin
-  instalar nada.
-- **Decisión de moneda: USDC.** Buscando cómo haría Rosa para sacar la plata,
-  apareció MoneyGram Ramps: permite retirar efectivo en mostrador **sin cuenta
-  bancaria**, en más de 170 países, y funciona con USDC sobre Stellar. Para alguien
-  excluido del sistema financiero, eso no es un detalle técnico: es la diferencia
-  entre que la plata le sirva o no.
+The evidence, with a link to each transaction and proof that the currency was fixed
+correctly, is in [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md) (in Spanish). It also
+keeps the July deployment, which shows the full flow executed on-chain with money
+really moving between wallets.
 
 ---
 
-## Diseño universal: por qué la app está hecha así
+## What we built this week
 
-La accesibilidad no es un agregado del final. Está en
-[`docs/diseno-accesible.md`](docs/diseno-accesible.md), y se apoya en tres marcos:
+September 2026, during the **Argentina Builder Challenge**:
 
-- **Las 10 heurísticas de usabilidad de Jakob Nielsen**, para que se entienda.
-- **La Convención sobre los Derechos de las Personas con Discapacidad** (artículos 2, 9
-  y 21) y el diseño universal, para que se entienda sin importar cómo ve, oye, se mueve
-  o lee cada persona.
-- **WCAG 2.1 nivel AA** como referencia técnica concreta.
-
-Algunas decisiones que salen de ahí:
-
-- **El color nunca informa solo.** Cada estado lleva ícono, palabra y trama propia, así
-  también se entiende en blanco y negro o con daltonismo.
-- **Los mensajes dicen qué pasó y qué hacer**, no un código de error.
-- **Ninguna palabra del mundo cripto aparece en la pantalla.** No se lee "escrow", ni
-  "wallet", ni "transacción".
+- **We closed the fake-currency flaw** (the one described above).
+- **Time limit and dispute**, so the supplier isn't held hostage by Rosa's silence.
+- **Public events on the network.** Every change of state leaves an event anyone can
+  read. It does two things: the app can show order history by reading the network
+  instead of relying on the phone's memory, and both Rosa and the supplier can prove
+  what they did without depending on the other's word.
+- **Orders don't get archived.** On Stellar, stored data expires. Now each order
+  renews its expiry date while it's in use, so no one's order "disappears".
+- **The app updated for the new contract**: wallet on the supplier screen, time-limit
+  field, a button to freeze the payment, a countdown, and a network check every minute.
+- **Accessibility**: payment notices are read aloud for screen readers, visible focus
+  when navigating by keyboard, fixed contrast, larger text, and a number keypad on
+  phones.
+- **A full written security review** of the contract.
+- **Property tests**: besides testing cases one by one, the computer makes up
+  thousands of random combinations and checks that the numbers always add up. We tested
+  them by breaking the contract on purpose, to make sure they catch it.
+- **A clickable prototype** of the shop's three screens, in
+  [`mockups/minga-app.html`](mockups/minga-app.html): it opens with a double click,
+  nothing to install.
+- **Currency decision: USDC.** While looking into how Rosa would cash out, we found
+  MoneyGram Ramps: it lets people withdraw cash at a counter **without a bank
+  account**, in more than 170 countries, and it works with USDC on Stellar. For someone
+  shut out of the financial system, that's not a technical detail: it's the difference
+  between the money being useful or not.
 
 ---
 
-## Cómo está hecho
+## Universal design: why the app is built this way
+
+Accessibility isn't an add-on at the end. It's documented in
+[`docs/diseno-accesible.md`](docs/diseno-accesible.md) (in Spanish), and it rests on
+three frameworks:
+
+- **Jakob Nielsen's 10 usability heuristics**, so it's easy to understand.
+- **The Convention on the Rights of Persons with Disabilities** (articles 2, 9 and 21)
+  and universal design, so it's understood no matter how each person sees, hears, moves
+  or reads.
+- **WCAG 2.1 level AA** as the concrete technical reference.
+
+Some decisions that come from that:
+
+- **Color never carries information alone.** Each state has its own icon, word and
+  pattern, so it also works in black and white or with color blindness.
+- **Messages say what happened and what to do**, not an error code.
+- **No crypto words appear on screen.** You won't read "escrow", "wallet" or
+  "transaction".
+
+> The app itself is in Spanish, because it's built for shops in Argentina. The words
+> quoted in this file are translated.
+
+---
+
+## How it's built
 
 ```
 minga/
-├── contracts/escrow/        # El contrato (Rust, Soroban)
-│   ├── src/lib.rs           #   la lógica: crear, entregar, confirmar, objetar, cobrar
-│   ├── src/test.rs          #   las pruebas del flujo completo
-│   └── src/propiedades.rs   #   las pruebas al azar
-├── frontend/                # La app (React + TypeScript)
-│   ├── src/wallet.ts        #   conexión con la billetera (Stellar Wallets Kit)
-│   ├── src/stellar.ts       #   la capa que habla con la red
-│   ├── src/escrow.ts        #   las funciones del contrato, tipadas
-│   └── src/screens/         #   pantallas Comerciante y Proveedor
-├── mockups/minga-app.html   # Prototipo navegable, se abre con doble clic
-├── marca/                   # El logo, en varios tamaños y formatos
-├── docs/                    # Revisión de seguridad, diseño accesible, integraciones
-├── entrevistas/             # Guías de entrevista por rubro + consentimiento
-└── COMANDOS.md              # Los comandos exactos, para copiar y pegar
+├── contracts/escrow/        # The contract (Rust, Soroban)
+│   ├── src/lib.rs           #   the logic: create, deliver, confirm, object, claim
+│   ├── src/test.rs          #   tests for the full flow
+│   └── src/propiedades.rs   #   the random (property) tests
+├── frontend/                # The app (React + TypeScript)
+│   ├── src/wallet.ts        #   wallet connection (Stellar Wallets Kit)
+│   ├── src/stellar.ts       #   the layer that talks to the network
+│   ├── src/escrow.ts        #   the contract functions, typed
+│   └── src/screens/         #   the Shop and Supplier screens
+├── mockups/minga-app.html   # Clickable prototype, opens with a double click
+├── marca/                   # The logo, in several sizes and formats
+├── docs/                    # Security review, accessible design, integrations
+├── entrevistas/             # Interview guides by business type + consent form
+└── COMANDOS.md              # The exact commands, ready to copy and paste
 ```
 
-### Lo que hace el contrato
+### What the contract does
 
-**Funciones que mueven plata** (hay que firmar con la billetera):
+**Functions that move money** (you have to sign with your wallet):
 
-| Función | Quién firma | Cuándo se puede |
+| Function | Who signs | When it's allowed |
 |---|---|---|
-| `create_escrow(comprador, proveedor, monto, id_pedido, plazo_dias)` | el comerciante | siempre |
-| `marcar_entregado(id_pedido)` | **el proveedor** | solo si está Pendiente |
-| `confirm_delivery(id_pedido)` | el comerciante | Pendiente, Entregado o En disputa |
-| `cancel_escrow(id_pedido)` | el comerciante | **solo si está Pendiente** |
-| `objetar_entrega(id_pedido)` | el comerciante | solo Entregado y **dentro** del plazo |
-| `reclamar_pago(id_pedido)` | **el proveedor** | solo Entregado y **vencido** el plazo |
-| `devolver_fondos(id_pedido)` | **el proveedor** | Entregado o En disputa |
+| `create_escrow(comprador, proveedor, monto, id_pedido, plazo_dias)` | the shop | always |
+| `marcar_entregado(id_pedido)` | **the supplier** | only while Pending |
+| `confirm_delivery(id_pedido)` | the shop | Pending, Delivered or In dispute |
+| `cancel_escrow(id_pedido)` | the shop | **only while Pending** |
+| `objetar_entrega(id_pedido)` | the shop | only Delivered and **within** the time limit |
+| `reclamar_pago(id_pedido)` | **the supplier** | only Delivered and **after** the time limit |
+| `devolver_fondos(id_pedido)` | **the supplier** | Delivered or In dispute |
 
-**Funciones que solo miran** (gratis, sin firma): `get_escrow_status`, `get_escrow`,
-`get_token`, `segundos_restantes`, `puede_reclamar`.
+The parameters are in Spanish: `comprador` is the buyer, `proveedor` the supplier,
+`monto` the amount, `id_pedido` the order number and `plazo_dias` the time limit in
+days.
 
-La moneda se fija al instalar el contrato (`__constructor`) y no se puede cambiar nunca.
+**Read-only functions** (free, no signature): `get_escrow_status`, `get_escrow`,
+`get_token`, `segundos_restantes` (seconds left), `puede_reclamar` (can claim).
 
-### Dónde toca la red de verdad
+The currency is set when the contract is installed (`__constructor`) and can never be
+changed.
 
-Buscá los comentarios `*** ON-CHAIN ***` en
-[`contracts/escrow/src/lib.rs`](contracts/escrow/src/lib.rs): ahí es donde la plata se
-mueve de verdad entre la billetera del comerciante, el contrato y el proveedor.
+### Where it really touches the network
 
-En [`frontend/src/stellar.ts`](frontend/src/stellar.ts), el comentario
-`*** ESTO ES ON-CHAIN REAL ***` marca el punto exacto donde la operación se firma y se
-manda a la red.
+Look for the `*** ON-CHAIN ***` comments in
+[`contracts/escrow/src/lib.rs`](contracts/escrow/src/lib.rs): that's where money
+really moves between the shop's wallet, the contract and the supplier.
 
-Para conectar la billetera usamos **Stellar Wallets Kit**, que soporta varias
-(Freighter, xBull, Albedo, LOBSTR) con una sola conexión. Elegimos eso para no atar a
-nadie a una billetera sola.
+In [`frontend/src/stellar.ts`](frontend/src/stellar.ts), the comment
+`*** ESTO ES ON-CHAIN REAL ***` ("this is real on-chain") marks the exact point where
+the operation is signed and sent to the network.
+
+To connect the wallet we use **Stellar Wallets Kit**, which supports several wallets
+(Freighter, xBull, Albedo, LOBSTR) through a single connection. We chose it so nobody
+is tied to a single wallet.
 
 ---
 
-## Probarlo
+## Try it
 
-**Lo más rápido, sin instalar nada:** abrí
-[`mockups/minga-app.html`](mockups/minga-app.html) con doble clic, o entrá a
-[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) y consultá el pedido **42** en
-la pestaña *Proveedor* (esa es la versión de julio, la que está en la red).
+**The fastest way, nothing to install:** open
+[`mockups/minga-app.html`](mockups/minga-app.html) with a double click, or go to
+[minga-r5ql.vercel.app](https://minga-r5ql.vercel.app) and look up order **42** on the
+*Supplier* tab (that's the July version, the one on the network).
 
-**Correr las pruebas** (lo que verifica que el contrato hace lo que dice):
+**Run the tests** (they check that the contract does what it says):
 
 ```bash
 cd contracts/escrow
-cargo test        # tienen que pasar 29
+cargo test        # all 29 must pass
 ```
 
-**Levantar la app:**
+**Run the app:**
 
 ```bash
 cd frontend
 npm install
-npm run dev       # abre http://localhost:5173
+npm run dev       # opens http://localhost:5173
 ```
 
-Los comandos completos para instalar el contrato en la red están en
-[`COMANDOS.md`](COMANDOS.md).
+The full commands to install the contract on the network are in
+[`COMANDOS.md`](COMANDOS.md) (in Spanish).
 
-Todo corre en **Stellar Testnet**, la red de prueba: **no se usa plata real.**
+Everything runs on **Stellar Testnet**, the test network: **no real money is used.**
 
 ---
 
-## Hoja de ruta
+## Roadmap
 
-Acá está **todo lo que Minga promete y todavía no hace**. Está separado de lo que ya
-funciona a propósito: nada de esto está construido, y no queremos que se lea como si
-lo estuviera.
+Here is **everything Minga promises and doesn't do yet**. It's kept apart from what
+already works on purpose: none of this is built, and we don't want it read as if it
+were.
 
-El orden no es un capricho. Cada etapa necesita que la anterior exista.
+The order isn't arbitrary. Each stage needs the previous one to exist.
 
-### Ahora mismo
+### Right now
 
-| | Qué |
+| | What |
 |---|---|
-| ✅ | ~~Instalar el contrato nuevo en la red.~~ Hecho el 22/09/2026. |
-| 🔜 | **Dejar pedidos de demostración** en el contrato nuevo, para que cualquiera pueda consultarlos sin instalar nada. |
-| 🔜 | **El historial de pedidos leído desde la red**, usando los avisos que el contrato ya publica. |
+| ✅ | ~~Install the new contract on the network.~~ Done on 09/22/2026. |
+| 🔜 | **Leave demo orders** on the new contract, so anyone can look them up without installing anything. |
+| 🔜 | **Order history read from the network**, using the events the contract already publishes. |
 
-### Etapa 1 — Que cargar no cueste nada
+### Stage 1 — Recording things should cost nothing
 
-**Cargá sin escribir.** El comerciante le saca una foto a la boleta del proveedor, o
-lo dice en voz alta. La app muestra lo que entendió y **la persona confirma o
-corrige** — nunca decide sola.
+**Record without typing.** The shop owner takes a photo of the supplier's receipt, or
+says it out loud. The app shows what it understood and **the person confirms or
+corrects it** — it never decides alone.
 
-Funciona con boletas informales: un papel escrito a mano que dice *"azúcar 10 kg"*,
-sin dirección ni teléfono, sirve igual. Es lo que la mayoría de los proveedores
-chicos entrega de verdad.
+It works with informal receipts: a handwritten note that says *"sugar 10 kg"*, with no
+address or phone number, works just as well. That's what most small suppliers
+actually hand over.
 
-**Control de stock y avisos.** Con lo que se carga, la app sabe qué se está
-terminando y avisa antes de que falte.
+**Stock control and alerts.** With what gets recorded, the app knows what's running
+low and warns before it runs out.
 
-**Pedir por WhatsApp.** Un enlace que abre el WhatsApp del proveedor con el pedido ya
-escrito. El comerciante solo toca "enviar". No hace falta que el proveedor tenga
-Minga, ni que sepa que existe.
+**Order through WhatsApp.** A link that opens the supplier's WhatsApp with the order
+already written. The shop owner just taps "send". The supplier doesn't need to have
+Minga, or even know it exists.
 
-### Etapa 2 — La Feria: la biblioteca de precios
+### Stage 2 — La Feria: the price library
 
-Cada boleta cargada deja registrado **qué producto, a qué precio, de qué proveedor y
-en qué fecha**. Con eso se arma un registro de precios en común, anónimo, que todos
-los comercios pueden consultar.
+Every recorded receipt logs **which product, at what price, from which supplier and
+on what date**. That builds a shared, anonymous price record that every shop can
+look up.
 
-Rosa tiene su almacén. Marianita tiene una despensa a cinco cuadras. Bernardo vende
-maderas. Los tres alimentan el mismo registro y los tres lo usan.
+Rosa has her grocery store. Marianita has a small shop five blocks away. Bernardo
+sells lumber. All three feed the same record and all three use it.
 
-Cuatro decisiones de fondo:
+Four core decisions:
 
-**1. El cruce es por producto, no por rubro.**
+**1. The match is by product, not by type of business.**
 
-A Bernardo no le sirve saber cuánto sale el azúcar. Pero la **cinta de embalaje**,
-las **bolsas** y el **papel** los compran él y Rosa por igual. Los insumos genéricos
-cruzan rubros que no tienen nada que ver entre sí.
+Knowing the price of sugar is useless to Bernardo. But **packing tape**, **bags** and
+**paper** are bought by him and Rosa alike. Generic supplies cut across businesses
+that have nothing to do with each other.
 
-Si el registro fuera por rubro, cada almacenera necesitaría otras almaceneras cerca
-para que le sirviera de algo. Cruzando por producto, **un maderero y una almacenera
-ya se ayudan entre ellos** sin vender nada parecido. Algunos productos coinciden,
-otros no — y eso está bien: cada comercio ve lo que le toca.
+If the record were by type of business, each grocer would need other grocers nearby
+for it to be any use. Matching by product, **a lumber seller and a grocer already help
+each other** without selling anything alike. Some products overlap, others don't — and
+that's fine: each shop sees what's relevant to it.
 
-**2. El precio siempre va con su fecha.**
+**2. A price always comes with its date.**
 
-En Argentina los precios se mueven todas las semanas. Un precio de referencia de hace
-seis meses no sirve para nada. Saber qué está pagando Marianita **esta semana** es la
-diferencia entre remarcar a tiempo o vender por debajo del costo sin darse cuenta.
+In Argentina, prices change every week. A reference price from six months ago is
+useless. Knowing what Marianita is paying **this week** is the difference between
+repricing on time and selling below cost without noticing.
 
-**3. No depende de que los proveedores adopten nada.**
+**3. It doesn't depend on suppliers adopting anything.**
 
-Un proveedor informal no se va a bajar una aplicación. Pero el comerciante ya recibe
-su papel, y lo carga porque le sirve a él: para saber cuánto paga y para que no se le
-termine la mercadería. **La biblioteca se arma de rebote**, como efecto de algo que ya
-le conviene hacer.
+An informal supplier isn't going to download an app. But the shop owner already gets
+their receipt, and records it because it helps them: to know how much they're paying
+and to avoid running out of stock. **The library builds itself as a side effect** of
+something that's already worth doing.
 
-Lo mismo con el orden administrativo: no hace falta llevar un Excel ni aprender un
-sistema de gestión. Se saca la foto, y de ahí sale lo que compró, cuánto gastó y qué
-le está faltando. **El orden es efecto secundario de algo que tarda tres segundos.**
+The same goes for keeping the books: no need for a spreadsheet or learning a
+management system. You take the photo, and from that comes what you bought, how much
+you spent and what you're running out of. **Order is a side effect of something that
+takes three seconds.**
 
-**4. Dónde se guarda cada cosa.**
+**4. Where each thing is stored.**
 
-| Qué | Dónde | Por qué |
+| What | Where | Why |
 |---|---|---|
-| **La biblioteca de precios** | En Minga, compartida entre todos los comercios | Tiene que ser rápida y barata de consultar. Guardar miles de precios en la blockchain costaría carísimo y sería lento. |
-| **El historial de pagos** | En la red Stellar | Es lo que después se convierte en reputación y en crédito. Eso sí tiene que ser imborrable y no depender de que Minga siga existiendo. |
+| **The price library** | In Minga, shared by all shops | It has to be fast and cheap to look up. Storing thousands of prices on the blockchain would be very expensive and slow. |
+| **Payment history** | On the Stellar network | This is what later becomes reputation and credit. It has to be permanent and not depend on Minga continuing to exist. |
 
-Es una decisión a propósito, no una comodidad: cada dato va donde corresponde según
-para qué sirve.
+This is a deliberate decision, not a convenience: each piece of data goes where it
+belongs, based on what it's for.
 
-> **Nota sobre cómo se cuenta esto.** Este archivo lo leen jurados, mentores y
-> programadores, así que acá se explica dónde vive cada cosa. **En la aplicación no
-> aparece nada de esto.** La comerciante no lee la palabra "blockchain" ni le
-> prometemos que se puede "llevar sus datos": a alguien que cierra su negocio eso no
-> le sirve de nada. El historial le importa en un solo momento —cuando quiere pedir
-> crédito— y para entonces la app se lo muestra, sin explicarle dónde está guardado.
+> **A note on how this is told.** This file is read by judges, mentors and developers,
+> so it explains where each thing lives. **None of this appears in the app.** The shop
+> owner never reads the word "blockchain", and we don't promise she can "take her data
+> with her": for someone closing their business, that's worthless. Her history matters
+> at one moment only —when she wants to ask for credit— and by then the app shows it to
+> her, without explaining where it's stored.
 
-### Etapa 3 — Reputación
+### Stage 3 — Reputation
 
-Cada pago cumplido deja una constancia pública en la red. Muchos pagos cumplidos son
-**un historial verificable** que el comerciante se lleva con él, y que ningún
-intermediario le puede quitar ni negar.
+Every payment completed leaves a public record on the network. Many completed payments
+make **a verifiable history** that the shop owner carries with them, and that no
+middleman can take away or deny.
 
-Es lo que hoy no tiene: un comercio informal es invisible para el sistema financiero
-porque no puede demostrar nada de lo que hizo.
+That's what they lack today: an informal shop is invisible to the financial system
+because it can't prove anything it has done.
 
-### Etapa 4 — Crédito sin banco
+### Stage 4 — Credit without a bank
 
-Con historial de pagos y registro de inventario, un comerciante puede pedir crédito
-mostrando lo que hizo, no papeles que no tiene. El inventario mismo puede funcionar
-como garantía.
+With a payment history and an inventory record, a shop owner can ask for credit by
+showing what they've done, not papers they don't have. The inventory itself can work
+as collateral.
 
-Esta es la razón por la que Minga existe. Todo lo anterior construye la base para
-esto.
+This is the reason Minga exists. Everything before it builds the foundation for this.
 
-### Decisiones tomadas, pendientes de hacer
+### Decisions made, still to do
 
-- **Pasar a USDC.** Por **MoneyGram Ramps**: permite retirar efectivo en mostrador
-  **sin cuenta bancaria**, en más de 170 países. Para alguien excluido del sistema
-  financiero, eso es la diferencia entre que la plata le sirva o no.
-- **Mediadores para las disputas trabadas.** Hoy, si ninguna de las dos partes cede,
-  la plata queda frenada y el contrato no tiene salida. La idea es que un tercero
-  pueda destrabarla. Falta definir quién: personas designadas, o un grupo que vote.
-  Sea cual sea, la regla de fondo no cambia: **el mediador decide hacia quién va la
-  plata, pero nunca puede quedársela.**
-- **Piezas auditadas de [OpenZeppelin](https://github.com/OpenZeppelin/stellar-contracts).**
-  Dos cosas concretas:
-  - **Contratos actualizables** (SEP-0049). Hoy el contrato no se puede corregir: si
-    aparece un error hay que instalar uno nuevo, y los pedidos viejos quedan en el
-    anterior.
-  - **Los detectores de seguridad**, que revisan el contrato buscando fallas típicas.
-    No lo modifican, solo lo analizan.
+- **Move to USDC.** Because of **MoneyGram Ramps**: it lets people withdraw cash at a
+  counter **without a bank account**, in more than 170 countries. For someone shut out
+  of the financial system, that's the difference between the money being useful or not.
+- **Mediators for stuck disputes.** Today, if neither side gives in, the money stays
+  frozen and the contract has no way out. The idea is for a third party to be able to
+  unlock it. Who that is still has to be decided: appointed people, or a group that
+  votes. Either way, the underlying rule doesn't change: **the mediator decides who the
+  money goes to, but can never keep it.**
+- **Audited building blocks from [OpenZeppelin](https://github.com/OpenZeppelin/stellar-contracts).**
+  Two specific things:
+  - **Upgradeable contracts** (SEP-0049). Today the contract can't be fixed: if a bug
+    shows up, a new one has to be installed, and old orders stay on the previous one.
+  - **The security detectors**, which scan the contract for typical flaws. They don't
+    change it, they only analyze it.
 
-  > **Lo que no vamos a usar, y es a propósito:** el control de permisos y las listas
-  > de autorizados. El contrato de Minga **no tiene dueño ni administrador**: nadie,
-  > ni quien lo escribió, puede tocar la plata de un pedido. Agregar un rol
-  > privilegiado sería crear exactamente lo que el producto promete que no existe. Y
-  > una lista de autorizados reproduciría el sistema que deja a esta gente afuera:
-  > acá cualquiera puede ser proveedor sin pedirle permiso a nadie.
-- **Auditoría de seguridad externa**, por el camino del Stellar Community Fund y el
-  Audit Bank. La revisión interna que ya está hecha
-  ([`docs/revision-seguridad.md`](docs/revision-seguridad.md)) es preparación para
-  eso, no un reemplazo.
-- **Evaluar [Trustless Work](https://www.trustlesswork.com/)**, que ofrece escrow
-  como servicio sobre Stellar. Podría ahorrar mantener contrato propio. Es una
-  decisión para más adelante, con el producto en la calle.
+  > **What we won't use, on purpose:** access control and allowlists. Minga's contract
+  > **has no owner or administrator**: nobody, not even whoever wrote it, can touch the
+  > money of an order. Adding a privileged role would create exactly what the product
+  > promises doesn't exist. And an allowlist would recreate the system that leaves these
+  > people out: here anyone can be a supplier without asking anyone for permission.
+- **An external security audit**, through the Stellar Community Fund and the Audit
+  Bank. The internal review already done
+  ([`docs/revision-seguridad.md`](docs/revision-seguridad.md)) is preparation for that,
+  not a replacement.
+- **Evaluate [Trustless Work](https://www.trustlesswork.com/)**, which offers escrow as
+  a service on Stellar. It could save us from maintaining our own contract. It's a
+  decision for later, once the product is out in the world.
 
-### Cómo se sostiene Minga
+### How Minga sustains itself
 
-**Decidido, para empezar: 1% de comisión por venta cerrada, cobrada al proveedor.**
-No a Rosa. Ella es la persona que hoy el sistema excluye — cobrarle a ella repetiría
-el mismo problema que Minga resuelve. El que paga es el proveedor, porque es quien
-gana algo nuevo: vender con el pago asegurado a comerciantes que antes no le
-compraban por no conocerlo.
+**Decided, to start: a 1% fee per completed sale, charged to the supplier.** Not to
+Rosa. She's the person the system excludes today — charging her would repeat the very
+problem Minga solves. The supplier pays, because they gain something new: selling with
+guaranteed payment to shops that wouldn't buy from them before because they didn't
+know them.
 
-**Planeado, con la Etapa 4: microcréditos.** Cuando el historial de pagos cumplidos
-alcance para ofrecer crédito (ver "Etapa 4 — Crédito sin banco" arriba), esa misma
-pieza también financia la plataforma: un margen sobre el crédito otorgado, o una
-comisión de originación si el crédito lo da un socio financiero y Minga solo aporta
-el historial que lo hace posible. Todavía no está construido — depende de que la
-Etapa 3 (reputación) esté funcionando primero.
+**Planned, with Stage 4: microloans.** When the history of completed payments is
+enough to offer credit (see "Stage 4 — Credit without a bank" above), that same piece
+also funds the platform: a margin on the credit given, or an origination fee if the
+credit comes from a financial partner and Minga only provides the history that makes
+it possible. It isn't built yet — it depends on Stage 3 (reputation) working first.
 
-**En evaluación, no decidido: hacer rendir la plata varada.** Una idea que **solo
-vale con condiciones estrictas**, y que sigue siendo secundaria frente a la comisión
-y los microcréditos.
+**Under evaluation, not decided: putting stranded money to work.** An idea that **only
+holds under strict conditions**, and that remains secondary to the fee and the
+microloans.
 
-La plata que espera dentro del contrato podría generar un rendimiento. Pero acá hay
-una línea que no se cruza: **la plata de un pedido en curso no se toca nunca.** Rosa
-tiene que poder recuperarla en el momento en que cancela, sin depender de nada ni de
-nadie. Esa es la promesa central de Minga y no se negocia por un rendimiento.
+The money waiting inside the contract could earn a return. But there's a line we don't
+cross: **the money of an order in progress is never touched.** Rosa has to be able to
+get it back the moment she cancels, without depending on anything or anyone. That's
+Minga's core promise and it's not traded for a return.
 
-Lo único que se podría poner a rendir es **la plata que quedó varada**: pedidos
-olvidados, disputas que nadie destrabó hace meses. Y con tres condiciones:
+The only money that could be put to work is **money that got stranded**: forgotten
+orders, disputes nobody has resolved in months. And only under three conditions:
 
-1. **Retiro inmediato garantizado.** Si el dueño aparece, cobra al instante. Si no se
-   puede asegurar eso, no se hace.
-2. **Un plazo largo y explícito** antes de considerar que algo está varado, avisado
-   de antemano.
-3. **El rendimiento es de quien puso la plata**, no de Minga, salvo que se acuerde
-   otra cosa a la vista.
+1. **Guaranteed instant withdrawal.** If the owner shows up, they get paid right away.
+   If that can't be guaranteed, it doesn't happen.
+2. **A long, explicit waiting period** before anything counts as stranded, announced in
+   advance.
+3. **The return belongs to whoever put the money in**, not to Minga, unless something
+   else is agreed openly.
 
-Si alguna de las tres no se cumple, la idea se cae.
+If any of the three isn't met, the idea is dropped.
 
-**Esto último no está construido ni decidido.** Está escrito acá para que la
-discusión sea pública y no una sorpresa.
+**This last part isn't built or decided.** It's written here so the discussion is
+public and not a surprise.
 
-**Pendiente de medir: el costo de los anchors y las trustlines.** Dos cosas técnicas
-que hoy no están presupuestadas:
+**Still to be measured: the cost of anchors and trustlines.** Two technical things that
+aren't budgeted yet:
 
-- **Trustlines.** Cada cuenta que quiera tener una moneda que no sea el XLM nativo
-  (como USDC) necesita abrir una, y eso bloquea **0,5 XLM de reserva** por cuenta
-  mientras esté abierta. Es un costo de la red, chico pero real, y crece con cada
-  comerciante nuevo.
-- **Anchors** (como MoneyGram Ramps, ya mencionado arriba). Convierten entre pesos y
-  la moneda de Stellar, y cada uno tiene su propia tabla de comisiones. Normalmente lo
-  paga quien retira o deposita, no Minga — pero hay que revisar esa tabla antes de
-  elegir uno, y no está hecho todavía.
+- **Trustlines.** Every account that wants to hold a currency other than native XLM
+  (like USDC) needs to open one, and that locks **0.5 XLM in reserve** per account for
+  as long as it's open. It's a network cost, small but real, and it grows with every
+  new shop.
+- **Anchors** (like MoneyGram Ramps, mentioned above). They convert between pesos and
+  the currency on Stellar, and each one has its own fee table. Usually whoever
+  withdraws or deposits pays, not Minga — but that table has to be reviewed before
+  choosing one, and that hasn't been done yet.
 
-Entra en la misma idea de fondo: usar las piezas que ya existen en el ecosistema de
-Stellar en vez de reinventarlas, y medir bien lo que cuestan antes de depender de
-ellas.
+It fits the same underlying idea: use the pieces that already exist in the Stellar
+ecosystem instead of reinventing them, and measure what they cost before depending on
+them.
 
-### Por qué el escrow fue lo primero
+### Why escrow came first
 
-De todas estas etapas, **el escrow es la única que no puede existir sin blockchain**.
-Cargar boletas, controlar stock o avisar por WhatsApp se pueden hacer con tecnología
-común. Garantizar un pago entre dos personas que no se conocen, sin una empresa en el
-medio que se quede con la plata, no.
+Of all these stages, **escrow is the only one that can't exist without a blockchain**.
+Recording receipts, tracking stock or ordering through WhatsApp can be done with
+ordinary technology. Guaranteeing a payment between two people who don't know each
+other, without a company in the middle holding the money, can't.
 
-Por eso se construyó primero: es la pieza donde la red hace falta de verdad, y la que
-sostiene a todas las demás.
+That's why it was built first: it's the piece where the network is truly needed, and
+the one that holds up all the others.
 
 ---
 
-El estado detallado y los pendientes del día a día están en
-[`ESTADO-Y-PROXIMOS-PASOS.md`](ESTADO-Y-PROXIMOS-PASOS.md).
+The detailed status and day-to-day to-dos are in
+[`ESTADO-Y-PROXIMOS-PASOS.md`](ESTADO-Y-PROXIMOS-PASOS.md) (in Spanish).
 
 ---
 
-## Quiénes
+## Who we are
 
 **Cintia Venecia** · **Octavio Giménez Bravo** — Salta, Argentina.
 
-Las entrevistas de descubrimiento se hicieron con emprendedoras y emprendedores reales
-de Salta, de tres rubros distintos, para validar que el problema de la confianza con
-los proveedores existe de verdad y no es una suposición nuestra. Las guías y el
-consentimiento están en [`entrevistas/`](entrevistas/).
+The discovery interviews were done with real entrepreneurs from Salta, in three
+different lines of business, to validate that the trust problem with suppliers is real
+and not an assumption of ours. The guides and the consent form are in
+[`entrevistas/`](entrevistas/) (in Spanish).
 
-El proyecto nació en la **Stellar Pulso Hackathon** (julio 2026) y sigue creciendo en
-el **Argentina Builder Challenge** (septiembre 2026).
+The project was born at the **Stellar Pulso Hackathon** (July 2026) and keeps growing
+in the **Argentina Builder Challenge** (September 2026).
 
-## Enlaces
+## Links
 
-- Repositorio: https://github.com/veneciaedith/minga
-- App en vivo (versión de julio): https://minga-r5ql.vercel.app
-- Video demo: https://youtu.be/6X-0l_hIbqs
-- El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N)
+- Repository: https://github.com/veneciaedith/minga
+- Live app (July version): https://minga-r5ql.vercel.app
+- Demo video: https://youtu.be/6X-0l_hIbqs
+- The contract on the explorer: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N)
