@@ -1,4 +1,5 @@
 import { EXPLORER_TX } from "../config";
+import { esCancelacion, mensajeClaro } from "../textos";
 
 /**
  * Piezas que comparten las dos pantallas.
@@ -14,6 +15,14 @@ export type Tono = "trabajando" | "bien" | "mal" | "neutro";
 export interface Aviso {
   tono: Tono;
   texto: string;
+}
+
+/**
+ * Arma el aviso para un error. Si la persona cerró su billetera, no es
+ * una falla: va sin rojo y sin alarma, para que no crea que perdió plata.
+ */
+export function avisoDeError(error: unknown): Aviso {
+  return { tono: esCancelacion(error) ? "neutro" : "mal", texto: mensajeClaro(error) };
 }
 
 /**

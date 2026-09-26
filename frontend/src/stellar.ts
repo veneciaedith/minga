@@ -61,7 +61,16 @@ export async function escribirContrato(
   firmante: string
 ): Promise<string> {
   // 1) Traemos la cuenta real del firmante desde la red (necesita estar fondeada).
-  const cuenta = await servidor.getAccount(firmante);
+  //    Si todavía no tiene plata de prueba, la red contesta "Account not
+  //    found". Lo traducimos acá, porque es NUESTRA billetera la que falta,
+  //    no la del proveedor, y el mensaje tiene que decir eso.
+  let cuenta;
+  try {
+    cuenta = await servidor.getAccount(firmante);
+  } catch (e) {
+    if (esCuentaInexistente(e)) throw new Error(BILLETERA_SIN_FONDOS);
+    throw e;
+  }
 
   // 2) Armamos la transacción que invoca el método del contrato.
   let tx = new TransactionBuilder(cuenta, {
@@ -112,6 +121,43 @@ export async function escribirContrato(
 
   // Devolvemos el hash para mostrar el link al explorador.
   return envio.hash;
+}
+
+// ---------------------------------------------------------------------
+//  PLATA DE PRUEBA — en la red de prueba, una billetera recién creada
+//  "no existe" hasta que alguien le manda fondos. En la prueba con un
+//  usuario real, ese paso fue justo donde se trabó: xBull le mostraba la
+//  cuenta creada y Minga le decía que no existía. Acá lo resolvemos sin
+//  mandarlo a otra página.
+// ---------------------------------------------------------------------
+
+/** Marca que usa escribirContrato() y que traduce textos.ts. */
+export const BILLETERA_SIN_FONDOS = "billetera sin fondos de prueba";
+
+function esCuentaInexistente(e: unknown): boolean {
+  const texto = e instanceof Error ? e.message : String(e);
+  return texto.toLowerCase().includes("account not found");
+}
+
+/**
+ * ¿La billetera ya tiene plata de prueba?
+ * Devuelve false solo cuando la red dice que no existe. Si la red no
+ * contesta, tira el error: no queremos decirle a nadie que su billetera
+ * está vacía por un problema de internet.
+ */
+export async function tienePlataDePrueba(direccion: string): Promise<boolean> {
+  try {
+    await servidor.getAccount(direccion);
+    return true;
+  } catch (e) {
+    if (esCuentaInexistente(e)) return false;
+    throw e;
+  }
+}
+
+/** Le pide a la red de prueba (Friendbot) que cargue la billetera. Es gratis. */
+export async function cargarPlataDePrueba(direccion: string): Promise<void> {
+  await servidor.requestAirdrop(direccion);
 }
 
 // ---------------------------------------------------------------------

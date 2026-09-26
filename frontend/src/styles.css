@@ -266,6 +266,22 @@ body {
 
 .billetera code { word-break: break-all; }
 
+/* Billetera creada pero sin plata de prueba. Color de "atención", no de
+   error: no hizo nada mal, le falta un paso. Lleva texto además del
+   color, así se entiende también sin verlo. */
+.falta-plata {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px 14px;
+  border: 2px solid var(--atencion);
+  border-radius: 12px;
+  background: var(--atencion-fondo);
+  color: var(--atencion);
+}
+.falta-plata p { margin: 0; }
+.falta-plata .detalle { color: var(--atencion); }
+
 /* ---------------------------------------------------------------
    5. Navegación entre pantallas (pestañas accesibles)
    --------------------------------------------------------------- */
