@@ -3,8 +3,10 @@
 Tres entrevistas con emprendedoras reales de Salta, de tres rubros distintos:
 comercio artesanal, comercio de alimentos y servicio/oficio.
 
-En septiembre se sumó una cuarta, a un comercio de artículos de limpieza
-(`entrevista-antonio-y-nelly.md`).
+En septiembre se sumaron dos más: un comercio de artículos de limpieza
+(`entrevista-antonio-y-nelly.md`) y un vendedor de electrónica que le compra a
+proveedores de Bolivia y además probó la app desde su celular
+(`entrevista-compralinda.md`).
 
 Se siguió el método **«The Mom Test»**: preguntar por hechos del pasado y
 comportamientos reales, no por opiniones sobre el futuro. Por eso las preguntas
@@ -24,6 +26,7 @@ dato de contacto.
 |---|---|
 | `Entrevistas-Minga-Consolidado.docx` | Las tres entrevistas completas, con sus conclusiones |
 | `entrevista-antonio-y-nelly.md` | Entrevista de septiembre a un comercio de artículos de limpieza: paga al recibir y lo que más quiere es comparar precios |
+| `entrevista-compralinda.md` | Entrevista y prueba de uso de septiembre a un vendedor de electrónica: le paga por adelantado a proveedores de Bolivia y usó Minga solo desde su celular |
 | `guia-entrevistas.md` | La guía de preguntas que se usó |
 | `plantilla-resumen.md` | Plantilla para resumir cada entrevista |
 | `instalar-freighter.md` | Guía para que alguien instale la billetera antes de probar la app |
