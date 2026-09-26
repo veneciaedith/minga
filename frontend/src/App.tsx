@@ -3,7 +3,9 @@ import { conectarWallet, direccionActual } from "./wallet";
 import Comerciante from "./screens/Comerciante";
 import Proveedor from "./screens/Proveedor";
 import { CONTRACT_ID } from "./config";
-import { direccionCorta, finalDeletreado, mensajeClaro } from "./textos";
+import { direccionCorta, finalDeletreado } from "./textos";
+import { cargarPlataDePrueba, tienePlataDePrueba } from "./stellar";
+import { Aviso, Estado, avisoDeError } from "./componentes/Estado";
 
 type Pantalla = "comerciante" | "proveedor";
 type Tema = "claro" | "oscuro" | "sistema";
@@ -21,8 +23,12 @@ const PESTANAS: { id: Pantalla; titulo: string; ayuda: string }[] = [
 export default function App() {
   const [pantalla, setPantalla] = useState<Pantalla>("comerciante");
   const [billetera, setBilletera] = useState<string | null>(null);
-  const [errorBilletera, setErrorBilletera] = useState<string | null>(null);
+  const [avisoBilletera, setAvisoBilletera] = useState<Aviso | null>(null);
   const [conectando, setConectando] = useState(false);
+  // null = todavía no sabemos. false = la billetera existe en xBull o
+  // Freighter, pero en la red de prueba no tiene plata y no se puede usar.
+  const [tienePlata, setTienePlata] = useState<boolean | null>(null);
+  const [cargandoPlata, setCargandoPlata] = useState(false);
 
   // Preferencias de lectura. Se guardan para no volver a configurarlas
   // en cada visita: quien necesita el texto grande lo necesita siempre.
@@ -51,15 +57,50 @@ export default function App() {
     direccionActual().then(setBilletera).catch(() => setBilletera(null));
   }, []);
 
+  // Apenas hay billetera, miramos si tiene plata de prueba. Mejor
+  // avisarlo ahora que cuando la persona ya cargó todo el pedido.
+  // (Heurística 5 — prevención de errores)
+  useEffect(() => {
+    setTienePlata(null);
+    if (!billetera) return;
+    let vigente = true;
+    tienePlataDePrueba(billetera)
+      .then((si) => vigente && setTienePlata(si))
+      .catch(() => {
+        // Sin internet no sabemos: mejor no mostrar nada que asustar.
+      });
+    return () => {
+      vigente = false;
+    };
+  }, [billetera]);
+
   async function conectar() {
-    setErrorBilletera(null);
+    setAvisoBilletera(null);
     setConectando(true);
     try {
       setBilletera(await conectarWallet());
     } catch (e) {
-      setErrorBilletera(mensajeClaro(e));
+      setAvisoBilletera(avisoDeError(e));
     } finally {
       setConectando(false);
+    }
+  }
+
+  async function cargarPlata() {
+    if (!billetera) return;
+    setAvisoBilletera({ tono: "trabajando", texto: "Estamos cargando tu plata de prueba. Tarda unos segundos." });
+    setCargandoPlata(true);
+    try {
+      await cargarPlataDePrueba(billetera);
+      setTienePlata(true);
+      setAvisoBilletera({
+        tono: "bien",
+        texto: "Listo, tu billetera ya tiene plata de prueba. Ahora podés hacer tu pedido.",
+      });
+    } catch (e) {
+      setAvisoBilletera(avisoDeError(e));
+    } finally {
+      setCargandoPlata(false);
     }
   }
 
@@ -166,6 +207,31 @@ export default function App() {
             </p>
             {/* Sin este botón, si la billetera dejaba de responder no había cómo
                 volver a elegirla: la app decía «conectada» y no ofrecía salida. */}
+            {/* En la prueba con un usuario real, este fue el paso que faltaba:
+                xBull le mostraba la cuenta creada, y Minga decía que no existía.
+                Ahora se dice qué falta y se resuelve con un toque. */}
+            {tienePlata === false && (
+              <div className="falta-plata">
+                <p>
+                  <strong>Tu billetera está creada, pero todavía no tiene plata de prueba.</strong>{" "}
+                  Sin eso no se puede hacer un pedido. La plata de prueba es gratis y no es plata
+                  real.
+                </p>
+                <button
+                  type="button"
+                  className="boton boton-principal boton-chico"
+                  onClick={cargarPlata}
+                  disabled={cargandoPlata}
+                >
+                  {cargandoPlata ? "Cargando…" : "Cargar plata de prueba"}
+                </button>
+                <p className="detalle">
+                  Si usás xBull y ahí te sigue apareciendo 0, es porque xBull muestra la red real.
+                  Para verla, cambiá la red a «Testnet»: menú ☰, Ajustes, Cuenta y Horizonte, Nodo de
+                  red.
+                </p>
+              </div>
+            )}
             <button
               type="button"
               className="boton boton-secundario boton-chico"
@@ -194,16 +260,7 @@ export default function App() {
       </section>
 
       {/* Los avisos que cambian solos se anuncian al lector de pantalla. */}
-      <div role="status" aria-live="polite">
-        {errorBilletera && (
-          <div className="estado-sistema mal">
-            <span className="signo" aria-hidden="true">
-              ✕
-            </span>
-            <p>{errorBilletera}</p>
-          </div>
-        )}
-      </div>
+      <Estado aviso={avisoBilletera} cargando={cargandoPlata} />
 
       <nav className="pestanas" role="tablist" aria-label="Elegí quién sos">
         {PESTANAS.map((p, i) => (

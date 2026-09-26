@@ -9,12 +9,11 @@ import {
   segundosRestantes,
   sigueAbierto,
 } from "../escrow";
-import { Aviso, Estado, EnlaceTransaccion } from "../componentes/Estado";
+import { Aviso, Estado, EnlaceTransaccion, avisoDeError } from "../componentes/Estado";
 import {
   conMiles,
   direccionCorta,
   finalDeletreado,
-  mensajeClaro,
   revisarDireccion,
   revisarMonto,
   revisarPlazo,
@@ -164,7 +163,7 @@ export default function Comerciante({ billetera }: { billetera: string | null })
     try {
       setHash(await accion());
     } catch (e) {
-      setAviso({ tono: "mal", texto: mensajeClaro(e) });
+      setAviso(avisoDeError(e));
       // Después de un error conviene volver a mirar la red: casi siempre
       // el error es que el pedido ya está en otro momento.
       if (creado) mirarLaRed();

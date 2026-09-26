@@ -11,11 +11,10 @@ import {
   segundosRestantes,
   stroopsAXlm,
 } from "../escrow";
-import { Aviso, Estado, EnlaceTransaccion } from "../componentes/Estado";
+import { Aviso, Estado, EnlaceTransaccion, avisoDeError } from "../componentes/Estado";
 import {
   conMiles,
   direccionCorta,
-  mensajeClaro,
   revisarNumeroPedido,
   tiempoRestante,
 } from "../textos";
@@ -127,7 +126,7 @@ export default function Proveedor({ billetera }: { billetera: string | null }) {
       // no se entera de que apareció algo nuevo más abajo.
       requestAnimationFrame(() => resultado.current?.focus());
     } catch (e) {
-      setAviso({ tono: "mal", texto: mensajeClaro(e) });
+      setAviso(avisoDeError(e));
     } finally {
       setCargando(false);
     }
@@ -143,7 +142,7 @@ export default function Proveedor({ billetera }: { billetera: string | null }) {
       setAviso({ tono: "bien", texto: exito });
       if (idConsultado !== null) await traer(idConsultado);
     } catch (e) {
-      setAviso({ tono: "mal", texto: mensajeClaro(e) });
+      setAviso(avisoDeError(e));
     } finally {
       setCargando(false);
     }

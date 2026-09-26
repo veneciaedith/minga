@@ -121,10 +121,40 @@ interface Traduccion {
   dice: string;
 }
 
+/**
+ * Cuándo el "error" es en realidad que la persona cerró la billetera.
+ * No es una falla: decidió no seguir, o no entendió qué le pedía.
+ * Por eso no se muestra en rojo. (Heurística 9)
+ *
+ * «closed the modal» es lo que manda xBull desde el celular. En la
+ * prueba con usuario real se mostraba tal cual, en inglés y con
+ * «código -1», y nadie lo entendió.
+ */
+const CANCELACIONES = [
+  "user declined",
+  "user rejected",
+  "denied",
+  "rechaz",
+  "declined access",
+  "closed the modal",
+  "user closed",
+];
+
+export function esCancelacion(error: unknown): boolean {
+  const busqueda = textoDelError(error).toLowerCase();
+  return CANCELACIONES.some((b) => busqueda.includes(b));
+}
+
 const TRADUCCIONES: Traduccion[] = [
   {
-    busca: ["user declined", "user rejected", "denied", "rechaz", "declined access"],
-    dice: "Cerraste el cartel de tu billetera sin firmar, así que no se movió ni un peso. Si querés seguir, tocá el botón de nuevo y elegí «Firmar».",
+    busca: CANCELACIONES,
+    dice: "Cerraste tu billetera antes de terminar, así que no se hizo nada y tu plata no se movió. Si querés seguir, tocá el botón de nuevo y, cuando se abra tu billetera, aceptá.",
+  },
+  {
+    // Lo pone escribirContrato() cuando la billetera que firma todavía no
+    // tiene plata de prueba. Tiene que ir antes que "account not found".
+    busca: ["billetera sin fondos de prueba"],
+    dice: "Tu billetera todavía no tiene plata de prueba, por eso no se pudo hacer esto. Tu plata no se movió. Arriba, donde dice «Tu billetera», tocá «Cargar plata de prueba» y después probá de nuevo.",
   },
   {
     busca: ["insufficient", "underfunded", "not enough", "txinsufficientbalance"],
