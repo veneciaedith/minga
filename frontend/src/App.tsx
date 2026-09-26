@@ -97,8 +97,14 @@ export default function App() {
         tono: "bien",
         texto: "Listo, tu billetera ya tiene plata de prueba. Ahora podés hacer tu pedido.",
       });
-    } catch (e) {
-      setAvisoBilletera(avisoDeError(e));
+    } catch {
+      // El mensaje general habla de "tu pedido", y acá no hay pedido: se
+      // estaba cargando la billetera. Decimos eso y qué hacer.
+      setAvisoBilletera({
+        tono: "mal",
+        texto:
+          "No pudimos cargar la plata de prueba. Tu billetera está bien y no se perdió nada. Esperá un minuto y tocá «Cargar plata de prueba» de nuevo.",
+      });
     } finally {
       setCargandoPlata(false);
     }
