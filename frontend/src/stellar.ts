@@ -155,9 +155,23 @@ export async function tienePlataDePrueba(direccion: string): Promise<boolean> {
   }
 }
 
-/** Le pide a la red de prueba (Friendbot) que cargue la billetera. Es gratis. */
+const FRIENDBOT_URL = "https://friendbot.stellar.org/";
+
+/**
+ * Le pide a la red de prueba (Friendbot) que cargue la billetera. Es gratis.
+ *
+ * Un GET simple, a propósito. El `requestAirdrop` del SDK manda un POST con
+ * encabezados propios; el navegador del celular lo frena antes de salir
+ * (CORS) y la persona veía «No se pudo hablar con la red» aunque tuviera
+ * internet. Pasó en la primera prueba del botón, el 26/09.
+ */
 export async function cargarPlataDePrueba(direccion: string): Promise<void> {
-  await servidor.requestAirdrop(direccion);
+  const respuesta = await fetch(`${FRIENDBOT_URL}?addr=${encodeURIComponent(direccion)}`);
+  if (respuesta.ok) return;
+  // Si ya tenía plata, Friendbot contesta con error. Para nosotros está bien:
+  // lo que importa es que la billetera exista en la red de prueba.
+  if (await tienePlataDePrueba(direccion)) return;
+  throw new Error(`No se pudo cargar la plata de prueba (Friendbot ${respuesta.status}).`);
 }
 
 // ---------------------------------------------------------------------
