@@ -24,3 +24,5 @@ dato de contacto.
 | `plantilla-resumen.md` | Plantilla para resumir cada entrevista |
 | `instalar-freighter.md` | Guía para que alguien instale la billetera antes de probar la app |
 | `como-mostrar-la-app.md` | Cómo acompañar a una persona que prueba Minga por primera vez |
+| `prueba-usuario.md` | Prueba en la que la persona usa Minga sola desde su celular, y las preguntas para el final |
+| `plantilla-evidencia-prueba.md` | Plantilla para anotar qué pasó en cada prueba con usuario |
