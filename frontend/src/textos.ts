@@ -110,6 +110,15 @@ export function conMiles(v: string | number): string {
   return n.toLocaleString("es-AR", { maximumFractionDigits: 7 });
 }
 
+/**
+ * Cómo se nombra un monto en pantalla. En la red de prueba la moneda es
+ * XLM, pero esa palabra no se usa en un mostrador: decimos qué es.
+ * (Regla del proyecto: ninguna palabra cripto en la pantalla.)
+ */
+export function plataDePrueba(v: string | number): string {
+  return `${conMiles(v)} en plata de prueba`;
+}
+
 // ---------------------------------------------------------------------
 //  Traducción de errores
 // ---------------------------------------------------------------------
