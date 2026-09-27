@@ -1,4 +1,4 @@
-# 🤝 Minga — payments that don't depend on trust
+# <img src="marca/minga-logo.svg" alt="" width="40" align="absmiddle"> Minga — payments that don't depend on trust
 
 🌐 **English** · [Español](README.es.md)
 
