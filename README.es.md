@@ -1,4 +1,4 @@
-# 🤝 Minga — que el pago no dependa de la confianza
+# <img src="marca/minga-logo.svg" alt="" width="40" align="absmiddle"> Minga — que el pago no dependa de la confianza
 
 🌐 [English](README.md) · **Español**
 
