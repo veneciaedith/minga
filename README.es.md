@@ -553,4 +553,5 @@ el **Argentina Builder Challenge** (septiembre 2026).
 - Repositorio: https://github.com/veneciaedith/minga
 - App en vivo: https://minga-r5ql.vercel.app
 - Video demo: https://youtube.com/shorts/dZOcmdeODEs
+- Presentación (deck, en inglés): [`presentacion/Minga-Pitch-Deck.pdf`](presentacion/Minga-Pitch-Deck.pdf) · [versión en línea](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC)
 - El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)
