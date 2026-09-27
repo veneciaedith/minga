@@ -40,7 +40,8 @@ No hace falta aparecer en cámara: alcanza con grabar la pantalla y la voz.
 > Now Rosa, our shop owner, places an order.
 > She pastes her supplier's code, writes the amount, what she's buying, and how many days she
 > needs to check the goods when they arrive. Here, three days.
-> Before paying, Minga shows her a summary, in plain words. No crypto terms.
+> Before paying, Minga shows her a summary, in plain words: how much, to whom, and how many
+> days she has to check the goods.
 
 **[1:00 – 1:20] Confirmar y firmar en la billetera. Esperar el cartel «Tu plata quedó guardada»**
 
