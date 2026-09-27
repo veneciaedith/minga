@@ -13,7 +13,7 @@ import {
 } from "../escrow";
 import { Aviso, Estado, EnlaceTransaccion, avisoDeError } from "../componentes/Estado";
 import {
-  conMiles,
+  plataDePrueba,
   direccionCorta,
   revisarNumeroPedido,
   tiempoRestante,
@@ -217,7 +217,7 @@ export default function Proveedor({ billetera }: { billetera: string | null }) {
           {datos && (
             <p>
               Monto del pedido:{" "}
-              <span className="monto">{conMiles(stroopsAXlm(datos.monto))} XLM</span>
+              <span className="monto">{plataDePrueba(stroopsAXlm(datos.monto))}</span>
             </p>
           )}
 

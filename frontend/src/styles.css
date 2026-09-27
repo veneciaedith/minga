@@ -586,6 +586,15 @@ body {
   word-break: break-all;
 }
 
+/* En pantallas angostas, o con el texto agrandado, el dato va debajo de
+   su rótulo. Antes compartían la fila y el rótulo quedaba en una columna
+   tan finita que «Le comprás a la billetera» se partía palabra por
+   palabra. */
+@media (max-width: 36em) {
+  .repaso dl { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .repaso dd { text-align: left; margin-bottom: 10px; }
+}
+
 /* ---------------------------------------------------------------
    12. Pasos del pedido en curso
    --------------------------------------------------------------- */

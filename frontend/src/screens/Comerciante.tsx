@@ -11,9 +11,9 @@ import {
 } from "../escrow";
 import { Aviso, Estado, EnlaceTransaccion, avisoDeError } from "../componentes/Estado";
 import {
-  conMiles,
   direccionCorta,
   finalDeletreado,
+  plataDePrueba,
   revisarDireccion,
   revisarMonto,
   revisarPlazo,
@@ -219,7 +219,7 @@ export default function Comerciante({ billetera }: { billetera: string | null })
       setEstadoRed("pendiente");
       setAviso({
         tono: "bien",
-        texto: `Listo. Guardamos ${conMiles(monto.replace(",", "."))} XLM para el pedido número ${idPedido}. El proveedor todavía no cobró.`,
+        texto: `Listo. Guardamos ${plataDePrueba(monto.replace(",", "."))} para el pedido número ${idPedido}. El proveedor todavía no cobró.`,
       });
       return h;
     });
@@ -468,7 +468,7 @@ export default function Comerciante({ billetera }: { billetera: string | null })
           <div className="repaso">
             <h3>Esto es lo que va a pasar</h3>
             <p className="aclaracion">
-              Se apartan <strong>{conMiles(monto.replace(",", "."))} XLM</strong> de tu billetera y
+              Se apartan <strong>{plataDePrueba(monto.replace(",", "."))}</strong> de tu billetera y
               quedan guardados. El proveedor los va a cobrar recién cuando vos confirmes que la
               mercadería llegó.
             </p>
@@ -479,7 +479,7 @@ export default function Comerciante({ billetera }: { billetera: string | null })
                 <span className="solo-lectores">, termina en {finalDeletreado(proveedor.trim())}</span>
               </dd>
               <dt>Guardás</dt>
-              <dd>{conMiles(monto.replace(",", "."))} XLM</dd>
+              <dd>{plataDePrueba(monto.replace(",", "."))}</dd>
               <dt>Para revisar la mercadería te tomás</dt>
               <dd>{Number(plazo) === 1 ? "1 día" : `${plazo} días`}</dd>
               <dt>Número de pedido</dt>
@@ -563,8 +563,8 @@ export default function Comerciante({ billetera }: { billetera: string | null })
             <div className="campo">
               <label htmlFor="campo-monto">¿Cuánto le vas a pagar?</label>
               <p className="ayuda-campo" id="ayuda-monto">
-                En XLM, que es la moneda de prueba de esta demostración. Podés usar coma, por ejemplo
-                10,50.
+                Es plata de prueba de esta demostración, no plata real. Podés usar coma, por
+                ejemplo 10,50.
               </p>
               <input
                 id="campo-monto"
