@@ -1,8 +1,12 @@
-# <img src="marca/minga-logo.svg" alt="" width="40" align="absmiddle"> Minga — que el pago no dependa de la confianza
+<img src="marca/readme/portada-es.png" alt="Minga. Que el pago no dependa de la confianza. Muchas manos levantan lo que una sola no puede. 01 Comercio, 02 Proveedor, 03 Pago protegido. Testnet en vivo, 29 pruebas en verde, diseño universal." width="100%">
+
+| **ENLACES** | |
+|---|---|
+| [`→` APP EN VIVO](https://minga-r5ql.vercel.app) | [`→` VIDEO DEMO](https://youtube.com/shorts/dZOcmdeODEs) |
+| [`→` PRESENTACIÓN (PDF)](presentacion/Minga-Pitch-Deck.pdf) | [`→` PRESENTACIÓN EN LÍNEA](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC) |
+| [`→` EL CONTRATO EN LA RED](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) | [`→` REPOSITORIO](https://github.com/veneciaedith/minga) |
 
 🌐 [English](README.md) · **Español**
-
-> ### *Muchas manos levantan lo que una sola no puede.*
 
 Minga es una aplicación para que un comercio chico pueda comprarle mercadería a un
 proveedor sin que ninguno de los dos tenga que arriesgar primero.
@@ -13,7 +17,16 @@ sola. Si el pedido no llega, vuelve a quien la puso.
 Por debajo funciona con un contrato en la red **Stellar**, pero la persona que usa la
 app nunca toca eso. Solo lee *"Pedido creado"* y *"Pago liberado"*.
 
----
+| **ÍNDICE** | |
+|---|---|
+| [`01` LA HISTORIA](#por-qué-existe) | [`02` EL PROBLEMA](#el-problema-con-nombre-y-apellido) |
+| [`03` CÓMO FUNCIONA](#cómo-funciona) | [`04` SEGURIDAD](#una-falla-que-encontramos-y-cerramos) |
+| [`05` EL ESTADO](#en-qué-estado-está-hoy) | [`06` NOVEDADES](#qué-se-construyó-esta-semana) |
+| [`07` ACCESIBILIDAD](#diseño-universal-por-qué-la-app-está-hecha-así) | [`08` LO TÉCNICO](#cómo-está-hecho) |
+| [`09` PROBARLO](#probarlo) | [`10` HOJA DE RUTA](#hoja-de-ruta) |
+| [`11` EQUIPO](#quiénes) |  |
+
+<img src="marca/readme/seccion-01-es.png" alt="Sección 01: La historia" width="100%">
 
 ## Por qué existe
 
@@ -35,7 +48,7 @@ Por eso el proyecto tiene dos reglas que no se negocian:
 2. **Que entre cualquiera.** Diseño universal: la aplicación tiene que servir sin
    importar cómo ve, oye, se mueve o lee cada persona.
 
----
+<img src="marca/readme/seccion-02-es.png" alt="Sección 02: El problema" width="100%">
 
 ## El problema, con nombre y apellido
 
@@ -53,7 +66,7 @@ nada de eso.
 
 **Minga le da esa misma herramienta a Rosa.**
 
----
+<img src="marca/readme/seccion-03-es.png" alt="Sección 03: Cómo funciona" width="100%">
 
 ## Cómo funciona
 
@@ -137,7 +150,7 @@ stateDiagram-v2
 dos partes cede. Eso necesita un árbitro, y está fuera de alcance por ahora. Lo
 decimos acá y no en una nota al pie, porque esconderlo sería vender algo que no es.
 
----
+<img src="marca/readme/seccion-04-es.png" alt="Sección 04: Seguridad" width="100%">
 
 ## Una falla que encontramos y cerramos
 
@@ -162,7 +175,7 @@ La revisión completa está en [`docs/revision-seguridad.md`](docs/revision-segu
 afuera que cobra por romperte el código. Esto es una revisión interna, hecha contra la
 lista oficial de vulnerabilidades que publica Stellar.
 
----
+<img src="marca/readme/seccion-05-es.png" alt="Sección 05: El estado" width="100%">
 
 ## En qué estado está hoy
 
@@ -180,7 +193,7 @@ bien fijada, está en [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md). También
 el despliegue de julio, que muestra el flujo completo ejecutado on-chain con plata
 moviéndose de verdad entre billeteras.
 
----
+<img src="marca/readme/seccion-06-es.png" alt="Sección 06: Novedades" width="100%">
 
 ## Qué se construyó esta semana
 
@@ -213,7 +226,7 @@ Septiembre 2026, durante el **Argentina Builder Challenge**:
   excluido del sistema financiero, eso no es un detalle técnico: es la diferencia
   entre que la plata le sirva o no.
 
----
+<img src="marca/readme/seccion-07-es.png" alt="Sección 07: Accesibilidad" width="100%">
 
 ## Diseño universal: por qué la app está hecha así
 
@@ -234,7 +247,7 @@ Algunas decisiones que salen de ahí:
 - **Ninguna palabra del mundo cripto aparece en la pantalla.** No se lee "escrow", ni
   "wallet", ni "transacción".
 
----
+<img src="marca/readme/seccion-08-es.png" alt="Sección 08: Lo técnico" width="100%">
 
 ## Cómo está hecho
 
@@ -289,7 +302,7 @@ Para conectar la billetera usamos **Stellar Wallets Kit**, que soporta varias
 (Freighter, xBull, Albedo, LOBSTR) con una sola conexión. Elegimos eso para no atar a
 nadie a una billetera sola.
 
----
+<img src="marca/readme/seccion-09-es.png" alt="Sección 09: Probarlo" width="100%">
 
 ## Probarlo
 
@@ -323,7 +336,7 @@ Los comandos completos para instalar el contrato en la red están en
 
 Todo corre en **Stellar Testnet**, la red de prueba: **no se usa plata real.**
 
----
+<img src="marca/readme/seccion-10-es.png" alt="Sección 10: Hoja de ruta" width="100%">
 
 ## Hoja de ruta
 
@@ -534,7 +547,7 @@ sostiene a todas las demás.
 El estado detallado y los pendientes del día a día están en
 [`ESTADO-Y-PROXIMOS-PASOS.md`](ESTADO-Y-PROXIMOS-PASOS.md).
 
----
+<img src="marca/readme/seccion-11-es.png" alt="Sección 11: Equipo" width="100%">
 
 ## Quiénes
 
@@ -547,11 +560,3 @@ consentimiento están en [`entrevistas/`](entrevistas/).
 
 El proyecto nació en la **Stellar Pulso Hackathon** (julio 2026) y sigue creciendo en
 el **Argentina Builder Challenge** (septiembre 2026).
-
-## Enlaces
-
-- Repositorio: https://github.com/veneciaedith/minga
-- App en vivo: https://minga-r5ql.vercel.app
-- Video demo: https://youtube.com/shorts/dZOcmdeODEs
-- Presentación (deck, en inglés): [`presentacion/Minga-Pitch-Deck.pdf`](presentacion/Minga-Pitch-Deck.pdf) · [versión en línea](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC)
-- El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)
