@@ -2,3 +2,8 @@
 *
 !.gitignore
 !README.md
+
+# El proyecto del video (Remotion) sí se versiona. Su propio .gitignore deja
+# afuera node_modules y el video ya armado (out/).
+!remotion/
+!remotion/**
