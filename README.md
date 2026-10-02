@@ -1,8 +1,6 @@
-# <img src="marca/minga-logo.svg" alt="" width="40" align="absmiddle"> Minga — payments that don't depend on trust
+<img src="marca/readme/portada-en.png" alt="Minga. Payments that don't depend on trust. Many hands lift what one alone cannot. 01 Shop, 02 Supplier, 03 Protected payment. Live on testnet, 29 tests passing, universal design." width="100%">
 
 🌐 **English** · [Español](README.es.md)
-
-> ### *Many hands lift what one alone cannot.*
 
 Minga is an app that lets a small shop buy goods from a supplier without either of
 them having to take the risk first.
@@ -13,7 +11,16 @@ automatically. If the order never arrives, the money goes back to whoever put it
 Under the hood it runs on a contract on the **Stellar** network, but the person using
 the app never deals with that. They only read *"Order created"* and *"Payment released"*.
 
----
+| **CONTENTS** | |
+|---|---|
+| [`01` THE STORY](#why-it-exists) | [`02` THE PROBLEM](#the-problem-with-a-name-and-a-face) |
+| [`03` HOW IT WORKS](#how-it-works) | [`04` SECURITY](#a-flaw-we-found-and-fixed) |
+| [`05` STATUS](#where-it-stands-today) | [`06` WHAT'S NEW](#what-we-built-this-week) |
+| [`07` ACCESSIBILITY](#universal-design-why-the-app-is-built-this-way) | [`08` UNDER THE HOOD](#how-its-built) |
+| [`09` TRY IT](#try-it) | [`10` ROADMAP](#roadmap) |
+| [`11` TEAM](#who-we-are) | [`12` LINKS](#links) |
+
+<img src="marca/readme/seccion-01-en.png" alt="Section 01: The story" width="100%">
 
 ## Why it exists
 
@@ -35,7 +42,7 @@ That's why the project has two non-negotiable rules:
 2. **Anyone can use it.** Universal design: the app has to work no matter how each
    person sees, hears, moves or reads.
 
----
+<img src="marca/readme/seccion-02-en.png" alt="Section 02: The problem" width="100%">
 
 ## The problem, with a name and a face
 
@@ -54,7 +61,7 @@ grocery store has none of that.
 
 **Minga gives Rosa that same tool.**
 
----
+<img src="marca/readme/seccion-03-en.png" alt="Section 03: How it works" width="100%">
 
 ## How it works
 
@@ -138,7 +145,7 @@ stateDiagram-v2
 needs an arbitrator, and it's out of scope for now. We say it here and not in a
 footnote, because hiding it would be selling something it isn't.
 
----
+<img src="marca/readme/seccion-04-en.png" alt="Section 04: Security" width="100%">
 
 ## A flaw we found and fixed
 
@@ -163,7 +170,7 @@ Spanish). **It is not an audit** and we don't present it as one: an audit is don
 outside people who get paid to break your code. This is an internal review, done
 against the official vulnerability checklist that Stellar publishes.
 
----
+<img src="marca/readme/seccion-05-en.png" alt="Section 05: Status" width="100%">
 
 ## Where it stands today
 
@@ -181,7 +188,7 @@ correctly, is in [`DESPLIEGUE-TESTNET.md`](DESPLIEGUE-TESTNET.md) (in Spanish). 
 keeps the July deployment, which shows the full flow executed on-chain with money
 really moving between wallets.
 
----
+<img src="marca/readme/seccion-06-en.png" alt="Section 06: What's new" width="100%">
 
 ## What we built this week
 
@@ -213,7 +220,7 @@ September 2026, during the **Argentina Builder Challenge**:
   shut out of the financial system, that's not a technical detail: it's the difference
   between the money being useful or not.
 
----
+<img src="marca/readme/seccion-07-en.png" alt="Section 07: Accessibility" width="100%">
 
 ## Universal design: why the app is built this way
 
@@ -238,7 +245,7 @@ Some decisions that come from that:
 > The app itself is in Spanish, because it's built for shops in Argentina. The words
 > quoted in this file are translated.
 
----
+<img src="marca/readme/seccion-08-en.png" alt="Section 08: Under the hood" width="100%">
 
 ## How it's built
 
@@ -298,7 +305,7 @@ To connect the wallet we use **Stellar Wallets Kit**, which supports several wal
 (Freighter, xBull, Albedo, LOBSTR) through a single connection. We chose it so nobody
 is tied to a single wallet.
 
----
+<img src="marca/readme/seccion-09-en.png" alt="Section 09: Try it" width="100%">
 
 ## Try it
 
@@ -332,7 +339,7 @@ The full commands to install the contract on the network are in
 
 Everything runs on **Stellar Testnet**, the test network: **no real money is used.**
 
----
+<img src="marca/readme/seccion-10-en.png" alt="Section 10: Roadmap" width="100%">
 
 ## Roadmap
 
@@ -540,7 +547,7 @@ the one that holds up all the others.
 The detailed status and day-to-day to-dos are in
 [`ESTADO-Y-PROXIMOS-PASOS.md`](ESTADO-Y-PROXIMOS-PASOS.md) (in Spanish).
 
----
+<img src="marca/readme/seccion-11-en.png" alt="Section 11: Team" width="100%">
 
 ## Who we are
 
@@ -553,6 +560,8 @@ and not an assumption of ours. The guides and the consent form are in
 
 The project was born at the **Stellar Pulso Hackathon** (July 2026) and keeps growing
 in the **Argentina Builder Challenge** (September 2026).
+
+<img src="marca/readme/seccion-12-en.png" alt="Section 12: Links" width="100%">
 
 ## Links
 

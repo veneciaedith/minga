@@ -1,0 +1,11 @@
+@font-face{font-family:A;font-weight:800;src:url(fuentes/alegreya-sans-latin-800-normal.woff2)}
+@font-face{font-family:A;font-weight:700;src:url(fuentes/alegreya-sans-latin-700-normal.woff2)}
+@font-face{font-family:A;font-weight:500;src:url(fuentes/alegreya-sans-latin-500-normal.woff2)}
+@font-face{font-family:M;font-weight:500;src:url(fuentes/ibm-plex-mono-latin-500-normal.woff2)}
+@font-face{font-family:M;font-weight:600;src:url(fuentes/ibm-plex-mono-latin-600-normal.woff2)}
+:root{--papel:#FBF7F1;--tinta:#1A2321;--verde:#0E5A51;--ocre:#D9A227;--terra:#C0512F}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--papel);color:var(--tinta);overflow:hidden}
+.mono{font-family:M;font-weight:500;letter-spacing:.14em;text-transform:uppercase}
+.caja{background:var(--tinta);color:var(--ocre);font-family:M;font-weight:600;letter-spacing:.16em;text-transform:uppercase}
+.tag{display:inline-block;background:var(--ocre);border:4px solid var(--tinta);font-family:M;font-weight:600;letter-spacing:.1em;text-transform:uppercase;box-shadow:6px 6px 0 var(--tinta)}
