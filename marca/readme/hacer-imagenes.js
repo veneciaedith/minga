@@ -20,7 +20,7 @@ const textos = {
     lema: ['Muchas manos', ' levantan lo que una sola no puede.'],
     tags: ['Testnet en vivo', '29 pruebas en verde', 'Diseño universal'],
     secciones: ['La historia', 'El problema', 'Cómo funciona', 'Seguridad', 'El estado', 'Novedades',
-      'Accesibilidad', 'Lo técnico', 'Probarlo', 'Hoja de ruta', 'Equipo', 'Enlaces'],
+      'Accesibilidad', 'Lo técnico', 'Probarlo', 'Hoja de ruta', 'Equipo'],
   },
   en: {
     datos: ['Shop', 'Supplier', 'Protected payment'],
@@ -28,7 +28,7 @@ const textos = {
     lema: ['Many hands', ' lift what one alone cannot.'],
     tags: ['Live on testnet', '29 tests passing', 'Universal design'],
     secciones: ['The story', 'The problem', 'How it works', 'Security', 'Status', "What's new",
-      'Accessibility', 'Under the hood', 'Try it', 'Roadmap', 'Team', 'Links'],
+      'Accessibility', 'Under the hood', 'Try it', 'Roadmap', 'Team'],
   },
 };
 

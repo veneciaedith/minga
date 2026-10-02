@@ -1,5 +1,11 @@
 <img src="marca/readme/portada-en.png" alt="Minga. Payments that don't depend on trust. Many hands lift what one alone cannot. 01 Shop, 02 Supplier, 03 Protected payment. Live on testnet, 29 tests passing, universal design." width="100%">
 
+| **LINKS** | |
+|---|---|
+| [`→` LIVE APP](https://minga-r5ql.vercel.app) | [`→` DEMO VIDEO](https://youtube.com/shorts/dZOcmdeODEs) |
+| [`→` PITCH DECK (PDF)](presentacion/Minga-Pitch-Deck.pdf) | [`→` DECK ONLINE](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC) |
+| [`→` THE CONTRACT ON THE NETWORK](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) | [`→` REPOSITORY](https://github.com/veneciaedith/minga) |
+
 🌐 **English** · [Español](README.es.md)
 
 Minga is an app that lets a small shop buy goods from a supplier without either of
@@ -18,7 +24,7 @@ the app never deals with that. They only read *"Order created"* and *"Payment re
 | [`05` STATUS](#where-it-stands-today) | [`06` WHAT'S NEW](#what-we-built-this-week) |
 | [`07` ACCESSIBILITY](#universal-design-why-the-app-is-built-this-way) | [`08` UNDER THE HOOD](#how-its-built) |
 | [`09` TRY IT](#try-it) | [`10` ROADMAP](#roadmap) |
-| [`11` TEAM](#who-we-are) | [`12` LINKS](#links) |
+| [`11` TEAM](#who-we-are) |  |
 
 <img src="marca/readme/seccion-01-en.png" alt="Section 01: The story" width="100%">
 
@@ -560,13 +566,3 @@ and not an assumption of ours. The guides and the consent form are in
 
 The project was born at the **Stellar Pulso Hackathon** (July 2026) and keeps growing
 in the **Argentina Builder Challenge** (September 2026).
-
-<img src="marca/readme/seccion-12-en.png" alt="Section 12: Links" width="100%">
-
-## Links
-
-- Repository: https://github.com/veneciaedith/minga
-- Live app: https://minga-r5ql.vercel.app
-- Demo video: https://youtube.com/shorts/dZOcmdeODEs
-- Pitch deck: [`presentacion/Minga-Pitch-Deck.pdf`](presentacion/Minga-Pitch-Deck.pdf) · [online version](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC)
-- The contract on the explorer: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)

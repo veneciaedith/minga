@@ -1,5 +1,11 @@
 <img src="marca/readme/portada-es.png" alt="Minga. Que el pago no dependa de la confianza. Muchas manos levantan lo que una sola no puede. 01 Comercio, 02 Proveedor, 03 Pago protegido. Testnet en vivo, 29 pruebas en verde, diseño universal." width="100%">
 
+| **ENLACES** | |
+|---|---|
+| [`→` APP EN VIVO](https://minga-r5ql.vercel.app) | [`→` VIDEO DEMO](https://youtube.com/shorts/dZOcmdeODEs) |
+| [`→` PRESENTACIÓN (PDF)](presentacion/Minga-Pitch-Deck.pdf) | [`→` PRESENTACIÓN EN LÍNEA](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC) |
+| [`→` EL CONTRATO EN LA RED](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G) | [`→` REPOSITORIO](https://github.com/veneciaedith/minga) |
+
 🌐 [English](README.md) · **Español**
 
 Minga es una aplicación para que un comercio chico pueda comprarle mercadería a un
@@ -18,7 +24,7 @@ app nunca toca eso. Solo lee *"Pedido creado"* y *"Pago liberado"*.
 | [`05` EL ESTADO](#en-qué-estado-está-hoy) | [`06` NOVEDADES](#qué-se-construyó-esta-semana) |
 | [`07` ACCESIBILIDAD](#diseño-universal-por-qué-la-app-está-hecha-así) | [`08` LO TÉCNICO](#cómo-está-hecho) |
 | [`09` PROBARLO](#probarlo) | [`10` HOJA DE RUTA](#hoja-de-ruta) |
-| [`11` EQUIPO](#quiénes) | [`12` ENLACES](#enlaces) |
+| [`11` EQUIPO](#quiénes) |  |
 
 <img src="marca/readme/seccion-01-es.png" alt="Sección 01: La historia" width="100%">
 
@@ -554,13 +560,3 @@ consentimiento están en [`entrevistas/`](entrevistas/).
 
 El proyecto nació en la **Stellar Pulso Hackathon** (julio 2026) y sigue creciendo en
 el **Argentina Builder Challenge** (septiembre 2026).
-
-<img src="marca/readme/seccion-12-es.png" alt="Sección 12: Enlaces" width="100%">
-
-## Enlaces
-
-- Repositorio: https://github.com/veneciaedith/minga
-- App en vivo: https://minga-r5ql.vercel.app
-- Video demo: https://youtube.com/shorts/dZOcmdeODEs
-- Presentación (deck, en inglés): [`presentacion/Minga-Pitch-Deck.pdf`](presentacion/Minga-Pitch-Deck.pdf) · [versión en línea](https://claude.ai/artifact/1LAhnakqr9qPERfqEh2BpC)
-- El contrato en el explorador: [stellar.expert](https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G)
