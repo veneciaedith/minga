@@ -1,5 +1,5 @@
 import React from 'react';
-import {AbsoluteFill, Sequence, Series} from 'remotion';
+import {AbsoluteFill, Audio, Sequence, Series, interpolate, staticFile} from 'remotion';
 import './fuentes';
 import {s} from './tema';
 import {Fondo} from './componentes/graficos/Fondo';
@@ -17,16 +17,18 @@ import {E09Mensaje} from './escenas/E09Mensaje';
 import {E10Cierre} from './escenas/E10Cierre';
 
 // El orden y la duración de cada escena. Suman exactamente 120 segundos.
+// Tres cortes caen justo donde cambia la música:
+// 0:20,1 (entra fuerte) · 1:00,0 · 1:41,1. Si cambiás la canción, revisalos.
 export const escenas = [
   {nombre: 'Apertura', duracion: s(10), Componente: E01Apertura},
-  {nombre: 'Problema', duracion: s(12), Componente: E02Problema},
-  {nombre: 'Cargar', duracion: s(13), Componente: E03Cargar},
+  {nombre: 'Problema', duracion: s(10.1), Componente: E02Problema}, // termina en 0:20,1
+  {nombre: 'Cargar', duracion: s(14.9), Componente: E03Cargar},
   {nombre: 'Remito', duracion: s(15), Componente: E04Remito},
-  {nombre: 'Reporte', duracion: s(9), Componente: E05Reporte},
-  {nombre: 'Aceite', duracion: s(11), Componente: E06Aceite},
+  {nombre: 'Reporte', duracion: s(10), Componente: E05Reporte}, // termina en 1:00,0
+  {nombre: 'Aceite', duracion: s(10), Componente: E06Aceite},
   {nombre: 'Feria', duracion: s(15), Componente: E07Feria},
-  {nombre: 'Pedido', duracion: s(15), Componente: E08Pedido},
-  {nombre: 'Mensaje', duracion: s(10), Componente: E09Mensaje},
+  {nombre: 'Pedido', duracion: s(16.1), Componente: E08Pedido}, // termina en 1:41,1
+  {nombre: 'Mensaje', duracion: s(8.9), Componente: E09Mensaje},
   {nombre: 'Cierre', duracion: s(10), Componente: E10Cierre},
 ];
 
@@ -46,6 +48,17 @@ export const MingaVideo: React.FC = () => {
 
   return (
     <AbsoluteFill>
+      {/* Música: «Deep House Groove», hecha con Suno. Baja suave en los últimos 4 segundos. */}
+      <Audio
+        src={staticFile('musica/deep-house-groove.mp3')}
+        volume={(f) =>
+          interpolate(f, [DURACION_TOTAL - s(4), DURACION_TOTAL - 1], [1, 0], {
+            extrapolateLeft: 'clamp',
+            extrapolateRight: 'clamp',
+          })
+        }
+      />
+
       <Fondo />
 
       <Series>

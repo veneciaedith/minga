@@ -44,9 +44,9 @@ const Barra: React.FC<{valor: number; inicio: number; color: string; rotulo: str
 export const E06Aceite: React.FC = () => {
   const frame = useCurrentFrame();
   const a = textos.aceite;
-  const brecha = progreso(frame, 100, 20);
-  const multiplica = progreso(frame, 140, 20);
-  const solucion = progreso(frame, 215, 24);
+  const brecha = progreso(frame, 85, 20);
+  const multiplica = progreso(frame, 120, 20);
+  const solucion = progreso(frame, 185, 24);
   const base = 610; // altura donde apoyan las barras
 
   return (
@@ -63,7 +63,7 @@ export const E06Aceite: React.FC = () => {
           <Barra valor={a.venta} inicio={56} color={colores.perdida} rotulo="Lo vendés" trama />
         </div>
         <div style={{opacity: solucion}}>
-          <Barra valor={a.precioSugerido} inicio={215} color={colores.bien} rotulo="Precio nuevo" />
+          <Barra valor={a.precioSugerido} inicio={185} color={colores.bien} rotulo="Precio nuevo" />
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export const E06Aceite: React.FC = () => {
           <div style={{fontFamily: fuentes.texto, fontSize: 46, color: colores.tintaSuave}}>
             × {a.vendidas} botellas vendidas esta semana
           </div>
-          <Contador hasta={a.perdidaTotal} formato="plata" signo="−" inicio={150} duracion={40} tamano={150} color={colores.perdida} />
+          <Contador hasta={a.perdidaTotal} formato="plata" signo="−" inicio={130} duracion={40} tamano={150} color={colores.perdida} />
         </div>
 
         <div
@@ -105,7 +105,7 @@ export const E06Aceite: React.FC = () => {
           </div>
           <div style={{fontFamily: fuentes.texto, fontSize: 44, color: colores.tinta, marginTop: 6}}>
             y volvés a ganar{' '}
-            <Contador hasta={a.gananciaUnidad} formato="plata" signo="+" inicio={235} duracion={30} tamano={50} color={colores.bien} />{' '}
+            <Contador hasta={a.gananciaUnidad} formato="plata" signo="+" inicio={205} duracion={30} tamano={50} color={colores.bien} />{' '}
             por botella
           </div>
         </div>
