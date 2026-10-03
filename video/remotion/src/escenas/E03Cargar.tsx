@@ -115,7 +115,7 @@ export const E03Cargar: React.FC = () => {
       </div>
 
       <Celular
-        capturas={[{archivo: 'cargar-inicio.png'}, {archivo: 'cargar-hoy.png', desde: 250}]}
+        capturas={[{archivo: 'cargar-inicio.png'}, {archivo: 'cargar-hoy.png', desde: 280}]}
         ancho={430}
         inicio={20}
         estilo={{right: 170, top: 80}}

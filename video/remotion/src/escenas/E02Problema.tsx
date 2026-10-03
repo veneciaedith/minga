@@ -78,8 +78,8 @@ const Panel: React.FC<{
 export const E02Problema: React.FC = () => {
   const frame = useCurrentFrame();
   const icono = progreso(frame, 0, 30);
-  const aparta = progreso(frame, 205, 24);
-  const subeTitulo = progreso(frame, 205, 24, entradaSuave);
+  const aparta = progreso(frame, 170, 22);
+  const subeTitulo = progreso(frame, 170, 22, entradaSuave);
 
   return (
     <AbsoluteFill style={{padding: '170px 120px 0'}}>
@@ -106,21 +106,21 @@ export const E02Problema: React.FC = () => {
         >
           <IconoTienda tamano={76} color={colores.verde} dibujo={icono} />
         </div>
-        <PalabraPorPalabra texto={textos.problema.quien} inicio={6} paso={5} tamano={84} peso={700} />
+        <PalabraPorPalabra texto={textos.problema.quien} inicio={6} paso={4} tamano={84} peso={700} />
       </div>
 
       <div style={{display: 'flex', justifyContent: 'space-between', marginTop: 90}}>
         <Panel
           titulo={textos.problema.antes.titulo}
           resultado={textos.problema.antes.resultado}
-          inicio={70}
+          inicio={50}
           desdeIzquierda
           aparta={aparta}
         />
         <Panel
           titulo={textos.problema.despues.titulo}
           resultado={textos.problema.despues.resultado}
-          inicio={118}
+          inicio={88}
           desdeIzquierda={false}
           aparta={aparta}
         />
@@ -130,8 +130,8 @@ export const E02Problema: React.FC = () => {
         <div style={{marginTop: -120}}>
           <PalabraPorPalabra
             texto={textos.problema.remate}
-            inicio={222}
-            paso={6}
+            inicio={185}
+            paso={5}
             tamano={120}
             peso={800}
             alinear="center"

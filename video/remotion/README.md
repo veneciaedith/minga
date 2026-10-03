@@ -1,7 +1,8 @@
 # Video de Minga (Remotion)
 
-Video de **120 segundos**, **1920 × 1080**, 30 cuadros por segundo. Sin audio, para
-que después se le pueda sumar música o voz.
+Video de **120 segundos**, **1920 × 1080**, 30 cuadros por segundo, con música:
+«Deep House Groove», hecha con Suno (`public/musica/`). Se usan los primeros 2 minutos
+y la música baja suave en los últimos 4 segundos.
 
 ## Cómo verlo y cómo armarlo
 
@@ -23,20 +24,21 @@ El `.mp4` no se sube a GitHub (pesa unos 16 MB).
 | Cuánto dura cada escena | `src/MingaVideo.tsx` (tienen que sumar 120 s) |
 | Una escena | `src/escenas/E01Apertura.tsx` … `E10Cierre.tsx` |
 | Las capturas de la app | `public/capturas/` |
+| La música | `public/musica/` y el bloque `<Audio>` en `src/MingaVideo.tsx` |
 
 ## Las escenas
 
 | Tiempo | Escena |
 |---|---|
 | 0:00–0:10 | Apertura: el logo se arma pieza por pieza y aparece el lema |
-| 0:10–0:22 | El problema de Rosa: pagar antes o pagar después |
-| 0:22–0:35 | Cargar: con la voz o con una foto del remito |
+| 0:10–0:20 | El problema de Rosa: pagar antes o pagar después |
+| 0:20–0:35 | Cargar: con la voz o con una foto del remito (entra fuerte la música) |
 | 0:35–0:50 | Minga lee el remito |
-| 0:50–0:59 | Tu reporte de hoy: 7 / 3 / 2 |
-| 0:59–1:10 | El aceite: dónde se pierde plata y cómo arreglarlo |
+| 0:50–1:00 | Tu reporte de hoy: 7 / 3 / 2 |
+| 1:00–1:10 | El aceite: dónde se pierde plata y cómo arreglarlo (cambio en la música) |
 | 1:10–1:25 | La Feria: precios de 34 comercios de la zona |
-| 1:25–1:40 | El pedido protegido |
-| 1:40–1:50 | «Que el pago no dependa de la confianza» |
+| 1:25–1:41 | El pedido protegido |
+| 1:41–1:50 | «Que el pago no dependa de la confianza» (cambio en la música) |
 | 1:50–2:00 | Cierre con logo, lema y link |
 
 ## Accesibilidad
