@@ -2,6 +2,11 @@
 
 Copiá y pegá las secciones según los campos que te pida el formulario.
 
+> **Actualizado el 23/11/2026.** Este texto se escribió para la Stellar Pulso Hackathon
+> (julio 2026), con el contrato de ese momento. Ahora apunta al **contrato nuevo**
+> (instalado el 22/09), al video nuevo y al equipo actual. El contrato de julio
+> (`CCYCSIXO…MX2W5N`) sigue en la red y su evidencia queda en `DESPLIEGUE-TESTNET.md`.
+
 ---
 
 ## Nombre del proyecto
@@ -28,14 +33,20 @@ Un flujo de **pago en escrow** end-to-end, funcionando sobre Stellar:
 Fiel al principio de Minga: **la persona nunca toca la blockchain** — solo ve "pedido creado" / "pago liberado".
 
 ## Cómo usa Stellar (integración fundamental, no decorativa)
-- **Smart contract en Soroban (Rust)** que **custodia y transfiere XLM real**: `create_escrow`, `confirm_delivery`, `cancel_escrow`, `get_escrow_status`. Sin el contrato no hay garantía de pago — es el motor del producto.
+- **Smart contract en Soroban (Rust)** que **custodia y transfiere XLM real** de testnet. Sin el contrato no hay garantía de pago — es el motor del producto. Funciones: `create_escrow`, `marcar_entregado`, `confirm_delivery`, `cancel_escrow`, `objetar_entrega`, `reclamar_pago`, `devolver_fondos`, y las de lectura `get_escrow_status`, `get_escrow`, `get_token`, `segundos_restantes`, `puede_reclamar`.
+- **Plazo y disputa**: el comprador elige de 1 a 60 días para revisar la mercadería. Si no responde, el proveedor cobra al vencer el plazo; si objeta, la plata queda frenada hasta que uno de los dos ceda.
+- **Avisos públicos en la red** (eventos) en cada cambio de estado, y los pedidos renuevan su vencimiento (TTL) mientras se usan.
+- **La moneda se fija al instalar el contrato** y no se puede cambiar, para que nadie pueda pagar con un token falso.
+- **29 pruebas automáticas**, incluidas pruebas de propiedades (miles de casos al azar que verifican que las cuentas siempre cierren), y una revisión de seguridad escrita (`docs/revision-seguridad.md`).
 - **Stellar Wallets Kit** (categoría Wallet Integration de la lista de integraciones) para que el comerciante firme cada operación con su billetera (Freighter, xBull, Albedo, Lobstr).
 - Todo corre en **Stellar Testnet**, con transferencias reales del token XLM nativo.
 
 ## Demo en vivo en testnet (evidencia verificable)
-- Contrato deployado: `CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N`
-- Flujo completo ejecutado on-chain: crear escrow → confirmar entrega → **+10 XLM transferidos al proveedor**, con estado `pendiente → liberado`.
-- Evidencia con links a cada transacción en el repo (`DESPLIEGUE-TESTNET.md`).
+- Contrato deployado (22/09/2026): `CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G`
+- Pedidos reales hechos desde el celular:
+  - **287573** y **125388**: recorrido completo, crear pedido → el proveedor avisa que entregó → confirmar → **el proveedor cobra** («Pago liberado»).
+  - **129183**: queda **Pendiente** a propósito, para mostrar que la plata está guardada esperando la mercadería.
+- Evidencia con links a cada transacción en el repo (`DESPLIEGUE-TESTNET.md`), incluido el despliegue de julio.
 
 ## Stack técnico
 Soroban (Rust) · Stellar Wallets Kit · @stellar/stellar-sdk · React + TypeScript + Vite · Stellar Testnet. Frontend desplegado en Vercel.
@@ -43,15 +54,18 @@ Soroban (Rust) · Stellar Wallets Kit · @stellar/stellar-sdk · React + TypeScr
 ## Validación con clientes
 Realizamos entrevistas de descubrimiento con emprendedores reales de Salta de tres rubros distintos (comercio minorista, servicio/oficio y artesano) para validar el dolor de la confianza con proveedores y la exclusión financiera. *(Evidencia en el link de Drive.)*
 
+En septiembre sumamos una **prueba de uso sin ayuda** desde el celular (Ruperto, CompraLinda, electrónica) y una entrevista a Antonio y Nelly (artículos de limpieza). Ruperto no llegó a completar el pedido: se trabó buscando la billetera. Eso nos confirmó que el próximo paso es entrar sin billetera, con huella (passkeys). Todo está en la carpeta `entrevistas/` del repo.
+
 ## Visión / roadmap
 El escrow es la puerta de entrada: cada pago genera el registro verificable que luego se convierte en **reputación on-chain → crédito sin banco → datos que vuelven a la comunidad (data-to-earn)**. Construimos en fases, priorizando la adopción.
 
 ## Equipo
-Cintia Venecia · Mariela Caminos · Cristina Soto · Lourdes Gimenez Bravo — Salta, Argentina.
+Cintia Venecia · Octavio Giménez Bravo — Salta, Argentina.
 
 ## Links
 - Repositorio: https://github.com/veneciaedith/minga
 - App en vivo: https://minga-r5ql.vercel.app
-- Video demo: https://youtu.be/6X-0l_hIbqs
+- Video demo: https://youtube.com/shorts/dZOcmdeODEs
+- Presentación (PDF): https://github.com/veneciaedith/minga/blob/main/presentacion/Minga-Pitch-Deck.pdf
 - Entrevistas (Drive): *(pegar link cuando estén las 3)*
-- Contrato en el explorador: https://stellar.expert/explorer/testnet/contract/CCYCSIXOT4XBMEGE2AQUMHZ2JKURZXRKB6MH7DFFQCDCZQGSL3MX2W5N
+- Contrato en el explorador: https://stellar.expert/explorer/testnet/contract/CDUJYPSQOFAQOHNQLERLEG54USCED3MJIGNHLWTILAKUZ22PWLMAZ73G
