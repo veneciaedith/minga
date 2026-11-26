@@ -1,8 +1,9 @@
 # 📍 Dónde estamos y qué sigue
 
-> Última actualización: **24 de septiembre de 2026** (checkpoint del jueves cumplido)
+> Última actualización: **23 de noviembre de 2026**
 > Equipo hoy: **Cintia Venecia** y **Octavio Giménez Bravo**
-> Rama de trabajo: **`claude/cool-fermi-6kp11h`**
+> Rama principal: **`main`**. Cada sesión de IA trabaja en una rama propia y se une
+> a `main` con un *pull request*. La rama vieja `claude/cool-fermi-6kp11h` ya no existe.
 
 Este archivo es para retomar sin tener que recordar nada. Se actualiza al final de
 cada jornada.
@@ -16,7 +17,7 @@ Copiá este bloque tal cual y pegalo como primer mensaje:
 ```
 Proyecto Minga (escrow en Stellar/Soroban). Retomamos trabajo anterior.
 
-1. git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h
+1. git checkout main && git pull origin main
 2. Leé ESTADO-Y-PROXIMOS-PASOS.md — tiene todo el estado, los pendientes y las
    decisiones ya tomadas.
 3. Confirmame que lo leíste y decime cuál es el próximo paso según ese archivo.
@@ -37,13 +38,51 @@ para pegar en una sesión sin repo" y lo genera desde este archivo.
 ## ⚡ Los tres pasos, si preferís a mano
 
 1. Abrí Claude Code en la carpeta `minga` y decí: **"leé ESTADO-Y-PROXIMOS-PASOS.md y seguimos"**.
-2. Traé los cambios: `git checkout claude/cool-fermi-6kp11h && git pull origin claude/cool-fermi-6kp11h`
+2. Traé los cambios: `git checkout main && git pull origin main`
 3. Comprobá que todo está sano: `cd contracts/escrow && cargo test` → **tienen que pasar 29 tests**.
 
 > 📱 **Desde el celular** no se pueden correr comandos ni tests. Para solo leer este
 > archivo formateado:
-> https://github.com/veneciaedith/minga/blob/claude/cool-fermi-6kp11h/ESTADO-Y-PROXIMOS-PASOS.md
+> https://github.com/veneciaedith/minga/blob/main/ESTADO-Y-PROXIMOS-PASOS.md
 > (conviene guardarlo en favoritos)
+
+---
+
+## 🆕 Lo que pasó después del 24/09
+
+### Entrega del Argentina Builder Challenge (27/09) — hecha
+
+- **Pruebas con personas reales** (26/09), registradas en `entrevistas/`:
+  - **Ruperto, CompraLinda** (electrónica, hermano de Cintia): prueba de uso desde el
+    celular, sin ayuda. **No llegó a hacer el pedido** y le puso 3/5 de facilidad. Se
+    trabó buscando la billetera xBull en Play Store. Detalle en
+    `entrevistas/entrevista-compralinda.md`.
+  - **Antonio y Nelly** (artículos de limpieza): entrevista, en
+    `entrevistas/entrevista-antonio-y-nelly.md`.
+  - El protocolo de prueba y la plantilla para registrar cada una están en
+    `entrevistas/prueba-usuario.md` y `entrevistas/plantilla-evidencia-prueba.md`.
+- **La app**: botón para cargar plata de prueba (Friendbot), aviso claro si se cierra
+  la billetera, **ya no dice «XLM» en pantalla**, y el resumen del pedido se lee bien
+  en el celular.
+- **Guion del video** nuevo (2:30, narrado en inglés) y **video demo** en
+  https://youtube.com/shorts/dZOcmdeODEs
+- **Presentación** en el repo: `presentacion/Minga-Pitch-Deck.pdf` y `.pptx`.
+- **README en inglés** (`README.md`), con la versión en castellano en `README.es.md`.
+  Tiene los mapas del recorrido del pedido dibujados con Mermaid, y apunta al
+  contrato nuevo y a los pedidos de demo.
+
+### Octubre
+
+- **02–03/10 — Video hecho con Remotion** (120 s, 1920×1080), con música y cortes al
+  ritmo de la canción. Está en `video/`.
+- **02/10 — README con estética nueva**: portada, índice, secciones numeradas y los
+  enlaces arriba de todo.
+- **21/10 — Seguridad de la app**: se actualizaron piezas del frontend que tenían
+  fallas conocidas (`npm audit fix`).
+- **21/10 — `SECURITY.md`**: explica cómo avisar de una falla en privado, sin
+  publicarla.
+
+Desde el 21/10 no hubo cambios.
 
 ---
 
@@ -107,17 +146,19 @@ Recorrido de punta a punta probado dos veces más, desde el celular:
 - Pie de la app actualizado con el equipo actual (Cintia y Octavio).
 - Primer borrador del guion de pitch, en PDF, listo para la llamada de las 11.
 
-### Lo que sigue, en orden
+### Lo que sigue, en orden (actualizado el 23/11)
 
-1. **Las tres pruebas con usuarios** (hermano, prima, Bernardo) — para el checkpoint
-   del sábado 26. Ellos manejan la computadora, no Cintia.
-2. **Video demo y deck**, para la entrega del domingo 27 a las 23:59.
-3. **Pulir el tamaño de pantalla en el celular**: algunas pantallas quedan más largas
-   de lo que entra de una vista, hay que desplazarse para verlas enteras. Es ajuste
-   de estilos, no funcionalidad nueva — entra dentro del feature freeze.
+1. **El historial de pedidos leído desde la red**, usando los avisos que el contrato
+   ya publica. Es el primer punto de la hoja de ruta del README.
+2. **Hacer más fácil conseguir la billetera.** Fue lo que trabó a Ruperto. Va de la
+   mano con las **cuentas con huella (passkeys)** de la hoja de ruta.
+3. **Más pruebas con personas reales**, siguiendo `entrevistas/prueba-usuario.md`.
+   Hasta ahora hay una prueba de uso registrada.
 
-**Esto ya se resolvió del lado del código (16/09).** El frontend ahora habla el
-idioma del contrato nuevo:
+> ✅ Ya hecho de la lista anterior: pruebas con usuarios (26/09), video y deck
+> (27/09), y la pantalla del resumen del pedido en el celular (27/09).
+
+**Del 16/09, como registro.** El frontend habla el idioma del contrato nuevo:
 
 ```
 Antes el frontend mandaba: (comprador, proveedor, TOKEN, monto, id_pedido)
@@ -125,13 +166,11 @@ Ahora manda, como pide el
 contrato nuevo:            (comprador, proveedor, monto, id_pedido, plazo_dias)
 ```
 
-Lo que queda es **el deploy**, y eso lo tiene que correr Cintia porque necesita
-su billetera. Mientras tanto la app no puede operar contra la red, y lo dice con
-todas las letras en vez de mostrar un error de tipos.
+El deploy se hizo el 22/09 y la app ya opera contra el contrato nuevo.
 
 ---
 
-## ✅ Lo que se hizo (6 commits, todos pusheados)
+## ✅ Lo que se hizo hasta el 16/09 (registro)
 
 | Commit | Qué |
 |---|---|
@@ -189,7 +228,7 @@ Rosa crea el pedido (elige plazo: 1 a 60 días)
 
 ## 📋 Pendientes, en orden de prioridad
 
-### 1. Etapa 2 — ✅ el código está hecho (16/09). Falta el deploy, que lo corre Cintia
+### 1. Etapa 2 — ✅ CERRADA (código el 16/09, deploy el 22/09)
 
 Lo que quedó hecho y verificado:
 
@@ -211,22 +250,12 @@ Lo que quedó hecho y verificado:
       lista). Corta a los 90 segundos y el mensaje NO dice «tu plata no se movió»,
       porque la firma ya salió: dice que no vuelva a firmar y que actualice.
 
-**Lo único que falta, y no lo puede hacer una sesión de IA:**
+**Lo que faltaba, ya hecho:**
 
-- [ ] 🔑 **Deployar el contrato nuevo a testnet.** Hace falta una billetera con
-      fondos, así que **lo corre Cintia en su máquina**. El comando está en
-      `COMANDOS.md` sección 2 — **ojo con el `-- --token` del final**.
-- [ ] **Pegar el `CONTRACT_ID` nuevo** en `frontend/src/config.ts`. El archivo ya
-      avisa, en el lugar donde se toca, que el id que está ahí es el viejo.
-- [ ] **Actualizar** `README.md` y `DESPLIEGUE-TESTNET.md`, que hoy apuntan al viejo.
-- [ ] **Grabar un pedido de demo nuevo** on-chain. El pedido 42 no existe en el
-      contrato nuevo.
-
-> ⚠️ **Hasta que se haga el deploy, la app no puede operar.** Habla el idioma del
-> contrato nuevo y en la red está el viejo. No está rota: si alguien prueba, le va
-> a aparecer *«Esta versión de Minga y el contrato instalado en la red no coinciden…
-> no es nada que hayas hecho mal»*. Eso es a propósito, para que nadie se quede con
-> un error incomprensible.
+- [x] 🔑 **Deployar el contrato nuevo a testnet** (22/09, desde la máquina de Cintia).
+- [x] **Pegar el `CONTRACT_ID` nuevo** en `frontend/src/config.ts`.
+- [x] **Actualizar** `README.md` y `DESPLIEGUE-TESTNET.md` (24 y 25/09).
+- [x] **Grabar pedidos de demo nuevos** on-chain: 129183, 287573 y 125388.
 
 ### 2. Pendientes del contrato — ✅ CERRADOS el 16/09 (commit `7946357`)
 
@@ -241,9 +270,7 @@ Lo que quedó hecho y verificado:
       (`confirmo` / `vencio` / `cancelo` / `devolvio`), porque no es lo mismo que
       Rosa confirme a que el proveedor cobre por vencimiento.
 
-> Con esto, **el contrato ya está listo para deployar**. No quedan pendientes suyos.
-> Lo que falta antes del deploy es la Etapa 2 del frontend (punto 1), porque frontend
-> y deploy van juntos en el mismo paso.
+> El contrato no tiene pendientes y ya está en la red.
 
 > ⚠️ Detalle técnico para la próxima sesión: se usó `env.events().publish(...)`,
 > que es la API del **SDK 22**, el que usa Minga. La skill oficial de Stellar
@@ -256,9 +283,8 @@ Lo que quedó hecho y verificado:
 
 ### 4. Opcional, para la hackathon
 
-- [ ] **Documentar la accesibilidad en el README.** El trabajo del commit `9e912f4`
-      no se ve en ningún lado, así que un jurado no se entera. Es un diferencial real
-      de Minga y hoy es invisible.
+- [x] **Documentar la accesibilidad en el README.** Hecho: sección «07 Accesibilidad»
+      del README, y el detalle en `docs/diseno-accesible.md`.
 
 ---
 
@@ -275,18 +301,16 @@ Lo que quedó hecho y verificado:
    > La rama `claude/mockup-link-rd56g2` queda como registro histórico. **No hay que
    > seguir trabajando ahí**: todo lo suyo ya está acá.
 
-2. **Los créditos del equipo.** El `README.md` (línea 4) y el pie de la app (`frontend/src/App.tsx:93`) dicen
-   *"Cintia Venecia, Mariela Caminos, Cristina Soto y Lourdes Gimenez Bravo"*, pero el
-   equipo hoy es **Cintia Venecia y Octavio Giménez Bravo**. Son nombres de personas
-   reales: **decidí vos qué tiene que decir** y se cambia. No se toca por iniciativa propia.
+2. ✅ **RESUELTO — los créditos del equipo.** El README y el pie de la app ya dicen
+   **Cintia Venecia y Octavio Giménez Bravo**.
 3. **WSL, sí o no.** Está la duda desde el 14/9. El entorno de Windows ya funciona
    (Node 24, Rust, Stellar CLI 27 — ver `COMANDOS.md`), así que WSL no hace falta
    para avanzar. Sirve si el grupo de la hackathon pasa comandos de Linux.
    ⚠️ Antes de instalarlo: **liberar espacio en C:** o instalarlo en D:.
-4. **¿Cuántas personas reales antes del 27/09?** Cintia puso como objetivo que la
-   app la usen **7 personas reales**. Hoy hay un artefacto compartido con su
-   hermano, que prueba como cliente. Falta decidir cómo se registra lo que cada
-   persona dice y quién las contacta.
+4. **¿Cuántas personas reales más?** El objetivo era que la app la usen **7 personas
+   reales**. Quedó resuelto *cómo* se registra (`entrevistas/prueba-usuario.md` y la
+   plantilla), y hay una prueba de uso hecha (Ruperto) y una entrevista (Antonio y
+   Nelly). Falta decidir **quién contacta a las próximas y para cuándo**.
 
 > ✅ **Resuelta:** *"¿cerrar los pendientes del contrato antes de deployar?"* — sí,
 > se cerraron el 16/09. Ya se puede deployar una sola vez.
@@ -307,6 +331,10 @@ Lo que quedó hecho y verificado:
   disputas, hay un árbitro con poder sobre los fondos? ¿hay un administrador que pueda
   pausar o congelar? ¿cobran comisión? ¿qué licencia tiene el código? ¿está auditado?
   Las tres primeras tocan decisiones que Minga ya tomó al revés a propósito.
+
+  ✅ **Respondidas el 26/11** en [`docs/trustless-work.md`](docs/trustless-work.md):
+  tiene árbitro con poder sobre la plata, cobra 0,3%, no publica licencia y está
+  auditado. Se confirma seguir con el escrow propio.
 
   Lo que juega a favor: toda la conversación con el contrato vive en **un solo
   archivo** (`frontend/src/escrow.ts`). Cambiar el motor por debajo es tocar ese
@@ -442,7 +470,13 @@ Las dos son para después del 27/09.
 
 ---
 
-## 💡 Decidido el 17/09: el deploy va con USDC, no con XLM
+## 💡 USDC: decidido el 17/09, todavía no aplicado
+
+> **Cómo quedó de verdad:** el deploy del 22/09 se hizo con **XLM** (se verificó con
+> `get_token`). La app ya no
+> muestra «XLM» en pantalla, pero por debajo sigue moviendo XLM. **Pasar a USDC
+> necesita un deploy nuevo** (el token se fija al instalar y no se cambia) y está en
+> la hoja de ruta del README. Lo de abajo es el razonamiento, que sigue valiendo.
 
 Dos razones, y la segunda es la que pesa:
 
