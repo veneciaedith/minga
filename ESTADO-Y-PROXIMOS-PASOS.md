@@ -332,6 +332,10 @@ Lo que quedó hecho y verificado:
   pausar o congelar? ¿cobran comisión? ¿qué licencia tiene el código? ¿está auditado?
   Las tres primeras tocan decisiones que Minga ya tomó al revés a propósito.
 
+  ✅ **Respondidas el 26/11** en [`docs/trustless-work.md`](docs/trustless-work.md):
+  tiene árbitro con poder sobre la plata, cobra 0,3%, no publica licencia y está
+  auditado. Se confirma seguir con el escrow propio.
+
   Lo que juega a favor: toda la conversación con el contrato vive en **un solo
   archivo** (`frontend/src/escrow.ts`). Cambiar el motor por debajo es tocar ese
   archivo, no rehacer la app.
